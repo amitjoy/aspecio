@@ -1,4 +1,4 @@
-package io.primeval.aspecio.internal.service;
+package com.amitinside.aspecio.service.provider;
 
 public interface WovenServiceListener {
 

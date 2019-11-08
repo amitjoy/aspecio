@@ -1,0 +1,16 @@
+-privatepackage     : com.amitinside.aspecio.* 
+-conditionalpackage : \
+	io.primeval.reflex.*,\
+	org.objectweb.asm
+
+-buildpath: \
+	osgi.cmpn,\
+	osgi.core,\
+	osgi.annotation,\
+	io.primeval.reflex,\
+	com.amitinside.aspecio.api,\
+	org.objectweb.asm
+
+Import-Package: \
+	org.slf4j;resolution:=optional,\
+	*

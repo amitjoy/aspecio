@@ -1,8 +1,8 @@
 # Aspecio, AOP Proxies for OSGi
 
-Aspecio is a 'micro-framework' that provide AOP Proxies to OSGi R7. It brings a mix of component-oriented and aspect-oriented programming to your application. Aspecio lets you define _Aspects_ that you can later pick to add behavior to your components and avoid duplicating boilerplate dealing with cross-cutting concerns.
+Aspecio is a 'micro-framework' that provide AOP Proxies to OSGi R7. It brings a mix of component-oriented and aspect-oriented programming to your application. Aspecio lets you define _Aspects_ that you can later pick to add behaviour to your components and avoid duplicating boilerplate dealing with cross-cutting concerns.
 
-The [initial version](https://github.com/primeval-io/aspecio) has been developed by Simon Chemouil and this is a revamped version that makes it OSGi R7 compatible and encapsulates all required dependencies. This also includes some enhancements to make it work properly in OSGi R7. 
+The [initial version](https://github.com/primeval-io/aspecio) has been developed by Simon Chemouil, and this is a revamped version that makes it OSGi R7 compatible and encapsulates all required dependencies. This also includes some enhancements to make it work properly in OSGi R7. 
 
 
 ## Aspecio 1.0.0
@@ -20,15 +20,15 @@ Aside from this page, Javadoc is complete and provides a good overview.
 ### Why Aspects?
 
 In general, aspects allow you to intercept code and alter its execution. There are a number of downsides to using aspects:
-* Scattering behavior across the code base ;
+* Scattering behaviour across the codebase ;
 * Making the execution model opaque by having aspects intercept any random piece of code, including internal code that might have implicit invariants that aspects break ;
 * Not knowing **which** aspects are being _woven_ on a piece of code at a given time ;
 * Having some aspect framework implementations _weave_ aspects into one big bytecode muddy-ball, making debugging difficult when line numbers are desynchronized, adding synthetic methods in the bytecode.
-* Sometimes aspects are implemented using JDK Proxies, which can break consuming code, for example code relying on reflection such as annotation-driven frameworks.
+* Sometimes aspects are implemented using JDK Proxies, which can break consuming code, for example, code relying on reflection such as annotation-driven frameworks.
 
-However there are _cross-cutting concerns_ for which aspects can be very useful, for example:
+However, there are _cross-cutting concerns_ for which aspects can be beneficial, for example:
 * Security: ensuring some conditions are met before being allowed into a function ; 
-* Metrics: having live metrics on key components (e.g using Coda Hale's Metrics library) ;
+* Metrics: having live metrics on key components (e.g. using Coda Hale's Metrics library) ;
 * Ensuring a piece of code takes place in a transaction ;
 * And more :-)
 
@@ -37,11 +37,11 @@ Aspecio aims to make aspects predictable and bridges them with the OSGi service 
 
 ### Aspecio and OSGi
 
-While Aspecio's internal weaving code could be interesting to plug to other Dependency Injection frameworks, it currently supports exclusively OSGi R7 out of the box.
+While Aspecio's internal weaving code could be interesting to plug to other Dependency Injection frameworks, it currently supports OSGi R7 exclusively out of the box.
 
 As it is, Aspecio works with OSGi Services and can weave almost any _willing_ OSGi service (only OSGi services registered as a class and not an interface, which a bad practice, cannot be woven using Aspecio). 
 
-Aspecio works with any service scope, `singleton`, `bundle` and `prototype` and will only create as many instances as expected. In case of service frameworks using the `bundle` scope to make service creation lazy (such as Declarative Services), but still having effectively `singleton` services, Aspecio will make sure each service instance has exactly one proxy instance.
+Aspecio works with any service scope, `singleton`, `bundle` and `prototype` and will only create as many instances as expected. In case of service frameworks using the `bundle` scope to make service creation lazy (such as Declarative Services), but still having effectively `singleton` services, Aspecio will make sure each service instance has precisely one proxy instance.
 
 Thanks to relying on OSGi's low-level service primitives, Aspecio can work with any OSGi service component framework, including any compliant implementation of Declarative Services, Blueprint, Guice + Peaberry, Apache Felix iPojo or Apache Felix DependencyManager.
 
@@ -61,7 +61,7 @@ See [Primeval Reflex](http://github.com/primeval-io/primeval-reflex) for documen
 
 ### Installing Aspecio in an OSGi Framework
 
-Just start Aspecio in your OSGi framework and it will work right away.
+Just start Aspecio in your OSGi framework, and it will work right away.
 
 If there are already registered services with the weaving property, Aspecio will restart their bundles to make sure it has the opportunity to apply its service hook.
 
@@ -72,7 +72,7 @@ Aspecio first collects the set of bundles providing services to weave, sorts the
 
 In Aspecio, we use Java to declare an Aspect.
 
-Here is a simple Aspect counting how many times a method has been called. Depending on its configuration, it may count only successful calls (e.g, methods that did not throw an exception) or all methods indiscriminately. 
+Here is a simple Aspect counting how many times a method has been called. Depending on its configuration, it may count only successful calls (e.g., methods that did not throw an exception) or all methods indiscriminately. 
 
 ```java
 @Component
@@ -101,12 +101,12 @@ public final class CountingAspectImpl implements Interceptor {
 
 Aspecio finds Aspects by:
 
-* Looking for OSGi Services ; in the example above, provided using the `@Component` Declarative Service annotation)
+* Looking for OSGi Services; in the example above, provided using the `@Component` Declarative Service annotation)
 * That provides the OSGi service String property `AspecioConstants.SERVICE_ASPECT` (`"service.aspect"`) declared using the `@Aspect` annotation.
 * That implement the interface `io.primeval.reflect.proxy.Interceptor` (it need not be provided as the service's `"objectClass"`).
-* If several services provide an aspect, Aspecio will pick the one with the highest-service ranking ; in case of equal service rankings, Aspecio will pick the one with the lowest service id. Aspecio supports OSGi's service dynamics and will happily replace or update Aspects live. Aspecio is always 'greedy': if a "better" interceptor is registered for a given aspect, all the services using it will have it updated immediately. 
+* If several services provide an aspect, Aspecio will pick the one with the highest-service ranking; in case of equal service rankings, Aspecio will pick the one with the lowest service id. Aspecio supports OSGi's service dynamics and will happily replace or update Aspects live. Aspecio is always 'greedy': if a "better" interceptor is registered for a given aspect, all the services using it will have it updated immediately. 
 
-In the example above, our component `CountingAspectImpl` provides the aspect named `"CountingAspect"` (a Java String). You can name your aspects with any String, but it is practical to use Java classes to piggyback on the namespaces. 
+In the example above, our component `CountingAspectImpl` provides the aspect named `"CountingAspect"` (a Java String). You can call your aspects with any String, but it is practical to use Java classes to piggyback on the namespaces. 
 
 For documentation on Interceptors, see [Primeval Reflect](http://github.com/primeval-io/primeval-reflect).
 
@@ -143,15 +143,15 @@ That's all! Now any aspect woven will be notified with the calls of methods `hel
 
 Also, because `"CountingAspect.class"` is `required` by `HelloGoodbyeImpl`, the service will **not** be visible until a service providing Aspect `"CountingAspect.class"` is available. All the kinds of OSGi dynamics can happen here: the aspect can be registered after a service requiring it or later. 
 
-Having `"AnotherOptionalAspect.class"` as an optional aspect will not prevent Aspecio's proxy of `HelloGoodbyeImpl` of being registered even in case `"AnotherOptionalAspect.class"` is missing ; however if it becomes available during `HelloGoodbyImpl`'s lifetime, it will start intercepting its methods as well.
+Having `"AnotherOptionalAspect.class"` as an optional aspect will not prevent Aspecio's proxy of `HelloGoodbyeImpl` of being registered even in case `"AnotherOptionalAspect.class"` is missing; however, if it becomes available during `HelloGoodbyImpl`'s lifetime, it will start intercepting its methods as well.
 
 
 ## Aspect patterns
 
 ### Annotation-based interception
 
-* When you want to intercept only certain annotated methods, and you can use the annotation to pass configuration to the interceptor ;
-* When you annotate certain method parameters to guide your aspect.
+* When you want to intercept only specific annotated methods, and you can use the annotation to pass configuration to the interceptor ;
+* When you annotate specific method parameters to guide your aspect.
 
 ```java
 @Component
@@ -178,7 +178,7 @@ See `AnnotationInterceptor` in [Primeval Reflex](http://github.com/primeval-io/p
 
 ### Aspects that bridge services
 
-Because we rarely want the actual cross-cutting behavior to reside in our interceptor, it is a better approach to use your favorite component framework to make your aspects merely bring a functionality provided elsewhere:
+Because we rarely want the actual cross-cutting behaviour to reside in our interceptor, it is a better approach to use your favourite component framework to make your aspects merely bring a functionality provided elsewhere:
 
 
 ```java
@@ -211,14 +211,14 @@ public final class MySecurityAspectImpl implements Interceptor {
     @Override
     public <T, E extends Throwable> T onCall(MyAnnotationDrivenAspect annotation, CallContext context,
                                                               InterceptionHandler<T> handler) throws E {
-	     auth.checkPermissions(...);
-	     ...
+         auth.checkPermissions(...);
+         ...
     }   
 }
 
 ```
 
-The proxy service object registered by Aspecio will have the OSGi service Boolean property `"secured"` set to `Boolean.TRUE`. Now consuming code can check for that property to know if a service is secure, on only select secured services using a target filter. The consuming code doesn't need to know whether a service was secured manually or using an aspect, and this enables just that.
+The proxy service object registered by Aspecio will have the OSGi service Boolean property `"secured"` set to `Boolean.TRUE`. Now consuming code can check for that property to know if a service is secure, on only select secured services using a target filter. The consuming code doesn't need to know whether a service was obtained manually or using an aspect, and this enables just that.
 
 
 ## Debugging Aspecio
@@ -232,4 +232,4 @@ Aspecio provides two Gogo commands to get the same information in the Gogo shell
 
 # Author
 
-Aspecio was initially developed by Simon Chemouil and this revamped version is maintained by Amit Kumar Mondal.
+Simon Chemouil initially developed Aspecio and Amit Kumar Mondal maintains this revamped version.

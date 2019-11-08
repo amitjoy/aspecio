@@ -13,6 +13,16 @@ testsrc                : src/test/java
 testbin                : ${testbin.directory}
 target-dir             : target
 
+Bundle-License         : http://opensource.org/licenses/apache2.0.php;\
+							link="http://www.apache.org/licenses/LICENSE-2.0";\
+							description="Apache License, Version 2.0"
+
+Bundle-SCM             : url=https://github.com/amitjoy/aspecio,\
+                  			connection=scm:git:https://github.com/amitjoy/aspecio.git,\
+                  			developerConnection=scm:git:git@github.com:amitjoy/aspecio.git
+
+Bundle-Developers      : Simon Chemouil, Amit Kumar Mondal
+
 -plugin.1.R7.API       : \
 	aQute.bnd.repository.maven.pom.provider.BndPomRepository; \
 		  snapshotUrls       = https://oss.sonatype.org/content/repositories/osgi/; \

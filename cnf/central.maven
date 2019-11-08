@@ -1,0 +1,24 @@
+# OSGi
+org.apache.felix:org.apache.felix.configadmin:1.9.16
+org.apache.felix:org.apache.felix.configurator:1.0.10
+org.apache.felix:org.apache.felix.converter:1.0.10
+org.apache.felix:org.apache.felix.coordinator:1.0.2
+org.apache.felix:org.apache.felix.eventadmin:1.5.0
+org.apache.felix:org.apache.felix.framework:6.0.3
+org.apache.felix:org.apache.felix.gogo.command:1.1.0
+org.apache.felix:org.apache.felix.http.api:3.0.0
+org.apache.felix:org.apache.felix.http.jetty:4.0.14
+org.apache.felix:org.apache.felix.http.servlet-api:1.1.2
+org.apache.felix:org.apache.felix.http.sslfilter:1.2.6
+org.apache.felix:org.apache.felix.inventory:1.0.6
+org.apache.felix:org.apache.felix.metatype:1.2.2
+org.apache.felix:org.apache.felix.scr:2.1.16
+org.apache.felix:org.apache.felix.useradmin:1.0.4
+org.apache.felix:org.apache.felix.webconsole:4.3.16
+org.apache.felix:org.apache.felix.webconsole.plugins.ds:2.1.0
+org.apache.felix:org.apache.felix.webconsole.plugins.event:1.1.8
+org.apache.felix:org.apache.felix.webconsole.plugins.packageadmin:1.0.4
+org.apache.felix:org.apache.felix.webconsole.plugins.useradmin:1.0.2
+org.osgi:org.osgi.util.function:1.1.0
+org.osgi:org.osgi.util.promise:1.1.1
+org.osgi:org.osgi.util.pushstream:1.0.1

@@ -1,6 +1,4 @@
-.settings
-.classpath
-.project
-*.iml
-**/target/
-/target/
+.DS_Store
+.gradle/
+/generated/
+.metadata

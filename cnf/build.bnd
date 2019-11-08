@@ -1,0 +1,51 @@
+-releaserepo           : Release
+-baselinerepo          : Release
+-contract              :      *
+
+bin.directory          : ${if;${is;${driver};gradle};target/gradle/classes;target/classes}
+testbin.directory      : ${if;${is;${driver};gradle};target/gradle/test-classes;target/test-classes}
+bin.testbin.directory  : ${if;${is;${driver};gradle};target/gradle/classes,target/gradle/test-classes;target/classes,target/test-classes}
+
+src                    : src/main/java, src/main/resources
+bin                    : ${bin.directory}
+testsrc                : src/test/java
+testbin                : ${testbin.directory}
+target-dir             : target
+
+Git-Descriptor         : ${system-allow-fail;git describe --dirty --always}
+Git-SHA                : ${system-allow-fail;git rev-list -1 HEAD}
+
+
+-plugin.1.R7.API: \
+	aQute.bnd.repository.maven.pom.provider.BndPomRepository; \
+		  snapshotUrls=https://oss.sonatype.org/content/repositories/osgi/; \
+		  releaseUrls=https://repo.maven.apache.org/maven2/; \
+		  revision=org.osgi.enroute:osgi-api:7.0.0; \
+		  readOnly=true; \
+		  name="OSGi R7 API"
+
+-plugin.2.Runtime             = \
+    aQute.bnd.repository.maven.provider.MavenBndRepository; \
+          snapshotUrl         = "https://oss.sonatype.org/content/repositories/osgi/"; \
+          releaseUrl          = "https://repo.maven.apache.org/maven2/"; \
+          noupdateOnRelease   = false; \
+          name                = "Maven Central"; \
+          index               = central.maven
+
+-plugin.3.Local: \
+	aQute.bnd.deployer.repository.LocalIndexedRepo; \
+		  name = Local; \
+		  pretty = true; \
+		  local = ${build}/local
+
+-plugin.4.Templates: \
+	aQute.bnd.deployer.repository.LocalIndexedRepo; \
+		  name = Templates; \
+		  pretty = true; \
+		  local = ${build}/templates
+
+-plugin.5.Release: \
+	aQute.bnd.deployer.repository.LocalIndexedRepo; \
+		  name = Release; \
+		  pretty = true; \
+		  local = ${build}/release

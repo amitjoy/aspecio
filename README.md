@@ -61,7 +61,7 @@ See [Primeval Reflex](http://github.com/primeval-io/primeval-reflex) for documen
 
 ### Installing Aspecio in an OSGi Framework
 
-Just start Aspecio in your OSGi framework, and it will work right away.
+Just install `com.amitinside.aspecio.provider` in your OSGi framework and it will work right away.
 
 If there are already registered services with the weaving property, Aspecio will restart their bundles to make sure it has the opportunity to apply its service hook.
 
@@ -79,7 +79,7 @@ Here is a simple Aspect counting how many times a method has been called. Depend
 @Aspect(provides = CountingAspect.class)
 public final class CountingAspectImpl implements Interceptor {
 
-    private final Map<Method, Integer> methodCallCount = Maps.newConcurrentMap();
+    private final Map<Method, Integer> methodCallCount = new ConcurrentHashMap();
     
     // This could be dynamically configured using Declarative Service + ConfigAdmin
     private volatile boolean countOnlySuccessful = false;
@@ -161,7 +161,7 @@ public final class MyAnnotationDrivenAspectImpl implements AnnotationInterceptor
     @Override
     public <T, E extends Throwable> T onCall(MyAnnotationDrivenAspect annotation, CallContext context,
                                                               InterceptionHandler<T> handler) throws E {
-        // myAnn may contain previous info on how to use the aspect.
+        // may contain previous info on how to use the aspect.
         ...
     }
     
@@ -224,8 +224,9 @@ The proxy service object registered by Aspecio will have the OSGi service Boolea
 ## Debugging Aspecio
 
 Aspecio provides a service aptly named `Aspecio` that can show you what Aspecio sees at any time:
-* which aspects are present ;
-* what services are woven.
+
+* which aspects are present
+* what services are woven
 
 Aspecio provides two Gogo commands to get the same information in the Gogo shell, `aspect:aspects` and `aspect:woven`.
  

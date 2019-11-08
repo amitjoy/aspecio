@@ -1,0 +1,4 @@
+-buildpath: \
+	osgi.cmpn,\
+	osgi.core,\
+	osgi.annotation

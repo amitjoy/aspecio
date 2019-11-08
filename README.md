@@ -218,7 +218,7 @@ public final class MySecurityAspectImpl implements Interceptor {
 
 ```
 
-The proxy service object registered by Aspecio will have the OSGi service Boolean property `"secured"` set to `Boolean.TRUE`. Now consuming code can check for that property to know if a service is secure, on only select secured services using a target filter. The consuming code doesn't need to know whether a service was obtained manually or using an aspect, and this enables just that.
+The proxy service object registered by Aspecio will have the OSGi service Boolean property `"secured"` set to `Boolean.TRUE`. Now consuming code can check for that property to know if a service is secure, on the only select secured services using a target filter. The consuming code doesn't need to know whether a service was obtained manually or using an aspect, and this enables just that.
 
 
 ## Debugging Aspecio

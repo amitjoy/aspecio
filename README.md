@@ -65,8 +65,8 @@ Just install `com.amitinside.aspecio.provider` in your OSGi framework and it wil
 
 If there are already registered services with the weaving property, Aspecio will restart their bundles to make sure it has the opportunity to apply its service hook.
 
-Aspecio first collects the set of bundles providing services to weave, sorts them using the natural `Bundle` comparator (based on bundleIds). It stops them all in that order, then starts them all. The ordering should allow to keep the original installation order, and stopping and starting them by batch is aiming to minimize service level interactions between these bundles (such as re-creating components with static references too many times).
-  
+Aspecio first collects the set of bundles providing services to weave, sorts them using the natural `Bundle` comparator (based on bundle IDs). It stops them all in that order, then starts them all. The ordering should allow to keep the original installation order, and stopping and starting them by batch is aiming to minimize service level interactions between these bundles (such as re-creating components with static references too many times).
+
 
 ## Defining an Aspect with Aspecio
 
@@ -102,7 +102,7 @@ public final class CountingAspectImpl implements Interceptor {
 Aspecio finds Aspects by:
 
 * Looking for OSGi Services; in the example above, provided using the `@Component` Declarative Service annotation)
-* That provides the OSGi service String property `AspecioConstants.SERVICE_ASPECT` (`"service.aspect"`) declared using the `@Aspect` annotation.
+* That provides the OSGi service String property `AspecioConstants.SERVICE_ASPECT` (`"service.aspect.name"`) declared using the `@Aspect` annotation.
 * That implement the interface `io.primeval.reflect.proxy.Interceptor` (it need not be provided as the service's `"objectClass"`).
 * If several services provide an aspect, Aspecio will pick the one with the highest-service ranking; in case of equal service rankings, Aspecio will pick the one with the lowest service id. Aspecio supports OSGi's service dynamics and will happily replace or update Aspects live. Aspecio is always 'greedy': if a "better" interceptor is registered for a given aspect, all the services using it will have it updated immediately. 
 
@@ -115,7 +115,7 @@ For documentation on Interceptors, see [Primeval Reflect](http://github.com/prim
 
 In Aspecio, we can only weave OSGi services that opt-in to one or several aspects. This is because services have a well-defined contract and make it the perfect entry point for aspects.
 
-Services must declare the OSGi service `String` or `String[]` property `"service.aspect.weave"` (for required aspects) or `"service.aspect.weave.optional"` (for optional aspects), with the aspect names as value, to be candidate for weaving.
+Services must declare the OSGi service `String` or `String[]` property `"service.aspect.weave.required"` (for required aspects) or `"service.aspect.weave.optional"` (for optional aspects), with the aspect names as value, to be candidate for weaving.
 
 ### A simple example
 
@@ -150,8 +150,8 @@ Having `"AnotherOptionalAspect.class"` as an optional aspect will not prevent As
 
 ### Annotation-based interception
 
-* When you want to intercept only specific annotated methods, and you can use the annotation to pass configuration to the interceptor ;
-* When you annotate specific method parameters to guide your aspect.
+* When you want to intercept only specific annotated methods, and you can use the annotation to pass configuration to the interceptor
+* When you annotate specific method parameters to guide your aspect
 
 ```java
 @Component

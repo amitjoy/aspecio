@@ -2,7 +2,7 @@
 
 Aspecio is a 'micro-framework' that provide AOP Proxies to OSGi R7. It brings a mix of component-oriented and aspect-oriented programming to your application. Aspecio lets you define _Aspects_ that you can later pick to add behaviour to your components and avoid duplicating boilerplate dealing with cross-cutting concerns.
 
-The [initial version](https://github.com/primeval-io/aspecio) has been developed by Simon Chemouil, and this is a revamped version that makes it OSGi R7 compatible and encapsulates all required dependencies. This also includes some enhancements to make it work properly in OSGi R7. 
+The [initial version](https://github.com/primeval-io/aspecio) has been developed by Simon Chemouil, and this is a revamped version that makes it OSGi R7 compatible and encapsulates all required dependencies. This also includes several enhancements and fixes to make it work properly in OSGi R7.
 
 
 ## Aspecio 1.0.0

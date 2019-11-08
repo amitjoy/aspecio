@@ -1,10 +1,10 @@
-package com.amitinside.aspecio.service.provider;
+package com.amitinside.aspecio.service;
 
-import static com.amitinside.aspecio.provider.AspecioUtils.copySet;
-import static com.amitinside.aspecio.provider.AspecioUtils.getLongValue;
-import static com.amitinside.aspecio.service.provider.WovenServiceEvent.OPTIONAL_ASPECT_CHANGE;
-import static com.amitinside.aspecio.service.provider.WovenServiceEvent.REQUIRED_ASPECT_CHANGE;
-import static com.amitinside.aspecio.service.provider.WovenServiceEvent.SERVICE_PROPERTIES_CHANGE;
+import static com.amitinside.aspecio.service.WovenServiceEvent.OPTIONAL_ASPECT_CHANGE;
+import static com.amitinside.aspecio.service.WovenServiceEvent.REQUIRED_ASPECT_CHANGE;
+import static com.amitinside.aspecio.service.WovenServiceEvent.SERVICE_PROPERTIES_CHANGE;
+import static com.amitinside.aspecio.util.AspecioUtil.copySet;
+import static com.amitinside.aspecio.util.AspecioUtil.getLongValue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +13,7 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.log.Logger;
 import com.amitinside.aspecio.api.InterceptedServiceDTO;
-import com.amitinside.aspecio.logging.provider.AspecioLogger;
+import com.amitinside.aspecio.logging.AspecioLogger;
 
 public final class AspecioServiceController
     implements AspectInterceptorListener, WovenServiceListener {

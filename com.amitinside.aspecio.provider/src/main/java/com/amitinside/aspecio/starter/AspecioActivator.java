@@ -1,8 +1,8 @@
-package com.amitinside.aspecio.provider;
+package com.amitinside.aspecio.starter;
 
 import static com.amitinside.aspecio.api.AspecioConstants.ASPECIO_FILTER_SERVICES;
-import static com.amitinside.aspecio.service.command.provider.AspecioGogoCommand.ASPECIO_GOGO_COMMANDS;
-import static com.amitinside.aspecio.service.command.provider.AspecioGogoCommand.ASPECIO_GOGO_COMMAND_SCOPE;
+import static com.amitinside.aspecio.command.AspecioGogoCommand.ASPECIO_GOGO_COMMANDS;
+import static com.amitinside.aspecio.command.AspecioGogoCommand.ASPECIO_GOGO_COMMAND_SCOPE;
 import static org.osgi.framework.Constants.BUNDLE_ACTIVATOR;
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -12,9 +12,9 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.hooks.service.EventListenerHook;
 import org.osgi.framework.hooks.service.FindHook;
 import com.amitinside.aspecio.api.Aspecio;
-import com.amitinside.aspecio.logging.provider.AspecioLogger;
-import com.amitinside.aspecio.service.command.provider.AspecioGogoCommand;
-import com.amitinside.aspecio.service.provider.AspecioProvider;
+import com.amitinside.aspecio.command.AspecioGogoCommand;
+import com.amitinside.aspecio.logging.AspecioLogger;
+import com.amitinside.aspecio.service.AspecioProvider;
 
 @Header(name = BUNDLE_ACTIVATOR, value = "${@class}")
 public final class AspecioActivator implements BundleActivator {

@@ -1,4 +1,4 @@
-package com.amitinside.aspecio.provider;
+package com.amitinside.aspecio.util;
 
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -6,13 +6,13 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.Callable;
 import org.osgi.service.log.Logger;
-import com.amitinside.aspecio.logging.provider.AspecioLogger;
+import com.amitinside.aspecio.logging.AspecioLogger;
 
-public final class AspecioUtils {
+public final class AspecioUtil {
 
-  private static final Logger logger = AspecioLogger.getLogger(AspecioUtils.class);
+  private static final Logger logger = AspecioLogger.getLogger(AspecioUtil.class);
 
-  private AspecioUtils() {
+  private AspecioUtil() {
     throw new IllegalAccessError("Cannot be instantiated");
   }
 

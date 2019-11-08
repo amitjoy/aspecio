@@ -1,4 +1,4 @@
-package com.amitinside.aspecio.logging.provider;
+package com.amitinside.aspecio.logging;
 
 import java.io.PrintStream;
 import java.time.LocalDateTime;

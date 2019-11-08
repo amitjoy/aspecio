@@ -1,4 +1,4 @@
-package com.amitinside.aspecio.service.provider;
+package com.amitinside.aspecio.service;
 
 import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT_WEAVE;
 import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT_WEAVE_OPTIONAL;
@@ -20,7 +20,7 @@ import org.osgi.service.log.Logger;
 import com.amitinside.aspecio.api.Aspecio;
 import com.amitinside.aspecio.api.AspectDTO;
 import com.amitinside.aspecio.api.InterceptedServiceDTO;
-import com.amitinside.aspecio.logging.provider.AspecioLogger;
+import com.amitinside.aspecio.logging.AspecioLogger;
 
 @Capability(namespace = SERVICE_NAMESPACE,
     attribute = "objectClass:List<String>=com.amitinside.aspecio.api.Aspecio")

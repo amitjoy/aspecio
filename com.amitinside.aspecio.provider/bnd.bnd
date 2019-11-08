@@ -1,3 +1,6 @@
+Bundle-Name         : Aspecio
+Bundle-Description  : AOP Proxies for OSGi Services
+
 -privatepackage     : com.amitinside.aspecio.*
 -conditionalpackage : io.primeval.reflex.*
 
@@ -21,8 +24,9 @@ Export-Package: \
 	io.primeval.reflex.proxy.handler.helper,\
 	io.primeval.reflex.service.adt,\
 	io.primeval.reflex.service.adt.spi,\
-	org.objectweb.asm
-	
+	org.objectweb.asm,\
+	org.objectweb.asm.signature
+
 Import-Package: \
 	org.slf4j;resolution:=optional,\
 	*

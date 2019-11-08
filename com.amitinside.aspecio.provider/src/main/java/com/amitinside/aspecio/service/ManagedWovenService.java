@@ -1,11 +1,11 @@
-package com.amitinside.aspecio.service.provider;
+package com.amitinside.aspecio.service;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.log.Logger;
 import com.amitinside.aspecio.api.AspecioConstants;
-import com.amitinside.aspecio.logging.provider.AspecioLogger;
+import com.amitinside.aspecio.logging.AspecioLogger;
 
 
 // Owned by AspecioServiceController (i.e, sync is done there)

@@ -1,4 +1,4 @@
-package com.amitinside.aspecio.service.command.provider;
+package com.amitinside.aspecio.command;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +11,7 @@ import com.amitinside.aspecio.api.InterceptorDTO;
 
 public final class AspecioGogoCommand {
 
-  public static final String   ASPECIO_GOGO_COMMAND_SCOPE = "aspect";
+  public static final String   ASPECIO_GOGO_COMMAND_SCOPE = "aspecio";
   public static final String[] ASPECIO_GOGO_COMMANDS      = new String[] {"aspects", "woven"};
 
   private final BundleContext bundleContext;
@@ -72,7 +72,7 @@ public final class AspecioGogoCommand {
     for (final InterceptedServiceDTO mws : interceptedServices) {
       System.out.println(
           "[" + i + "] Service id: " + mws.serviceId + ", objectClass: " + mws.objectClass);
-      System.out.println(shift + "Required aspects: " + mws.requiredAspects + ", Optional aspects: "
+      System.out.println(shift + "Required Aspects: " + mws.requiredAspects + ", Optional Aspects: "
           + mws.optionalAspects);
       final long   serviceBundleId = mws.bundleId;
       final Bundle bundle          = bundleContext.getBundle(serviceBundleId);
@@ -81,9 +81,9 @@ public final class AspecioGogoCommand {
       final boolean satisfied = mws.published;
       System.out.println(shift + "Satisfied: " + satisfied);
       if (!satisfied) {
-        System.out.println(shift + "Missing required aspects: " + mws.unsatisfiedRequiredAspects);
+        System.out.println(shift + "Missing Required Aspects: " + mws.unsatisfiedRequiredAspects);
       } else {
-        System.out.println(shift + "Active aspects: " + mws.satisfiedAspects);
+        System.out.println(shift + "Active Aspects: " + mws.satisfiedAspects);
       }
       i++;
     }

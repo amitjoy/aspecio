@@ -1,4 +1,4 @@
-package com.amitinside.aspecio.logging.provider;
+package com.amitinside.aspecio.logging;
 
 import static java.util.Objects.requireNonNull;
 import org.osgi.framework.Bundle;

@@ -1,4 +1,4 @@
-package com.amitinside.aspecio.provider;
+package com.amitinside.aspecio.util;
 
 // This is a fork of
 // https://android.googlesource.com/platform/libcore/+/master/luni/src/main/java/java/util/WeakIdentityHashMap.java

@@ -1,4 +1,4 @@
-package com.amitinside.aspecio.service.provider;
+package com.amitinside.aspecio.service;
 
 import java.util.IdentityHashMap;
 import java.util.Map;

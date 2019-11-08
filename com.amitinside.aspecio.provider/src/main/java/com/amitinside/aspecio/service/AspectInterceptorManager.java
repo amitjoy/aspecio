@@ -1,15 +1,15 @@
-package com.amitinside.aspecio.service.provider;
+package com.amitinside.aspecio.service;
 
 import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT;
 import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT_EXTRAPROPERTIES;
-import static com.amitinside.aspecio.provider.AspecioUtils.asStringProperties;
-import static com.amitinside.aspecio.provider.AspecioUtils.asStringProperty;
-import static com.amitinside.aspecio.provider.AspecioUtils.copySet;
-import static com.amitinside.aspecio.provider.AspecioUtils.firstOrNull;
-import static com.amitinside.aspecio.provider.AspecioUtils.getIntValue;
-import static com.amitinside.aspecio.provider.AspecioUtils.getLongValue;
-import static com.amitinside.aspecio.service.provider.AspectInterceptorListener.EventKind.NEWMATCH;
-import static com.amitinside.aspecio.service.provider.AspectInterceptorListener.EventKind.NOMATCH;
+import static com.amitinside.aspecio.service.AspectInterceptorListener.EventKind.NEWMATCH;
+import static com.amitinside.aspecio.service.AspectInterceptorListener.EventKind.NOMATCH;
+import static com.amitinside.aspecio.util.AspecioUtil.asStringProperties;
+import static com.amitinside.aspecio.util.AspecioUtil.asStringProperty;
+import static com.amitinside.aspecio.util.AspecioUtil.copySet;
+import static com.amitinside.aspecio.util.AspecioUtil.firstOrNull;
+import static com.amitinside.aspecio.util.AspecioUtil.getIntValue;
+import static com.amitinside.aspecio.util.AspecioUtil.getLongValue;
 import static org.osgi.framework.Constants.SERVICE_BUNDLEID;
 import static org.osgi.framework.Constants.SERVICE_ID;
 import static org.osgi.framework.Constants.SERVICE_RANKING;
@@ -42,8 +42,8 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.log.Logger;
 import com.amitinside.aspecio.api.AspectDTO;
 import com.amitinside.aspecio.api.InterceptorDTO;
-import com.amitinside.aspecio.logging.provider.AspecioLogger;
-import com.amitinside.aspecio.service.provider.AspectInterceptorListener.EventKind;
+import com.amitinside.aspecio.logging.AspecioLogger;
+import com.amitinside.aspecio.service.AspectInterceptorListener.EventKind;
 import io.primeval.reflex.proxy.Interceptor;
 import io.primeval.reflex.proxy.Interceptors;
 

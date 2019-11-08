@@ -1,17 +1,17 @@
-package com.amitinside.aspecio.service.provider;
+package com.amitinside.aspecio.service;
 
 import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT_WEAVE;
 import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT_WEAVE_OPTIONAL;
 import static com.amitinside.aspecio.api.AspecioConstants._SERVICE_ASPECT_WOVEN;
-import static com.amitinside.aspecio.provider.AspecioUtils.asStringProperties;
-import static com.amitinside.aspecio.provider.AspecioUtils.getIntValue;
-import static com.amitinside.aspecio.provider.AspecioUtils.getLongValue;
-import static com.amitinside.aspecio.service.provider.WovenServiceEvent.OPTIONAL_ASPECT_CHANGE;
-import static com.amitinside.aspecio.service.provider.WovenServiceEvent.REQUIRED_ASPECT_CHANGE;
-import static com.amitinside.aspecio.service.provider.WovenServiceEvent.SERVICE_DEPARTURE;
-import static com.amitinside.aspecio.service.provider.WovenServiceEvent.SERVICE_PROPERTIES_CHANGE;
-import static com.amitinside.aspecio.service.provider.WovenServiceEvent.SERVICE_REGISTRATION;
-import static com.amitinside.aspecio.service.provider.WovenServiceEvent.EventKind.SERVICE_UPDATE;
+import static com.amitinside.aspecio.service.WovenServiceEvent.OPTIONAL_ASPECT_CHANGE;
+import static com.amitinside.aspecio.service.WovenServiceEvent.REQUIRED_ASPECT_CHANGE;
+import static com.amitinside.aspecio.service.WovenServiceEvent.SERVICE_DEPARTURE;
+import static com.amitinside.aspecio.service.WovenServiceEvent.SERVICE_PROPERTIES_CHANGE;
+import static com.amitinside.aspecio.service.WovenServiceEvent.SERVICE_REGISTRATION;
+import static com.amitinside.aspecio.service.WovenServiceEvent.EventKind.SERVICE_UPDATE;
+import static com.amitinside.aspecio.util.AspecioUtil.asStringProperties;
+import static com.amitinside.aspecio.util.AspecioUtil.getIntValue;
+import static com.amitinside.aspecio.util.AspecioUtil.getLongValue;
 import static java.util.stream.Collectors.joining;
 import static org.osgi.framework.Bundle.START_TRANSIENT;
 import static org.osgi.framework.Bundle.STOP_TRANSIENT;
@@ -50,9 +50,9 @@ import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.wiring.BundleRevision;
 import org.osgi.service.log.Logger;
-import com.amitinside.aspecio.logging.provider.AspecioLogger;
-import com.amitinside.aspecio.provider.AspecioUtils;
-import com.amitinside.aspecio.provider.WeakIdentityHashMap;
+import com.amitinside.aspecio.logging.AspecioLogger;
+import com.amitinside.aspecio.util.AspecioUtil;
+import com.amitinside.aspecio.util.WeakIdentityHashMap;
 import io.primeval.reflex.proxy.bytecode.BridgingClassLoader;
 import io.primeval.reflex.proxy.bytecode.Proxy;
 import io.primeval.reflex.proxy.bytecode.ProxyBuilder;
@@ -184,8 +184,8 @@ public final class ServiceWeavingManager implements AllServiceListener {
         new ArrayList<>(Arrays.asList(asStringProperties(reference.getProperty(OBJECTCLASS))));
     int                serviceRanking         =
         getIntValue(reference.getProperty(SERVICE_RANKING), 0);
-    final ServiceScope serviceScope           = ServiceScope
-        .fromString(AspecioUtils.asStringProperty(reference.getProperty(SERVICE_SCOPE)));
+    final ServiceScope serviceScope           =
+        ServiceScope.fromString(AspecioUtil.asStringProperty(reference.getProperty(SERVICE_SCOPE)));
 
     // Keep original properties, except for managed ones.
     final Hashtable<String, Object> serviceProperties = new Hashtable<>(); // NOSONAR
@@ -345,7 +345,7 @@ public final class ServiceWeavingManager implements AllServiceListener {
     } while (currClazz != null && currClazz != Object.class);
 
     return bundleRevPath.computeClassLoaderIfAbsent(() -> {
-      // the bundles set is now prioritised ...
+      // the bundles set is now prioritized ...
       final ClassLoader[] classLoaders =
           bundleRevs.stream().map(b -> b.getWiring().getClassLoader()).toArray(ClassLoader[]::new);
       return new ProxyClassLoader(new BridgingClassLoader(classLoaders));

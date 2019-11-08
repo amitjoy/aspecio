@@ -1,39 +1,17 @@
 # Aspecio, AOP Proxies for OSGi [![Build Status](https://travis-ci.org/primeval-io/aspecio.svg?branch=master)](https://travis-ci.org/primeval-io/aspecio) [![Gitter primeval-io/Lobby](https://badges.gitter.im/primeval-io/Lobby.svg)](https://gitter.im/primeval-io/Lobby)
 
-Aspecio is a 'micro-framework' that provide AOP Proxies to OSGi R6. It brings a mix of component-oriented and aspect-oriented programming to your application. Aspecio lets you define _Aspects_ that you can later pick to add behavior to your components and avoid duplicating boilerplate dealing with cross-cutting concerns.
+Aspecio is a 'micro-framework' that provide AOP Proxies to OSGi R7. It brings a mix of component-oriented and aspect-oriented programming to your application. Aspecio lets you define _Aspects_ that you can later pick to add behavior to your components and avoid duplicating boilerplate dealing with cross-cutting concerns.
+
+The [initial version](https://github.com/primeval-io/aspecio) has been developed by Simon Chemouil and this is a revamped version that makes it OSGi R7 compatible and encapsulates all required dependencies. This also includes some enhancements to make it work properly in OSGi R7. 
 
 
-## Aspecio 2.0.0, now at Primeval!
+## Aspecio 1.0.0
 
-Aspecio 2.0.0 is a complete overhaul with a new proxy model that is simpler, completely unrestricted and faster. See [Primeval Reflex](http://github.com/primeval-io/primeval-reflex) for proxy capabilities. 
-
-## Maven coordinates
-
-```xml
-
-	<groupId>io.primeval.aspecio</groupId>
-	<artifactId>aspecio-core</artifactId>
-	<version>2.0.0-SNAPSHOT</version>
-```
-
-Until a stable release (soon), the snapshot version is available in the Sonatype OSS Snapshots repository.
-
-# Dependencies
-
-Aspecio requires Java 8 and depends on primeval-reflect. 
-
-```xml
-	<dependency>
-		<groupId>io.primeval</groupId>
-		<artifactId>primeval-reflex</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
-	</dependency>
-```	
+Aspecio 1.0.0 is a complete overhaul with a new proxy model that is simpler, completely unrestricted and faster. See [Primeval Reflex](http://github.com/primeval-io/primeval-reflex) for proxy capabilities. 
 
 ## Documentation
 
 Aside from this page, Javadoc is complete and provides a good overview. 
-
 
 
 ## Overview
@@ -59,7 +37,7 @@ Aspecio aims to make aspects predictable and bridges them with the OSGi service 
 
 ### Aspecio and OSGi
 
-While Aspecio's internal weaving code could be interesting to plug to other Dependency Injection frameworks, it currently supports exclusively OSGi R6 out of the box.
+While Aspecio's internal weaving code could be interesting to plug to other Dependency Injection frameworks, it currently supports exclusively OSGi R7 out of the box.
 
 As it is, Aspecio works with OSGi Services and can weave almost any _willing_ OSGi service (only OSGi services registered as a class and not an interface, which a bad practice, cannot be woven using Aspecio). 
 
@@ -67,7 +45,7 @@ Aspecio works with any service scope, `singleton`, `bundle` and `prototype` and 
 
 Thanks to relying on OSGi's low-level service primitives, Aspecio can work with any OSGi service component framework, including any compliant implementation of Declarative Services, Blueprint, Guice + Peaberry, Apache Felix iPojo or Apache Felix DependencyManager.
 
-Aspecio has been tested on Felix 5.4.0 but should work with any framework compliant with OSGi R6.
+Aspecio has been tested on Felix 6.3.0 but should work with any framework compliant with OSGi R7.
 
 In the following examples, Declarative Services will be used.
 
@@ -122,15 +100,15 @@ public final class CountingAspectImpl implements Interceptor {
 ```
 
 Aspecio finds Aspects by:
+
 * Looking for OSGi Services ; in the example above, provided using the `@Component` Declarative Service annotation)
-* That provide the OSGi service String property `AspecioConstants.SERVICE_ASPECT` (`"service.aspect"`) ; in the example above, declared using the `@Aspect` annotation using the [BND Declarative Services Annotation Property Plugin](https://github.com/lambdacube/bnd-dsap-plugin).
+* That provides the OSGi service String property `AspecioConstants.SERVICE_ASPECT` (`"service.aspect"`) declared using the `@Aspect` annotation.
 * That implement the interface `io.primeval.reflect.proxy.Interceptor` (it need not be provided as the service's `"objectClass"`).
 * If several services provide an aspect, Aspecio will pick the one with the highest-service ranking ; in case of equal service rankings, Aspecio will pick the one with the lowest service id. Aspecio supports OSGi's service dynamics and will happily replace or update Aspects live. Aspecio is always 'greedy': if a "better" interceptor is registered for a given aspect, all the services using it will have it updated immediately. 
 
-In the example above, our component `CountingAspectImpl` provides the aspect named `"io.primeval.aspecio.examples.aspect.counting.CountingAspect"` (a Java String). You can name your aspects with any String, but it is practical to use Java classes to piggyback on the namespaces. 
+In the example above, our component `CountingAspectImpl` provides the aspect named `"CountingAspect"` (a Java String). You can name your aspects with any String, but it is practical to use Java classes to piggyback on the namespaces. 
 
 For documentation on Interceptors, see [Primeval Reflect](http://github.com/primeval-io/primeval-reflect).
-
 
 
 ## Aspect Weaving with Aspecio
@@ -141,8 +119,7 @@ Services must declare the OSGi service `String` or `String[]` property `"service
 
 ### A simple example
 
-Here is a Declarative Services component that will be woven by Aspecio using our `CountingAspect` declared earlier. Again, you can see that we use a custom service property annotation, `@Weave`, that is picked-up by the [BND Declarative Services Annotation Property Plugin](https://github.com/lambdacube/bnd-dsap-plugin).
-
+Here is a Declarative Services component that will be woven by Aspecio using our `CountingAspect` declared earlier.
 
 ```java
 @Component
@@ -164,10 +141,9 @@ public final class HelloGoodbyeImpl implements Hello, Goodbye {
 
 That's all! Now any aspect woven will be notified with the calls of methods `hello()` or `goodbye()` and may interact by returning other values, throwing exceptions, catching exceptions, accessing the arguments of each call (or just some) or even update the arguments before the call takes place.
 
-Also, because `"i.p.a.e.a.c.CountingAspect.class"` is `required` by `HelloGoodbyeImpl`, the service will **not** be visible until a service providing Aspect `"i.l.a.e.a.c.CountingAspect.class"` is available. All the kinds of OSGi dynamics can happen here: the aspect can be registered after a service requiring it or later. 
+Also, because `"CountingAspect.class"` is `required` by `HelloGoodbyeImpl`, the service will **not** be visible until a service providing Aspect `"CountingAspect.class"` is available. All the kinds of OSGi dynamics can happen here: the aspect can be registered after a service requiring it or later. 
 
-Having `"i.p.a.e.a.a.AnotherOptionalAspect.class"` as an optional aspect will not prevent Aspecio's proxy of `HelloGoodbyeImpl` of being registered even in case `"i.l.a.e.a.a.AnotherOptionalAspect.class"` is missing ; however if it becomes available during `HelloGoodbyImpl`'s lifetime, it will start intercepting its methods as well.
-
+Having `"AnotherOptionalAspect.class"` as an optional aspect will not prevent Aspecio's proxy of `HelloGoodbyeImpl` of being registered even in case `"AnotherOptionalAspect.class"` is missing ; however if it becomes available during `HelloGoodbyImpl`'s lifetime, it will start intercepting its methods as well.
 
 
 ## Aspect patterns
@@ -252,53 +228,8 @@ Aspecio provides a service aptly named `Aspecio` that can show you what Aspecio 
 * what services are woven.
 
 Aspecio provides two Gogo commands to get the same information in the Gogo shell, `aspect:aspects` and `aspect:woven`.
-
-Here's a sample output of the two commands:
-
-```
-g! aspects
-* io.primeval.aspecio.examples.aspect.metric.MetricAspect$All
-  [ --- active --- ] Service id 25, class io.primeval.aspecio.examples.aspect.metric.internal.AllMetricInterceptorImpl, extra properties: [measured]
-                     Provided by: io.primeval.aspecio.examples 0.9.0.SNAPSHOT [10]
-* io.primeval.aspecio.examples.aspect.counting.CountingAspect
-  [ --- active --- ] Service id 24, class io.primeval.aspecio.examples.aspect.counting.internal.CountingAspectImpl, extra properties: []
-                     Provided by: io.primeval.aspecio.examples 0.9.0.SNAPSHOT [10]
-* io.primeval.aspecio.examples.aspect.metric.MetricAspect$AnnotatedOnly
-  [ --- active --- ] Service id 26, class io.primeval.aspecio.examples.aspect.metric.internal.AnnotatedMetricInterceptorImpl, extra properties: [measured]
-                     Provided by: io.primeval.aspecio.examples 0.9.0.SNAPSHOT [10]
-g! woven
-[0] Service id: 27, objectClass: [io.primeval.aspecio.examples.async.SuperSlowService]
-    Required aspects: [io.primeval.aspecio.examples.aspect.metric.MetricAspect$AnnotatedOnly], Optional aspects: [io.primeval.aspecio.examples.aspect.counting.CountingAspect]
-    Provided by: io.primeval.aspecio.examples 0.9.0.SNAPSHOT [10]
-    Satisfied: true
-    Active aspects: [io.primeval.aspecio.examples.aspect.metric.MetricAspect$AnnotatedOnly, io.primeval.aspecio.examples.aspect.counting.CountingAspect]
-[1] Service id: 29, objectClass: [io.primeval.aspecio.examples.greetings.Hello, io.primeval.aspecio.examples.greetings.Goodbye]
-    Required aspects: [io.primeval.aspecio.examples.aspect.counting.CountingAspect], Optional aspects: [io.primeval.aspecio.examples.aspect.metric.MetricAspect$All]
-    Provided by: io.primeval.aspecio.examples 0.9.0.SNAPSHOT [10]
-    Satisfied: true
-    Active aspects: [io.primeval.aspecio.examples.aspect.counting.CountingAspect, io.primeval.aspecio.examples.aspect.metric.MetricAspect$All]
-[2] Service id: 32, objectClass: [io.primeval.aspecio.examples.misc.Stuff]
-    Required aspects: [io.primeval.aspecio.examples.aspect.metric.Timed], Optional aspects: []
-    Provided by: io.primeval.aspecio.examples 0.9.0.SNAPSHOT [10]
-    Satisfied: false
-    Missing required aspects: [io.primeval.aspecio.examples.aspect.metric.Timed]
-g!        
-
-```
-
-
-
-# Getting help
-
-Post a new GitHub issue or join on [Gitter](https://gitter.im/primeval-io/Lobby).
  
 
 # Author
 
-Aspecio was developed by Simon Chemouil.
-
-# Copyright
-
-(c) 2016-2017, Simon Chemouil, Lambdacube
-
-Aspecio is part of the Primeval project.
+Aspecio was initially developed by Simon Chemouil and this revamped version is maintained by Amit Kumar Mondal.

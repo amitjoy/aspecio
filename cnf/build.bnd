@@ -13,24 +13,18 @@ testsrc                : src/test/java
 testbin                : ${testbin.directory}
 target-dir             : target
 
--plugin.1.R7.API: \
+-plugin.1.R7.API       : \
 	aQute.bnd.repository.maven.pom.provider.BndPomRepository; \
-		  snapshotUrls=https://oss.sonatype.org/content/repositories/osgi/; \
-		  releaseUrls=https://repo.maven.apache.org/maven2/; \
-		  revision=org.osgi.enroute:osgi-api:7.0.0; \
-		  readOnly=true; \
-		  name="OSGi R7 API"
+		  snapshotUrls       = https://oss.sonatype.org/content/repositories/osgi/; \
+		  releaseUrls        = https://repo.maven.apache.org/maven2/; \
+		  revision           = org.osgi.enroute:osgi-api:7.0.0; \
+		  readOnly           = true; \
+		  name               = "OSGi R7 API"
 
--plugin.2.Runtime             = \
+-plugin.2.Runtime      : \
     aQute.bnd.repository.maven.provider.MavenBndRepository; \
           snapshotUrl         = "https://oss.sonatype.org/content/repositories/snapshots/"; \
           releaseUrl          = "https://repo.maven.apache.org/maven2/"; \
           noupdateOnRelease   = false; \
           name                = "Maven Central"; \
           index               = central.maven
-
--plugin.3.Templates: \
-	aQute.bnd.deployer.repository.LocalIndexedRepo; \
-		  name = Templates; \
-		  pretty = true; \
-		  local = ${build}/templates

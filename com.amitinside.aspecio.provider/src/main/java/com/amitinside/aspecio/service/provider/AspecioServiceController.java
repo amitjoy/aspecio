@@ -2,6 +2,9 @@ package com.amitinside.aspecio.service.provider;
 
 import static com.amitinside.aspecio.provider.AspecioUtils.copySet;
 import static com.amitinside.aspecio.provider.AspecioUtils.getLongValue;
+import static com.amitinside.aspecio.service.provider.WovenServiceEvent.OPTIONAL_ASPECT_CHANGE;
+import static com.amitinside.aspecio.service.provider.WovenServiceEvent.REQUIRED_ASPECT_CHANGE;
+import static com.amitinside.aspecio.service.provider.WovenServiceEvent.SERVICE_PROPERTIES_CHANGE;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +58,6 @@ public final class AspecioServiceController
       final boolean required = wovenService.requiredAspects.contains(aspectName);
       handleServiceUpdate(wovenService, required, !required, false);
     }
-
   }
 
   @Override
@@ -66,10 +68,9 @@ public final class AspecioServiceController
         return;
 
       case SERVICE_UPDATE:
-        handleServiceUpdate(wovenService,
-            event.matchesCause(WovenServiceEvent.REQUIRED_ASPECT_CHANGE),
-            event.matchesCause(WovenServiceEvent.OPTIONAL_ASPECT_CHANGE),
-            event.matchesCause(WovenServiceEvent.SERVICE_PROPERTIES_CHANGE));
+        handleServiceUpdate(wovenService, event.matchesCause(REQUIRED_ASPECT_CHANGE),
+            event.matchesCause(OPTIONAL_ASPECT_CHANGE),
+            event.matchesCause(SERVICE_PROPERTIES_CHANGE));
         return;
 
       case SERVICE_DEPARTURE:

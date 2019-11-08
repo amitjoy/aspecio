@@ -17,7 +17,6 @@ package com.amitinside.aspecio.provider;
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.AbstractCollection;
@@ -41,7 +40,7 @@ import java.util.Set;
  * @see java.util.WeakHashMap
  * @see java.lang.ref.WeakReference
  */
-public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
+public final class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<K, V> {
   private static final int   DEFAULT_SIZE        = 16;
   private static final float DEFAULT_LOAD_FACTOR = 0.75f;
 
@@ -382,7 +381,7 @@ public class WeakIdentityHashMap<K, V> extends AbstractMap<K, V> implements Map<
    * all subsequent calls. This method may return different Collection when multiple calls to this
    * method, since it has no synchronization performed.
    * </p>
-   * 
+   *
    * @return a collection of the values contained in this map.
    */
   @Override

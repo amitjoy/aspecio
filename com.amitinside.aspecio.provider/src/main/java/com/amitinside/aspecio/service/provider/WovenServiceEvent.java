@@ -1,6 +1,7 @@
 package com.amitinside.aspecio.service.provider;
 
 public final class WovenServiceEvent {
+
   enum EventKind {
     SERVICE_ARRIVAL, SERVICE_UPDATE, SERVICE_DEPARTURE
   }

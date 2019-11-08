@@ -10,6 +10,7 @@ import com.amitinside.aspecio.examples.misc.Stuff;
 @Component
 @Weave(required = Timed.class)
 public final class StuffImpl implements Stuff {
+
   @Override
   public void test(final PrintStream ps, final int i, final byte b, final String s) {
     ps.println(s + " " + i + " b" + b);

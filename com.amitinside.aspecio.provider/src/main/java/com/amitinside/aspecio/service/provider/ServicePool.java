@@ -40,7 +40,9 @@ public final class ServicePool<T> {
     final Object original = proxyToOriginal.remove(proxy);
     final T      proxyX   = originalToProxy.remove(original);
 
-    assert proxy == proxyX;
+    if (proxy != proxyX) {
+      throw new RuntimeException("Service Proxies are not same");
+    }
 
     return true;
   }

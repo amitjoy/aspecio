@@ -18,7 +18,6 @@ public final class AspectInterceptorContext {
       final Set<String> satisfiedRequiredAspects, final Set<String> unsatisfiedRequiredAspects,
       final Set<String> satisfiedOptionalAspects, final Set<String> unsatisfiedOptionalAspects,
       final Set<String> extraProperties) {
-    super();
     this.interceptor                = interceptor;
     this.satisfiedAspects           = satisfiedAspects;
     this.satisfiedRequiredAspects   = satisfiedRequiredAspects;

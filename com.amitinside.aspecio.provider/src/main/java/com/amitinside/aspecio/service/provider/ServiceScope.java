@@ -1,6 +1,7 @@
 package com.amitinside.aspecio.service.provider;
 
 public enum ServiceScope {
+
   SINGLETON("singleton"), BUNDLE("bundle"), PROTOTYPE("prototype");
 
   private final String value;

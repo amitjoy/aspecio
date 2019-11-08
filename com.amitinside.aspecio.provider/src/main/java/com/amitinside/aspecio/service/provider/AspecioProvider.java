@@ -1,11 +1,15 @@
 package com.amitinside.aspecio.service.provider;
 
+import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT_WEAVE;
+import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT_WEAVE_OPTIONAL;
+import static org.osgi.namespace.service.ServiceNamespace.SERVICE_NAMESPACE;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import org.osgi.annotation.bundle.Capability;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceReference;
@@ -14,11 +18,12 @@ import org.osgi.framework.hooks.service.FindHook;
 import org.osgi.framework.hooks.service.ListenerHook.ListenerInfo;
 import org.osgi.service.log.Logger;
 import com.amitinside.aspecio.api.Aspecio;
-import com.amitinside.aspecio.api.AspecioConstants;
 import com.amitinside.aspecio.api.AspectDTO;
 import com.amitinside.aspecio.api.InterceptedServiceDTO;
 import com.amitinside.aspecio.logging.provider.AspecioLogger;
 
+@Capability(namespace = SERVICE_NAMESPACE,
+    attribute = "objectClass:List<String>=com.amitinside.aspecio.api.Aspecio")
 public final class AspecioProvider implements Aspecio, FindHook, EventListenerHook {
 
   private final Logger logger = AspecioLogger.getLogger(AspecioProvider.class);
@@ -52,9 +57,8 @@ public final class AspecioProvider implements Aspecio, FindHook, EventListenerHo
   public void event(final ServiceEvent event,
       final Map<BundleContext, Collection<ListenerInfo>> listeners) {
     // Is it an event we want to filter out?
-    if (event.getServiceReference().getProperty(AspecioConstants.SERVICE_ASPECT_WEAVE) == null
-        && event.getServiceReference()
-            .getProperty(AspecioConstants.SERVICE_ASPECT_WEAVE_OPTIONAL) == null) {
+    if (event.getServiceReference().getProperty(SERVICE_ASPECT_WEAVE) == null
+        && event.getServiceReference().getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL) == null) {
       return;
     }
     final Iterator<BundleContext> iterator = listeners.keySet().iterator();
@@ -76,12 +80,11 @@ public final class AspecioProvider implements Aspecio, FindHook, EventListenerHo
     if (consumingBundleId == bundleId || consumingBundleId == 0) {
       return;
     }
-
     final Iterator<ServiceReference<?>> iterator = references.iterator();
     while (iterator.hasNext()) {
       final ServiceReference<?> reference = iterator.next();
-      if (reference.getProperty(AspecioConstants.SERVICE_ASPECT_WEAVE) == null
-          && reference.getProperty(AspecioConstants.SERVICE_ASPECT_WEAVE_OPTIONAL) == null) {
+      if (reference.getProperty(SERVICE_ASPECT_WEAVE) == null
+          && reference.getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL) == null) {
         continue;
       }
       iterator.remove();
@@ -102,7 +105,5 @@ public final class AspecioProvider implements Aspecio, FindHook, EventListenerHo
   public List<InterceptedServiceDTO> getInterceptedServices() {
     return aspecioServiceController.getInterceptedServices();
   }
-
-
 
 }

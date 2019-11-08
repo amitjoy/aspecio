@@ -6,6 +6,7 @@ import org.osgi.framework.wiring.BundleRevision;
 import io.primeval.reflex.proxy.bytecode.ProxyClassLoader;
 
 public final class BundleRevPath {
+
   private ProxyClassLoader                   classLoader;
   private Map<BundleRevision, BundleRevPath> subMap;
 

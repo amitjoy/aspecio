@@ -1,11 +1,22 @@
 package com.amitinside.aspecio.service.provider;
 
+import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT;
+import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT_EXTRAPROPERTIES;
 import static com.amitinside.aspecio.provider.AspecioUtils.asStringProperties;
 import static com.amitinside.aspecio.provider.AspecioUtils.asStringProperty;
 import static com.amitinside.aspecio.provider.AspecioUtils.copySet;
 import static com.amitinside.aspecio.provider.AspecioUtils.firstOrNull;
 import static com.amitinside.aspecio.provider.AspecioUtils.getIntValue;
 import static com.amitinside.aspecio.provider.AspecioUtils.getLongValue;
+import static com.amitinside.aspecio.service.provider.AspectInterceptorListener.EventKind.NEWMATCH;
+import static com.amitinside.aspecio.service.provider.AspectInterceptorListener.EventKind.NOMATCH;
+import static org.osgi.framework.Constants.SERVICE_BUNDLEID;
+import static org.osgi.framework.Constants.SERVICE_ID;
+import static org.osgi.framework.Constants.SERVICE_RANKING;
+import static org.osgi.framework.ServiceEvent.MODIFIED;
+import static org.osgi.framework.ServiceEvent.MODIFIED_ENDMATCH;
+import static org.osgi.framework.ServiceEvent.REGISTERED;
+import static org.osgi.framework.ServiceEvent.UNREGISTERING;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,13 +35,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.Constants;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.log.Logger;
-import com.amitinside.aspecio.api.AspecioConstants;
 import com.amitinside.aspecio.api.AspectDTO;
 import com.amitinside.aspecio.api.InterceptorDTO;
 import com.amitinside.aspecio.logging.provider.AspecioLogger;
@@ -40,7 +49,7 @@ import io.primeval.reflex.proxy.Interceptors;
 
 public final class AspectInterceptorManager implements ServiceListener {
 
-  private static final String SERVICE_FILTER = "(" + AspecioConstants.SERVICE_ASPECT + "=*)";
+  private static final String SERVICE_FILTER = "(" + SERVICE_ASPECT + "=*)";
 
   private final Logger        logger = AspecioLogger.getLogger(AspectInterceptorManager.class);
   private final BundleContext bundleContext;
@@ -94,20 +103,17 @@ public final class AspectInterceptorManager implements ServiceListener {
     if (closed) {
       return;
     }
-
     final ServiceReference<?> sr = event.getServiceReference();
 
     switch (event.getType()) {
-      case ServiceEvent.REGISTERED:
+      case REGISTERED:
         onServiceRegistration(sr);
         break;
-
-      case ServiceEvent.MODIFIED:
+      case MODIFIED:
         onServiceUpdate(sr);
         break;
-
-      case ServiceEvent.MODIFIED_ENDMATCH:
-      case ServiceEvent.UNREGISTERING:
+      case MODIFIED_ENDMATCH:
+      case UNREGISTERING:
         onServiceDeparture(sr);
         break;
     }
@@ -119,13 +125,10 @@ public final class AspectInterceptorManager implements ServiceListener {
       // getServiceReferences call
       return;
     }
-
-    final String      aspect          =
-        asStringProperty(reference.getProperty(AspecioConstants.SERVICE_ASPECT));
-    final Set<String> extraProperties = new LinkedHashSet<>(Arrays.asList(asStringProperties(
-        reference.getProperty(AspecioConstants.SERVICE_ASPECT_EXTRAPROPERTIES))));
-    final int         serviceRanking  =
-        getIntValue(reference.getProperty(Constants.SERVICE_RANKING), 0);
+    final String      aspect          = asStringProperty(reference.getProperty(SERVICE_ASPECT));
+    final Set<String> extraProperties = new LinkedHashSet<>(
+        Arrays.asList(asStringProperties(reference.getProperty(SERVICE_ASPECT_EXTRAPROPERTIES))));
+    final int         serviceRanking  = getIntValue(reference.getProperty(SERVICE_RANKING), 0);
 
     final Object service = bundleContext.getService(reference);
     if (!(service instanceof Interceptor)) {
@@ -133,28 +136,24 @@ public final class AspectInterceptorManager implements ServiceListener {
       bundleContext.ungetService(reference);
       return;
     }
-
     logger.debug("Added aspect: {} (extraProps: {})", aspect, extraProperties);
-
     final AspectInterceptor aspectService = new AspectInterceptor(aspect, (Interceptor) service,
         reference, serviceRanking, extraProperties);
     aspectServiceByServiceRef.put(reference, aspectService);
 
     // Deal with aspect map.
-    {
-      final SortedSet<AspectInterceptor> as          =
-          aspectServicesByAspectName.computeIfAbsent(aspect, k -> new TreeSet<>());
-      final AspectInterceptor            firstBefore = firstOrNull(as);
-      // The trick here is that we use a SortedSet
-      // with the right compareTo method on aspectService.
-      as.add(aspectService);
+    final SortedSet<AspectInterceptor> as          =
+        aspectServicesByAspectName.computeIfAbsent(aspect, k -> new TreeSet<>());
+    final AspectInterceptor            firstBefore = firstOrNull(as);
+    // The trick here is that we use a SortedSet
+    // with the right compareTo method on aspectService.
+    as.add(aspectService);
 
-      final AspectInterceptor firstAfter = firstOrNull(as);
+    final AspectInterceptor firstAfter = firstOrNull(as);
 
-      if (firstAfter != firstBefore) {
-        // still in lock, should we?
-        fireEvent(EventKind.NEWMATCH, aspect, firstAfter);
-      }
+    if (firstAfter != firstBefore) {
+      // still in lock, should we?
+      fireEvent(NEWMATCH, aspect, firstAfter);
     }
   }
 
@@ -164,13 +163,10 @@ public final class AspectInterceptorManager implements ServiceListener {
       return;
     }
 
-    final String newAspect =
-        asStringProperty(reference.getProperty(AspecioConstants.SERVICE_ASPECT));
-
-    final Set<String> extraProperties = new LinkedHashSet<>(Arrays.asList(asStringProperties(
-        reference.getProperty(AspecioConstants.SERVICE_ASPECT_EXTRAPROPERTIES))));
-    final int         serviceRanking  =
-        getIntValue(reference.getProperty(Constants.SERVICE_RANKING), 0);
+    final String      newAspect       = asStringProperty(reference.getProperty(SERVICE_ASPECT));
+    final Set<String> extraProperties = new LinkedHashSet<>(
+        Arrays.asList(asStringProperties(reference.getProperty(SERVICE_ASPECT_EXTRAPROPERTIES))));
+    final int         serviceRanking  = getIntValue(reference.getProperty(SERVICE_RANKING), 0);
 
     final boolean rankingChanged    = aspectService.serviceRanking != serviceRanking;
     final boolean aspectChanged     = !Objects.equals(aspectService.aspect, newAspect);
@@ -224,8 +220,7 @@ public final class AspectInterceptorManager implements ServiceListener {
 
         if (firstAfter != firstBefore) {
           // still in lock, should we?
-          fireEvent(firstAfter != null ? EventKind.NEWMATCH : EventKind.NOMATCH, aspect,
-              firstAfter);
+          fireEvent(firstAfter != null ? NEWMATCH : NOMATCH, aspect, firstAfter);
         }
       }
     }
@@ -241,22 +236,20 @@ public final class AspectInterceptorManager implements ServiceListener {
     logger.debug("Removed aspect: {} (extraProps: {})", aspect, aspectService.extraProperties);
     aspectServiceByServiceRef.remove(reference);
 
-    {
-      final SortedSet<AspectInterceptor> as          = aspectServicesByAspectName.get(aspect);
-      final AspectInterceptor            firstBefore = firstOrNull(as);
+    final SortedSet<AspectInterceptor> as          = aspectServicesByAspectName.get(aspect);
+    final AspectInterceptor            firstBefore = firstOrNull(as);
 
-      if (as != null) {
-        as.remove(aspectService);
-        if (as.isEmpty()) {
-          aspectServicesByAspectName.remove(aspect);
-        }
+    if (as != null) {
+      as.remove(aspectService);
+      if (as.isEmpty()) {
+        aspectServicesByAspectName.remove(aspect);
       }
-      final AspectInterceptor firstAfter = firstOrNull(as);
+    }
+    final AspectInterceptor firstAfter = firstOrNull(as);
 
-      if (firstAfter != firstBefore) {
-        // still in lock, should we?
-        fireEvent(firstAfter != null ? EventKind.NEWMATCH : EventKind.NOMATCH, aspect, firstAfter);
-      }
+    if (firstAfter != firstBefore) {
+      // still in lock, should we?
+      fireEvent(firstAfter != null ? NEWMATCH : NOMATCH, aspect, firstAfter);
     }
   }
 
@@ -272,15 +265,11 @@ public final class AspectInterceptorManager implements ServiceListener {
       return a < b ? -1 : a > b ? 1 : 0;
     });
 
-    final Set<String> satisfiedRequiredAspects = new LinkedHashSet<>();
-
+    final Set<String> satisfiedRequiredAspects   = new LinkedHashSet<>();
     final Set<String> unsatisfiedRequiredAspects = new LinkedHashSet<>();
-
-    final Set<String> satisfiedOptionalAspects = new LinkedHashSet<>();
-
+    final Set<String> satisfiedOptionalAspects   = new LinkedHashSet<>();
     final Set<String> unsatisfiedOptionalAspects = new LinkedHashSet<>();
-
-    final Set<String> extraProperties = new LinkedHashSet<>();
+    final Set<String> extraProperties            = new LinkedHashSet<>();
 
     for (final String aspect : requiredAspects) {
       final AspectInterceptor aspectInterceptor = getAspectInterceptor(aspect);
@@ -365,8 +354,8 @@ public final class AspectInterceptorManager implements ServiceListener {
   }
 
   private InterceptorDTO makeInterceptorDTO(final AspectInterceptor ai) {
-    final long serviceId = getLongValue(ai.serviceRef.getProperty(Constants.SERVICE_ID));
-    final long bundleId  = getLongValue(ai.serviceRef.getProperty(Constants.SERVICE_BUNDLEID));
+    final long serviceId = getLongValue(ai.serviceRef.getProperty(SERVICE_ID));
+    final long bundleId  = getLongValue(ai.serviceRef.getProperty(SERVICE_BUNDLEID));
 
     final InterceptorDTO dto = new InterceptorDTO();
     dto.serviceId        = serviceId;
@@ -377,7 +366,5 @@ public final class AspectInterceptorManager implements ServiceListener {
 
     return dto;
   }
-
-
 
 }

@@ -16,7 +16,6 @@ public final class AspectInterceptor implements Comparable<AspectInterceptor> {
   public AspectInterceptor(final String aspect, final Interceptor interceptor,
       final ServiceReference<?> serviceRef, final int serviceRanking,
       final Set<String> extraProperties) {
-    super();
     this.aspect          = aspect;
     this.interceptor     = interceptor;
     this.serviceRef      = serviceRef;

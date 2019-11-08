@@ -10,6 +10,7 @@ import com.amitinside.aspecio.logging.provider.AspecioLogger;
 
 // Owned by AspecioServiceController (i.e, sync is done there)
 public final class ManagedWovenService {
+
   private final Logger logger = AspecioLogger.getLogger(ManagedWovenService.class);
 
   // can be null if unsatisfied

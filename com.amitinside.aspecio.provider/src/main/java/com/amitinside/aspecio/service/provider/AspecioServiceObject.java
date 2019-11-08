@@ -13,11 +13,13 @@ import io.primeval.reflex.proxy.Interceptor;
 import io.primeval.reflex.proxy.bytecode.Proxy;
 
 public final class AspecioServiceObject {
+
   private final ServiceScope            serviceScope;
   private final ServiceReference<?>     originalRef;
   private final Function<Object, Proxy> proxyFunction;
   private final List<Proxy>             instances = new CopyOnWriteArrayList<>();
-  // Try to de-duplicate for servicefactories that are just lazy singletons.
+
+  // Try to de-duplicate for service factories that are just lazy singletons.
   private final ServicePool<Proxy> servicePool = new ServicePool<>();
   private Object                   serviceToRegister;
   private volatile Interceptor     interceptor = Interceptor.DEFAULT;

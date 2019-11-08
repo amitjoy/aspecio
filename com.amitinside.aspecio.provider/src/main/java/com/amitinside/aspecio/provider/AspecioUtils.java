@@ -12,7 +12,9 @@ public final class AspecioUtils {
 
   private static final Logger logger = AspecioLogger.getLogger(AspecioUtils.class);
 
-  private AspecioUtils() {}
+  private AspecioUtils() {
+    throw new IllegalAccessError("Cannot be instantiated");
+  }
 
   // Run any block of code and propagate throwables as necessary
   public static <T> T trust(final Callable<T> block) {
@@ -66,7 +68,7 @@ public final class AspecioUtils {
 
   public static int getIntValue(final Object propObj, final int defaultValue) {
     if (propObj instanceof Integer) {
-      return ((Integer) propObj);
+      return (Integer) propObj;
     } else {
       return defaultValue;
     }

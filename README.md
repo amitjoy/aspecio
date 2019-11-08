@@ -39,11 +39,11 @@ Aspecio aims to make aspects predictable and bridges them with the OSGi service 
 
 While Aspecio's internal weaving code could be interesting to plug to other Dependency Injection frameworks, it currently supports OSGi R7 exclusively out of the box.
 
-As it is, Aspecio works with OSGi Services and can weave almost any _willing_ OSGi service (only OSGi services registered as a class and not an interface, which a bad practice, cannot be woven using Aspecio). 
+As it is, Aspecio works with OSGi Services and can weave almost any _willing_ OSGi service. 
 
 Aspecio works with any service scope, `singleton`, `bundle` and `prototype` and will only create as many instances as expected. In case of service frameworks using the `bundle` scope to make service creation lazy (such as Declarative Services), but still having effectively `singleton` services, Aspecio will make sure each service instance has precisely one proxy instance.
 
-Thanks to relying on OSGi's low-level service primitives, Aspecio can work with any OSGi service component framework, including any compliant implementation of Declarative Services, Blueprint, Guice + Peaberry, Apache Felix iPojo or Apache Felix DependencyManager.
+Thanks to relying on OSGi's low-level service primitives, Aspecio can work with any OSGi service component framework, including any compliant implementation of Declarative Services, Blueprint, Guice + Peaberry, Apache Felix iPojo or Apache Felix Dependency Manager.
 
 Aspecio has been tested on Felix 6.3.0 but should work with any framework compliant with OSGi R7.
 
@@ -57,6 +57,10 @@ Aspecio picks service objects that ask for certain aspects in their service prop
 Aspecio uses [Primeval Reflex](http://github.com/primeval-io/primeval-reflex) to proxy services requesting weaving. All interfaces and public methods are proxied.
 
 See [Primeval Reflex](http://github.com/primeval-io/primeval-reflex) for documentation on the proxies and writing interceptors.
+
+### Drawback
+
+OSGi services registered as a class cannot be woven using Aspecio.
 
 
 ### Installing Aspecio in an OSGi Framework

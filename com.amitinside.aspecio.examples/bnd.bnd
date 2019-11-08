@@ -1,0 +1,7 @@
+-buildpath: \
+	osgi.cmpn,\
+	osgi.core,\
+	osgi.annotation,\
+	io.primeval.reflex,\
+	com.amitinside.aspecio.api,\
+	com.google.guava

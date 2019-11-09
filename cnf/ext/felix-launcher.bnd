@@ -4,6 +4,10 @@
 -runtrace                       =         true
 -runrepos                       =         Workspace, Maven Central
 
+-runblacklist                   =         com.amitinside.aspecio.api,\
+                                          io.primeval.reflex,\
+                                          org.objectweb.asm
+
 -runsystempackages              =         com.sun.management,\
                                           sun.misc,\
                                           sun.net,\

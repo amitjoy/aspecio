@@ -82,7 +82,7 @@ public final class AspecioServiceController implements AspectInterceptorListener
         final ManagedWovenService old                 = managedServices.put(wovenService.originalReference,
                 managedWovenService);
         if (old != null) {
-            logger.warn("Got an old service that we shouldn't for service id {}", wovenService.originalServiceId);
+            logger.warn("Got an old service that we shouldn't for service ID {}", wovenService.originalServiceId);
             old.unregister();
         }
         final AspectInterceptorContext context = aspectInterceptorManager.getContext(wovenService.requiredAspects,
@@ -103,7 +103,7 @@ public final class AspecioServiceController implements AspectInterceptorListener
         final ManagedWovenService managed = managedServices.get(wovenService.originalReference);
         if (managed == null) {
             logger.trace(
-                    "Couldn't find an old service while we should for service id {}, treating the update as a new service...(?)",
+                    "Couldn't find an old service while we should for service ID {}, treating the update as a new service...(?)",
                     wovenService.originalServiceId);
             handleServiceArrival(wovenService);
             return;
@@ -137,7 +137,7 @@ public final class AspecioServiceController implements AspectInterceptorListener
     private synchronized void handleServiceDeparture(final WovenService wovenService) {
         final ManagedWovenService managed = managedServices.remove(wovenService.originalReference);
         if (managed == null) {
-            logger.warn("Notified of the departure of a service we couldn't find with service id {}",
+            logger.warn("Notified of the departure of a service we couldn't find with service ID {}",
                     wovenService.originalServiceId);
             return;
         }

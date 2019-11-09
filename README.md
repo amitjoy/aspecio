@@ -2,16 +2,17 @@
 
 Aspecio is a 'micro-framework' that provide AOP Proxies to OSGi R7. It brings a mix of component-oriented and aspect-oriented programming to your application. Aspecio lets you define _Aspects_ that you can later pick to add behaviour to your components and avoid duplicating boilerplate dealing with cross-cutting concerns.
 
-The [initial version](https://github.com/primeval-io/aspecio) has been developed by Simon Chemouil, and this is a revamped version that makes it OSGi R7 compatible and encapsulates all required dependencies. This also includes several enhancements and fixes to make it work properly in OSGi R7.
+Simon Chemouil has developed the [initial version](https://github.com/primeval-io/aspecio), and this is a revamped version that makes it OSGi R7 compatible and encapsulates all required dependencies in one bundle. This also includes several enhancements and fixes to make it work efficiently.
 
 
 ## Aspecio 1.0.0
 
-Aspecio 1.0.0 is a complete overhaul with a new proxy model that is simpler, completely unrestricted and faster. See [Primeval Reflex](http://github.com/primeval-io/primeval-reflex) for proxy capabilities. 
+Aspecio 1.0.0 is a complete overhaul with a new proxy model that is simpler, completely unrestricted and faster. See [Primeval Reflex](http://github.com/primeval-io/primeval-reflex) for proxy capabilities.
+
 
 ## Documentation
 
-Aside from this page, Javadoc is complete and provides a good overview. 
+Aside from this README, the API Javadoc also provides a detailed overview.
 
 
 ## Overview
@@ -19,16 +20,16 @@ Aside from this page, Javadoc is complete and provides a good overview.
 
 ### Why Aspects?
 
-In general, aspects allow you to intercept code and alter its execution. There are a number of downsides to using aspects:
-* Scattering behaviour across the codebase ;
-* Making the execution model opaque by having aspects intercept any random piece of code, including internal code that might have implicit invariants that aspects break ;
-* Not knowing **which** aspects are being _woven_ on a piece of code at a given time ;
-* Having some aspect framework implementations _weave_ aspects into one big bytecode muddy-ball, making debugging difficult when line numbers are desynchronized, adding synthetic methods in the bytecode.
-* Sometimes aspects are implemented using JDK Proxies, which can break consuming code, for example, code relying on reflection such as annotation-driven frameworks.
+In general, aspects allow you to intercept code and alter its execution. There are several downsides to using aspects:
+* Scattering behaviour across the codebase
+* Making the execution model opaque by having aspects intercept any random piece of code, including internal code that might have implicit invariants that aspects break
+* Not knowing **which** aspects are being _woven_ on a piece of code at a given time
+* Having some aspect framework implementations _weave_ aspects into one big bytecode muddy-ball, making debugging difficult when line numbers are desynchronized, adding synthetic methods in the bytecode
+* Sometimes aspects are implemented using JDK Proxies, which can break consuming code, for example, code relying on reflection such as annotation-driven frameworks
 
 However, there are _cross-cutting concerns_ for which aspects can be beneficial, for example:
 * Security: ensuring some conditions are met before being allowed into a function ; 
-* Metrics: having live metrics on key components (e.g. using Coda Hale's Metrics library) ;
+* Metrics: having live metrics on critical components (e.g. using Coda Hale's Metrics library) ;
 * Ensuring a piece of code takes place in a transaction ;
 * And more :-)
 
@@ -60,12 +61,12 @@ See [Primeval Reflex](http://github.com/primeval-io/primeval-reflex) for documen
 
 ### Drawback
 
-OSGi services registered as a class cannot be woven using Aspecio.
+OSGi services registered as simple classes cannot be woven using Aspecio. The services need to implement well-defined service interfaces.
 
 
 ### Installing Aspecio in an OSGi Framework
 
-Just install `com.amitinside.aspecio.provider` in your OSGi framework and it will work right away.
+Just install `com.amitinside.aspecio.provider` in your OSGi framework, and it will work right away.
 
 If there are already registered services with the weaving property, Aspecio will restart their bundles to make sure it has the opportunity to apply its service hook.
 
@@ -100,7 +101,6 @@ public final class CountingAspectImpl implements Interceptor {
         }
     }    
 }
-
 ```
 
 Aspecio finds Aspects by:
@@ -145,7 +145,7 @@ public final class HelloGoodbyeImpl implements Hello, Goodbye {
 
 That's all! Now any aspect woven will be notified with the calls of methods `hello()` or `goodbye()` and may interact by returning other values, throwing exceptions, catching exceptions, accessing the arguments of each call (or just some) or even update the arguments before the call takes place.
 
-Also, because `"CountingAspect.class"` is `required` by `HelloGoodbyeImpl`, the service will **not** be visible until a service providing Aspect `"CountingAspect.class"` is available. All the kinds of OSGi dynamics can happen here: the aspect can be registered after a service requiring it or later. 
+Also, because `"CountingAspect.class"` is `required` by `HelloGoodbyeImpl`, the service will **not** be visible until a service providing Aspect `"CountingAspect.class"` is available. All the kinds of OSGi dynamics can happen here: the aspect can be registered after a service requiring it or later.
 
 Having `"AnotherOptionalAspect.class"` as an optional aspect will not prevent Aspecio's proxy of `HelloGoodbyeImpl` of being registered even in case `"AnotherOptionalAspect.class"` is missing; however, if it becomes available during `HelloGoodbyImpl`'s lifetime, it will start intercepting its methods as well.
 
@@ -200,7 +200,6 @@ public final class MyFeatureAspectImpl implements Interceptor {
        ....
     }                                                              
 }
-
 ```
 
 ### Interceptors that register extra service properties
@@ -219,7 +218,6 @@ public final class MySecurityAspectImpl implements Interceptor {
          ...
     }   
 }
-
 ```
 
 The proxy service object registered by Aspecio will have the OSGi service Boolean property `"secured"` set to `Boolean.TRUE`. Now consuming code can check for that property to know if a service is secure, on the only select secured services using a target filter. The consuming code doesn't need to know whether a service was obtained manually or using an aspect, and this enables just that.
@@ -232,8 +230,40 @@ Aspecio provides a service aptly named `Aspecio` that can show you what Aspecio 
 * which aspects are present
 * what services are woven
 
-Aspecio provides two Gogo commands to get the same information in the Gogo shell, `aspect:aspects` and `aspect:woven`.
- 
+Aspecio provides two Gogo commands to get the same information in the Gogo shell, `aspecio:aspects` and `aspecio:woven`.
+
+Here's a sample output of these two commands:
+
+```
+g! aspects
+* com.amitinside.aspecio.examples.aspect.metric.MetricAspect$All
+  [ --- ACTIVE --- ] Service ID 22, class com.amitinside.aspecio.examples.aspect.metric.internal.AllMetricInterceptorImpl, extra properties: [measured]
+                     Provided by: com.amitinside.aspecio.examples 0.0.0 [1]
+* com.amitinside.aspecio.examples.aspect.counting.CountingAspect
+  [ --- ACTIVE --- ] Service ID 21, class com.amitinside.aspecio.examples.aspect.counting.internal.CountingAspectImpl, extra properties: []
+                     Provided by: com.amitinside.aspecio.examples 0.0.0 [1]
+* com.amitinside.aspecio.examples.aspect.metric.MetricAspect$AnnotatedOnly
+  [ --- ACTIVE --- ] Service ID 23, class com.amitinside.aspecio.examples.aspect.metric.internal.AnnotatedMetricInterceptorImpl, extra properties: [measured]
+                     Provided by: com.amitinside.aspecio.examples 0.0.0 [1]
+g! woven
+[0] Service ID: 26, objectClass: [com.amitinside.aspecio.examples.greetings.Hello, com.amitinside.aspecio.examples.greetings.Goodbye]
+    Required Aspects: [com.amitinside.aspecio.examples.aspect.counting.CountingAspect], Optional Aspects: [com.amitinside.aspecio.examples.aspect.metric.MetricAspect$All]
+    Provided by: com.amitinside.aspecio.examples 0.0.0 [1]
+    Satisfied: true
+    Active Aspects: [com.amitinside.aspecio.examples.aspect.counting.CountingAspect, com.amitinside.aspecio.examples.aspect.metric.MetricAspect$All]
+[1] Service ID: 29, objectClass: [com.amitinside.aspecio.examples.misc.Stuff]
+    Required Aspects: [com.amitinside.aspecio.examples.aspect.metric.Timed], Optional Aspects: []
+    Provided by: com.amitinside.aspecio.examples 0.0.0 [1]
+    Satisfied: false
+    Missing Required Aspects: [com.amitinside.aspecio.examples.aspect.metric.Timed]
+[2] Service ID: 24, objectClass: [com.amitinside.aspecio.examples.async.SuperSlowService]
+    Required Aspects: [com.amitinside.aspecio.examples.aspect.metric.MetricAspect$AnnotatedOnly], Optional Aspects: [com.amitinside.aspecio.examples.aspect.counting.CountingAspect]
+    Provided by: com.amitinside.aspecio.examples 0.0.0 [1]
+    Satisfied: true
+    Active Aspects: [com.amitinside.aspecio.examples.aspect.metric.MetricAspect$AnnotatedOnly, com.amitinside.aspecio.examples.aspect.counting.CountingAspect]
+g! 
+```
+
 
 # Author
 

@@ -1,4 +1,4 @@
-# Aspecio, AOP Proxies for OSGi
+# Aspecio - AOP Proxies for OSGi Services
 
 Aspecio is a 'micro-framework' that provide AOP Proxies to OSGi R7. It brings a mix of component-oriented and aspect-oriented programming to your application. Aspecio lets you define _Aspects_ that you can later pick to add behaviour to your components and avoid duplicating boilerplate dealing with cross-cutting concerns.
 

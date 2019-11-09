@@ -23,6 +23,11 @@ Bundle-SCM             : url=https://github.com/amitjoy/aspecio,\
 
 Bundle-Developers      : Simon Chemouil, Amit Kumar Mondal
 
+-buildpath.all         : \
+	      osgi.cmpn,\
+	      osgi.core,\
+	      osgi.annotation
+
 -plugin.1.R7.API       : \
 	aQute.bnd.repository.maven.pom.provider.BndPomRepository; \
 		  snapshotUrls       = https://oss.sonatype.org/content/repositories/osgi/; \

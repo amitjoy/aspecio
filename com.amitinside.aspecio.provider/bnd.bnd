@@ -5,9 +5,6 @@ Bundle-Description  : AOP Proxies for OSGi Services
 -conditionalpackage : io.primeval.reflex.*
 
 -buildpath: \
-	osgi.cmpn,\
-	osgi.core,\
-	osgi.annotation,\
 	io.primeval.reflex,\
 	com.amitinside.aspecio.api,\
 	org.objectweb.asm

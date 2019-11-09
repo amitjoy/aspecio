@@ -11,14 +11,14 @@ import com.amitinside.aspecio.examples.greetings.Hello;
 @Weave(required = CountingAspect.class, optional = MetricAspect.All.class)
 public final class HelloGoodbyeImpl implements Hello, Goodbye {
 
-  @Override
-  public String hello() {
-    return "hello";
-  }
+    @Override
+    public String hello() {
+        return "hello";
+    }
 
-  @Override
-  public String goodbye() {
-    return "goodbye";
-  }
+    @Override
+    public String goodbye() {
+        return "goodbye";
+    }
 
 }

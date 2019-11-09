@@ -10,13 +10,13 @@ import org.osgi.dto.DTO;
  */
 public final class InterceptedServiceDTO extends DTO {
 
-  public long         serviceId;
-  public long         bundleId;
-  public List<String> objectClass;
-  public boolean      published;
-  public Set<String>  satisfiedAspects;
-  public Set<String>  unsatisfiedRequiredAspects;
-  public Set<String>  requiredAspects;
-  public Set<String>  optionalAspects;
+    public long         serviceId;
+    public long         bundleId;
+    public List<String> objectClass;
+    public boolean      published;
+    public Set<String>  satisfiedAspects;
+    public Set<String>  unsatisfiedRequiredAspects;
+    public Set<String>  requiredAspects;
+    public Set<String>  optionalAspects;
 
 }

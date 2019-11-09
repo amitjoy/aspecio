@@ -11,13 +11,13 @@ import com.amitinside.aspecio.examples.misc.Stuff;
 @Weave(required = Timed.class)
 public final class StuffImpl implements Stuff {
 
-  @Override
-  public void test(final PrintStream ps, final int i, final byte b, final String s) {
-    ps.println(s + " " + i + " b" + b);
-  }
+    @Override
+    public void test(final PrintStream ps, final int i, final byte b, final String s) {
+        ps.println(s + " " + i + " b" + b);
+    }
 
-  @Override
-  public double foo(final double a, final int[] b) {
-    return a + IntStream.of(b).sum();
-  }
+    @Override
+    public double foo(final double a, final int[] b) {
+        return a + IntStream.of(b).sum();
+    }
 }

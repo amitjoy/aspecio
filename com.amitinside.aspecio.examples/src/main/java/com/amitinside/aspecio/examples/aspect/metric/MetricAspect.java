@@ -1,10 +1,10 @@
 package com.amitinside.aspecio.examples.aspect.metric;
 
 public interface MetricAspect {
-  interface AnnotatedOnly {
-  }
+    interface AnnotatedOnly {
+    }
 
-  interface All {
-  }
+    interface All {
+    }
 
 }

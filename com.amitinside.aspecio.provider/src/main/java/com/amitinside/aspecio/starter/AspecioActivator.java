@@ -19,44 +19,44 @@ import com.amitinside.aspecio.service.AspecioProvider;
 @Header(name = BUNDLE_ACTIVATOR, value = "${@class}")
 public final class AspecioActivator implements BundleActivator {
 
-  private AspecioProvider aspecio;
+    private AspecioProvider aspecio;
 
-  @Override
-  public void start(final BundleContext context) {
-    AspecioLogger.init(context);
-    aspecio = new AspecioProvider(context);
-    aspecio.activate();
+    @Override
+    public void start(final BundleContext context) {
+        AspecioLogger.init(context);
+        aspecio = new AspecioProvider(context);
+        aspecio.activate();
 
-    final boolean filterServices = shouldFilterServices(context);
+        final boolean filterServices = shouldFilterServices(context);
 
-    if (filterServices) {
-      context.registerService(new String[] {Aspecio.class.getName(), FindHook.class.getName(),
-          EventListenerHook.class.getName()}, aspecio, null);
-    } else {
-      context.registerService(Aspecio.class, aspecio, null);
+        if (filterServices) {
+            context.registerService(new String[] { Aspecio.class.getName(), FindHook.class.getName(),
+                    EventListenerHook.class.getName() }, aspecio, null);
+        } else {
+            context.registerService(Aspecio.class, aspecio, null);
+        }
+        final Dictionary<String, Object> props = new Hashtable<>(); // NOSONAR
+        props.put("osgi.command.scope", ASPECIO_GOGO_COMMAND_SCOPE);
+        props.put("osgi.command.function", ASPECIO_GOGO_COMMANDS);
+
+        final AspecioGogoCommand gogoCommand = new AspecioGogoCommand(context, aspecio);
+        context.registerService(Object.class, gogoCommand, props);
     }
-    final Dictionary<String, Object> props = new Hashtable<>(); // NOSONAR
-    props.put("osgi.command.scope", ASPECIO_GOGO_COMMAND_SCOPE);
-    props.put("osgi.command.function", ASPECIO_GOGO_COMMANDS);
 
-    final AspecioGogoCommand gogoCommand = new AspecioGogoCommand(context, aspecio);
-    context.registerService(Object.class, gogoCommand, props);
-  }
-
-  @Override
-  public void stop(final BundleContext context) {
-    if (aspecio != null) {
-      aspecio.deactivate();
+    @Override
+    public void stop(final BundleContext context) {
+        if (aspecio != null) {
+            aspecio.deactivate();
+        }
     }
-  }
 
-  private boolean shouldFilterServices(final BundleContext bundleContext) {
-    final String filterProp = bundleContext.getProperty(ASPECIO_FILTER_SERVICES);
-    if (filterProp == null) {
-      return true; // default to true
-    } else {
-      return Boolean.valueOf(filterProp.toLowerCase());
+    private boolean shouldFilterServices(final BundleContext bundleContext) {
+        final String filterProp = bundleContext.getProperty(ASPECIO_FILTER_SERVICES);
+        if (filterProp == null) {
+            return true; // default to true
+        } else {
+            return Boolean.valueOf(filterProp.toLowerCase());
+        }
     }
-  }
 
 }

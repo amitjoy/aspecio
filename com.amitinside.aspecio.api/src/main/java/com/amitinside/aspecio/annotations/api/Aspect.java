@@ -24,24 +24,24 @@ import com.amitinside.aspecio.api.AspecioConstants;
  */
 @ComponentPropertyType
 @Retention(RUNTIME)
-@Target({TYPE, TYPE_USE})
+@Target({ TYPE, TYPE_USE })
 public @interface Aspect {
 
-  String PREFIX_ = "service.aspect.";
+    String PREFIX_ = "service.aspect.";
 
-  /**
-   * The name of the aspect to provide. A class is used here to piggyback on Java's namespacing and
-   * avoid conflitcs in aspect names.
-   *
-   * @return The aspect class to provide
-   */
-  Class<?> name();
+    /**
+     * The name of the aspect to provide. A class is used here to piggyback on Java's namespacing and
+     * avoid conflitcs in aspect names.
+     *
+     * @return The aspect class to provide
+     */
+    Class<?> name();
 
-  /**
-   * The extra properties that will be published, with value {@link Boolean#TRUE} to services woven
-   * with this aspect. Defaults to the empty array.
-   *
-   * @return the extra properties
-   */
-  String[] extraProperties() default {};
+    /**
+     * The extra properties that will be published, with value {@link Boolean#TRUE} to services woven
+     * with this aspect. Defaults to the empty array.
+     *
+     * @return the extra properties
+     */
+    String[] extraProperties() default {};
 }

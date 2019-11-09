@@ -8,10 +8,10 @@ import org.osgi.dto.DTO;
  */
 public final class InterceptorDTO extends DTO {
 
-  public long        serviceId;
-  public long        bundleId;
-  public int         serviceRanking;
-  public Class<?>    interceptorClass;
-  public Set<String> extraProperties;
+    public long        serviceId;
+    public long        bundleId;
+    public int         serviceRanking;
+    public Class<?>    interceptorClass;
+    public Set<String> extraProperties;
 
 }

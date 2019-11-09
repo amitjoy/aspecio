@@ -8,22 +8,22 @@ import org.osgi.dto.DTO;
  */
 public final class AspectDTO extends DTO {
 
-  /**
-   * The aspect name.
-   */
-  public String aspectName;
+    /**
+     * The aspect name.
+     */
+    public String aspectName;
 
-  /**
-   * The currently chosen interceptor for that aspect
-   */
-  public InterceptorDTO interceptor;
+    /**
+     * The currently chosen interceptor for that aspect
+     */
+    public InterceptorDTO interceptor;
 
-  /**
-   * The sorted list of interceptors that will replace the current interceptor if the chosen
-   * interceptor is unregistered.<br>
-   * Interceptors are chosen using by comparing their ServiceReference, so a higher service ranking
-   * is preferred, and in the case of equal service rankings a lower service id will be chosen.
-   */
-  public List<InterceptorDTO> backupInterceptors;
+    /**
+     * The sorted list of interceptors that will replace the current interceptor if the chosen
+     * interceptor is unregistered.<br>
+     * Interceptors are chosen using by comparing their ServiceReference, so a higher service ranking
+     * is preferred, and in the case of equal service rankings a lower service id will be chosen.
+     */
+    public List<InterceptorDTO> backupInterceptors;
 
 }

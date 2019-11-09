@@ -8,7 +8,6 @@ import org.osgi.annotation.versioning.ProviderType;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 
-
 /**
  * <p>
  * <b>Aspecio Service Interface</b><br>
@@ -52,63 +51,63 @@ import org.osgi.framework.Constants;
 @ProviderType
 public interface Aspecio {
 
-  /**
-   * <p>
-   * Get the set of Aspects currently registered as seen by Aspecio.
-   * </p>
-   * <p>
-   * The returned set is a view and changing it will not change the state of Aspecio.
-   * </p>
-   *
-   * @return The set containing the registered Aspect names.
-   */
-  Set<String> getRegisteredAspects();
+    /**
+     * <p>
+     * Get the set of Aspects currently registered as seen by Aspecio.
+     * </p>
+     * <p>
+     * The returned set is a view and changing it will not change the state of Aspecio.
+     * </p>
+     *
+     * @return The set containing the registered Aspect names.
+     */
+    Set<String> getRegisteredAspects();
 
-  /**
-   * <p>
-   * Get the {@link AspectDTO} for Aspect named {@literal aspecName}, or {@link Optional#empty()} if
-   * there is no such Aspect.
-   * </p>
-   *
-   * @param aspectName The name of the aspect (case sensitive)
-   * @return An Optional containing the matching {@link AspectDTO}, or {@link Optional#empty()}
-   * @throws NullPointerException if the {@code aspectName} is {@code null}
-   */
-  Optional<AspectDTO> getAspectDescription(String aspectName);
+    /**
+     * <p>
+     * Get the {@link AspectDTO} for Aspect named {@literal aspecName}, or {@link Optional#empty()} if
+     * there is no such Aspect.
+     * </p>
+     *
+     * @param aspectName The name of the aspect (case sensitive)
+     * @return An Optional containing the matching {@link AspectDTO}, or {@link Optional#empty()}
+     * @throws NullPointerException if the {@code aspectName} is {@code null}
+     */
+    Optional<AspectDTO> getAspectDescription(String aspectName);
 
-  /**
-   * <p>
-   * Get the list of {@link InterceptedServiceDTO}, as seen by Aspecio.
-   * </p>
-   *
-   * @return The list of {@link InterceptedServiceDTO}, or an empty list if there are no intercepted
-   *         services.
-   */
-  List<InterceptedServiceDTO> getInterceptedServices();
+    /**
+     * <p>
+     * Get the list of {@link InterceptedServiceDTO}, as seen by Aspecio.
+     * </p>
+     *
+     * @return The list of {@link InterceptedServiceDTO}, or an empty list if there are no intercepted
+     *         services.
+     */
+    List<InterceptedServiceDTO> getInterceptedServices();
 
-  /**
-   * <p>
-   * Get the list of {@link InterceptedServiceDTO}, as seen by Aspecio, filtered by objectClass.
-   * </p>
-   *
-   * @param objectClassContains A filter that must be part of the {@link Constants#OBJECTCLASS} OSGi
-   *        property of the intercepted service to be selected.
-   * @return The list of {@link InterceptedServiceDTO}, or an empty list if there are no intercepted
-   *         services.
-   */
-  default List<InterceptedServiceDTO> getInterceptedServices(final String objectClassContains) {
-    final List<InterceptedServiceDTO>     interceptedServices = getInterceptedServices();
-    final Iterator<InterceptedServiceDTO> iterator            = interceptedServices.iterator();
-    entryLoop: while (iterator.hasNext()) {
-      final InterceptedServiceDTO serviceDescription = iterator.next();
-      for (final String objClass : serviceDescription.objectClass) {
-        if (objClass.contains(objectClassContains)) {
-          continue entryLoop;
+    /**
+     * <p>
+     * Get the list of {@link InterceptedServiceDTO}, as seen by Aspecio, filtered by objectClass.
+     * </p>
+     *
+     * @param objectClassContains A filter that must be part of the {@link Constants#OBJECTCLASS} OSGi
+     *            property of the intercepted service to be selected.
+     * @return The list of {@link InterceptedServiceDTO}, or an empty list if there are no intercepted
+     *         services.
+     */
+    default List<InterceptedServiceDTO> getInterceptedServices(final String objectClassContains) {
+        final List<InterceptedServiceDTO>     interceptedServices = getInterceptedServices();
+        final Iterator<InterceptedServiceDTO> iterator            = interceptedServices.iterator();
+        entryLoop: while (iterator.hasNext()) {
+            final InterceptedServiceDTO serviceDescription = iterator.next();
+            for (final String objClass : serviceDescription.objectClass) {
+                if (objClass.contains(objectClassContains)) {
+                    continue entryLoop;
+                }
+            }
+            iterator.remove();
         }
-      }
-      iterator.remove();
+        return interceptedServices;
     }
-    return interceptedServices;
-  }
 
 }

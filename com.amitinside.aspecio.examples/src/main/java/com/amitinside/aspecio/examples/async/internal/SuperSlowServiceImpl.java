@@ -19,27 +19,27 @@ import com.google.common.util.concurrent.Uninterruptibles;
 @Weave(required = MetricAspect.AnnotatedOnly.class, optional = CountingAspect.class)
 public final class SuperSlowServiceImpl implements SuperSlowService {
 
-  private ExecutorService executor;
+    private ExecutorService executor;
 
-  @Activate
-  public void activate() {
-    executor = Executors.newFixedThreadPool(3);
-  }
+    @Activate
+    public void activate() {
+        executor = Executors.newFixedThreadPool(3);
+    }
 
-  @Deactivate
-  public void deactivate() {
-    executor.shutdown();
-  }
+    @Deactivate
+    public void deactivate() {
+        executor.shutdown();
+    }
 
-  @Override
-  @Timed
-  public Promise<Long> compute() {
-    final Deferred<Long> deferred = new Deferred<>();
-    executor.submit(() -> {
-      Uninterruptibles.sleepUninterruptibly(3, TimeUnit.SECONDS);
-      deferred.resolve(42L);
-    });
-    return deferred.getPromise();
-  }
+    @Override
+    @Timed
+    public Promise<Long> compute() {
+        final Deferred<Long> deferred = new Deferred<>();
+        executor.submit(() -> {
+            Uninterruptibles.sleepUninterruptibly(3, TimeUnit.SECONDS);
+            deferred.resolve(42L);
+        });
+        return deferred.getPromise();
+    }
 
 }

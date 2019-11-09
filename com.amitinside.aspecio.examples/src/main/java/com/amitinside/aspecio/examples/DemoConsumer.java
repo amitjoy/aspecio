@@ -5,7 +5,7 @@ import org.osgi.util.promise.Promise;
 
 public interface DemoConsumer {
 
-  void consumeTo(PrintStream out);
+    void consumeTo(PrintStream out);
 
-  Promise<Long> getLongResult();
+    Promise<Long> getLongResult();
 }

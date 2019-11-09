@@ -10,6 +10,7 @@ import static com.amitinside.aspecio.service.WovenServiceEvent.SERVICE_PROPERTIE
 import static com.amitinside.aspecio.service.WovenServiceEvent.SERVICE_REGISTRATION;
 import static com.amitinside.aspecio.service.WovenServiceEvent.EventKind.SERVICE_UPDATE;
 import static com.amitinside.aspecio.util.AspecioUtil.asStringProperties;
+import static com.amitinside.aspecio.util.AspecioUtil.asStringProperty;
 import static com.amitinside.aspecio.util.AspecioUtil.getIntValue;
 import static com.amitinside.aspecio.util.AspecioUtil.getLongValue;
 import static java.util.stream.Collectors.joining;
@@ -54,7 +55,6 @@ import org.osgi.framework.wiring.BundleRevision;
 import org.osgi.service.log.Logger;
 
 import com.amitinside.aspecio.logging.AspecioLogger;
-import com.amitinside.aspecio.util.AspecioUtil;
 import com.amitinside.aspecio.util.WeakIdentityHashMap;
 
 import io.primeval.reflex.proxy.bytecode.BridgingClassLoader;
@@ -90,7 +90,6 @@ public final class ServiceWeavingManager implements AllServiceListener {
     public void open() {
         try {
             bundleContext.addServiceListener(this, SERVICE_FILTER);
-
             final ServiceReference<?>[] serviceReferences = bundleContext.getAllServiceReferences((String) null,
                     SERVICE_FILTER);
 
@@ -168,7 +167,7 @@ public final class ServiceWeavingManager implements AllServiceListener {
         }
         final long originalServiceId = getLongValue(reference.getProperty(SERVICE_ID));
 
-        logger.debug("Preparing the weaving service id {} provided by {}", originalServiceId,
+        logger.debug("Preparing the weaving service ID {} provided by {}", originalServiceId,
                 reference.getBundle().getSymbolicName());
 
         final List<String> requiredAspectsToWeave = new ArrayList<>(
@@ -179,7 +178,7 @@ public final class ServiceWeavingManager implements AllServiceListener {
                 Arrays.asList(asStringProperties(reference.getProperty(OBJECTCLASS))));
         int                serviceRanking         = getIntValue(reference.getProperty(SERVICE_RANKING), 0);
         final ServiceScope serviceScope           = ServiceScope
-                .fromString(AspecioUtil.asStringProperty(reference.getProperty(SERVICE_SCOPE)));
+                .fromString(asStringProperty(reference.getProperty(SERVICE_SCOPE)));
 
         // Keep original properties, except for managed ones.
         final Hashtable<String, Object> serviceProperties = new Hashtable<>(); // NOSONAR
@@ -209,7 +208,7 @@ public final class ServiceWeavingManager implements AllServiceListener {
                 if (!cls.isInterface()) {
                     // Cannot weave!
                     logger.warn(
-                            "Cannot weave service id {} because it provides service that are not interfaces, such as {}",
+                            "Cannot weave service ID {} because it provides service that are not interfaces, such as {}",
                             originalServiceId, cls.getName());
                     bundleContext.ungetService(reference);
                     return;
@@ -217,7 +216,7 @@ public final class ServiceWeavingManager implements AllServiceListener {
                 interfaces.add(cls);
             } catch (final ClassNotFoundException e) {
                 // Should not happen
-                logger.error("Could not find class, not weaving service id {}", originalServiceId, e);
+                logger.error("Could not find class, not weaving service ID {}", originalServiceId, e);
                 bundleContext.ungetService(reference);
                 return;
             }

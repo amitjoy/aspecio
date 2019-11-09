@@ -13,10 +13,6 @@ import static com.amitinside.aspecio.util.AspecioUtil.getLongValue;
 import static org.osgi.framework.Constants.SERVICE_BUNDLEID;
 import static org.osgi.framework.Constants.SERVICE_ID;
 import static org.osgi.framework.Constants.SERVICE_RANKING;
-import static org.osgi.framework.ServiceEvent.MODIFIED;
-import static org.osgi.framework.ServiceEvent.MODIFIED_ENDMATCH;
-import static org.osgi.framework.ServiceEvent.REGISTERED;
-import static org.osgi.framework.ServiceEvent.UNREGISTERING;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,11 +32,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Filter;
 import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceEvent;
-import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.log.Logger;
+import org.osgi.util.tracker.ServiceTracker;
+import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 import com.amitinside.aspecio.api.AspectDTO;
 import com.amitinside.aspecio.api.InterceptorDTO;
@@ -50,7 +47,7 @@ import com.amitinside.aspecio.service.AspectInterceptorListener.EventKind;
 import io.primeval.reflex.proxy.Interceptor;
 import io.primeval.reflex.proxy.Interceptors;
 
-public final class AspectInterceptorManager implements ServiceListener {
+public final class AspectInterceptorManager implements ServiceTrackerCustomizer<Object, Object> {
 
     private static final String SERVICE_FILTER = "(" + SERVICE_ASPECT + "=*)";
 
@@ -61,32 +58,20 @@ public final class AspectInterceptorManager implements ServiceListener {
     private final Map<String, SortedSet<AspectInterceptor>>         aspectServicesByAspectName = new ConcurrentHashMap<>();
     private final List<AspectInterceptorListener>                   aspectInterceptorListeners = new CopyOnWriteArrayList<>();
 
-    private volatile boolean closed = false;
+    private ServiceTracker<Object, Object> tracker;
 
     public AspectInterceptorManager(final BundleContext bundleContext) {
         this.bundleContext = bundleContext;
     }
 
-    public void open() {
-        try {
-            bundleContext.addServiceListener(this, SERVICE_FILTER);
-            final ServiceReference<?>[] serviceReferences = bundleContext.getServiceReferences((String) null,
-                    SERVICE_FILTER);
-            if (serviceReferences != null) {
-                synchronized (this) {
-                    for (final ServiceReference<?> sr : serviceReferences) {
-                        onServiceRegistration(sr);
-                    }
-                }
-            }
-        } catch (final InvalidSyntaxException e) {
-            throw new AssertionError("Could not create filter!", e);
-        }
+    public void open() throws InvalidSyntaxException {
+        final Filter filter = bundleContext.createFilter(SERVICE_FILTER);
+        tracker = new ServiceTracker<>(bundleContext, filter, this);
+        tracker.open();
     }
 
     public void close() {
-        closed = true;
-        bundleContext.removeServiceListener(this);
+        tracker.close();
         synchronized (this) {
             for (final ServiceReference<?> sr : aspectServiceByServiceRef.keySet()) {
                 bundleContext.ungetService(sr);
@@ -96,24 +81,19 @@ public final class AspectInterceptorManager implements ServiceListener {
     }
 
     @Override
-    public void serviceChanged(final ServiceEvent event) {
-        if (closed) {
-            return;
-        }
-        final ServiceReference<?> sr = event.getServiceReference();
+    public Object addingService(final ServiceReference<Object> reference) {
+        onServiceRegistration(reference);
+        return bundleContext.getService(reference);
+    }
 
-        switch (event.getType()) {
-            case REGISTERED:
-                onServiceRegistration(sr);
-                break;
-            case MODIFIED:
-                onServiceUpdate(sr);
-                break;
-            case MODIFIED_ENDMATCH:
-            case UNREGISTERING:
-                onServiceDeparture(sr);
-                break;
-        }
+    @Override
+    public void modifiedService(final ServiceReference<Object> reference, final Object service) {
+        onServiceUpdate(reference);
+    }
+
+    @Override
+    public void removedService(final ServiceReference<Object> reference, final Object service) {
+        onServiceDeparture(reference);
     }
 
     public synchronized void onServiceRegistration(final ServiceReference<?> reference) {
@@ -129,7 +109,7 @@ public final class AspectInterceptorManager implements ServiceListener {
 
         final Object service = bundleContext.getService(reference);
         if (!(service instanceof Interceptor)) {
-            // Don't track aspects that don't implements Interceptor.
+            // Don't track aspects that don't implement Interceptor.
             bundleContext.ungetService(reference);
             return;
         }

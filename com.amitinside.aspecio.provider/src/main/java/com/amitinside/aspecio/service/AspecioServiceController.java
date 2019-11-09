@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.log.Logger;
 
@@ -33,7 +34,7 @@ public final class AspecioServiceController implements AspectInterceptorListener
         this.serviceWeavingManager    = serviceWeavingManager;
     }
 
-    public void open() {
+    public void open() throws InvalidSyntaxException {
         aspectInterceptorManager.addListener(this);
         serviceWeavingManager.addListener(this);
         aspectInterceptorManager.open();

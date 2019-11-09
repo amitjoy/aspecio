@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.osgi.annotation.bundle.Capability;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.hooks.service.EventListenerHook;
@@ -43,7 +44,7 @@ public final class AspecioProvider implements Aspecio, FindHook, EventListenerHo
         aspecioServiceController = new AspecioServiceController(aspectInterceptorManager, serviceWeavingManager);
     }
 
-    public void activate() {
+    public void activate() throws InvalidSyntaxException {
         logger.info("Activating Aspecio");
         aspecioServiceController.open();
         logger.info("Aspecio activated");

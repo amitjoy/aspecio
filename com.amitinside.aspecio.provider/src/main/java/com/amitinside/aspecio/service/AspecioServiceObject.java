@@ -37,9 +37,7 @@ public final class AspecioServiceObject {
 
     public void setInterceptor(final Interceptor interceptor) {
         this.interceptor = interceptor;
-        for (final Proxy w : instances) {
-            w.setInterceptor(interceptor);
-        }
+        instances.forEach(w -> w.setInterceptor(interceptor));
     }
 
     public synchronized Object getServiceObjectToRegister() {

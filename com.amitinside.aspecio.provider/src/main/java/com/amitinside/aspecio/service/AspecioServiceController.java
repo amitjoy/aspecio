@@ -1,8 +1,8 @@
 package com.amitinside.aspecio.service;
 
-import static com.amitinside.aspecio.service.WovenServiceEvent.OPTIONAL_ASPECT_CHANGE;
-import static com.amitinside.aspecio.service.WovenServiceEvent.REQUIRED_ASPECT_CHANGE;
-import static com.amitinside.aspecio.service.WovenServiceEvent.SERVICE_PROPERTIES_CHANGE;
+import static com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent.OPTIONAL_ASPECT_CHANGE;
+import static com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent.REQUIRED_ASPECT_CHANGE;
+import static com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent.SERVICE_PROPERTIES_CHANGE;
 import static com.amitinside.aspecio.util.AspecioUtil.copySet;
 import static com.amitinside.aspecio.util.AspecioUtil.getLongValue;
 import static org.osgi.framework.Constants.SERVICE_BUNDLEID;
@@ -116,7 +116,6 @@ public final class AspecioServiceController implements AspectInterceptorListener
             managed.wovenService.aspecioServiceObject.setInterceptor(context.interceptor);
 
             final boolean satisfied = context.unsatisfiedRequiredAspects.isEmpty();
-
             if (satisfied) {
                 if (managed.registration == null) {
                     // newly satisfied!

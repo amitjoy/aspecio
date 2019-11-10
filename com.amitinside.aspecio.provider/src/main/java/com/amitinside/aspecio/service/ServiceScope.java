@@ -1,5 +1,7 @@
 package com.amitinside.aspecio.service;
 
+import java.util.stream.Stream;
+
 public enum ServiceScope {
 
     /**
@@ -34,17 +36,7 @@ public enum ServiceScope {
         return value;
     }
 
-    public static ServiceScope fromString(final String s) {
-        if (s == null) {
-            return SINGLETON;
-        }
-        switch (s) {
-            case "bundle":
-                return BUNDLE;
-            case "prototype":
-                return PROTOTYPE;
-            default:
-                return SINGLETON;
-        }
+    public static ServiceScope fromString(final String scope) {
+        return Stream.of(values()).filter(sc -> sc.value.equals(scope)).findAny().orElse(SINGLETON);
     }
 }

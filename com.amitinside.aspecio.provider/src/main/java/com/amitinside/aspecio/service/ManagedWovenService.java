@@ -9,6 +9,7 @@ import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.log.Logger;
 
 import com.amitinside.aspecio.logging.AspecioLogger;
+import com.amitinside.aspecio.util.Exceptions;
 
 // Owned by AspecioServiceController (i.e, sync is done there)
 public final class ManagedWovenService {
@@ -41,11 +42,11 @@ public final class ManagedWovenService {
         if (registration == null) {
             return;
         }
-        logger.debug("Unregistering aspect proxy for serviceId {}", wovenService.originalServiceId);
+        logger.debug("Deregistering aspect proxy for service ID {}", wovenService.originalServiceId);
         try {
             registration.unregister();
-        } catch (final IllegalStateException ise) {
-            // ignore, can happen if the remote bundle is gone before on some fwks
+        } catch (final IllegalStateException e) {
+            throw Exceptions.duck(e);
         } finally {
             registration = null;
         }

@@ -5,7 +5,9 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.Callable;
+
 import org.osgi.service.log.Logger;
+
 import com.amitinside.aspecio.logging.AspecioLogger;
 
 public final class AspecioUtil {
@@ -25,7 +27,7 @@ public final class AspecioUtil {
             throw e;
         } catch (final Exception e) {
             logger.error("Exception while running code", e);
-            throw new RuntimeException(e);
+            throw Exceptions.duck(e);
         }
     }
 
@@ -61,23 +63,16 @@ public final class AspecioUtil {
         if (propObj instanceof Number) {
             return ((Number) propObj).longValue();
         } else {
-            throw new IllegalArgumentException("Required number!");
+            throw new IllegalArgumentException("Can only convert properties of type Number");
         }
     }
 
     public static int getIntValue(final Object propObj, final int defaultValue) {
-        if (propObj instanceof Integer) {
-            return (Integer) propObj;
-        } else {
-            return defaultValue;
-        }
+        return propObj instanceof Integer ? (Integer) propObj : defaultValue;
     }
 
     public static <T> T firstOrNull(final SortedSet<T> set) {
-        if (set == null || set.isEmpty()) {
-            return null;
-        }
-        return set.first();
+        return set == null || set.isEmpty() ? null : set.first();
     }
 
     public static <T> Set<T> copySet(final Collection<T> source) {

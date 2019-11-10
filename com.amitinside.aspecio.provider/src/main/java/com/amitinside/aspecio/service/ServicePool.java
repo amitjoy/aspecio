@@ -13,25 +13,12 @@ public final class ServicePool<T> {
     public synchronized T get(final Object originalService, final Supplier<T> proxyFactory) {
         final T proxy = originalToProxy.computeIfAbsent(originalService, k -> proxyFactory.get());
         proxyToOriginal.putIfAbsent(proxy, originalService);
-        proxyToCount.compute(proxy, (k, v) -> {
-            if (v == null) {
-                return 1;
-            } else {
-                return v + 1;
-            }
-        });
+        proxyToCount.compute(proxy, (k, v) -> v == null ? 1 : v + 1);
         return proxy;
     }
 
     public synchronized boolean unget(final T proxy) {
-        final Integer count = proxyToCount.compute(proxy, (k, v) -> {
-            if (v == null) {
-                return 0;
-            } else {
-                return v - 1;
-            }
-        });
-
+        final Integer count = proxyToCount.compute(proxy, (k, v) -> v == null ? 0 : v - 1);
         if (count > 0) {
             return false;
         }
@@ -41,7 +28,7 @@ public final class ServicePool<T> {
         final T      proxyX   = originalToProxy.remove(original);
 
         if (proxy != proxyX) {
-            throw new RuntimeException("Service Proxies are not same");
+            throw new IllegalStateException("Service Proxies are not the same");
         }
         return true;
     }

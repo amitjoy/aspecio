@@ -2,13 +2,16 @@ package com.amitinside.aspecio.examples.aspect.counting.internal;
 
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Modified;
+
 import com.amitinside.aspecio.annotations.api.Aspect;
 import com.amitinside.aspecio.examples.aspect.counting.CountingAspect;
-import com.google.common.collect.Maps;
+
 import io.primeval.reflex.proxy.CallContext;
 import io.primeval.reflex.proxy.Interceptor;
 import io.primeval.reflex.proxy.handler.InterceptionHandler;
@@ -17,7 +20,7 @@ import io.primeval.reflex.proxy.handler.InterceptionHandler;
 @Aspect(name = CountingAspect.class)
 public final class CountingAspectImpl implements Interceptor, CountingAspect {
 
-    private final Map<Method, Integer> methodCallCount = Maps.newConcurrentMap();
+    private final Map<Method, Integer> methodCallCount = new ConcurrentHashMap<>();
 
     private volatile boolean countOnlySuccessful = false;
 

@@ -58,8 +58,8 @@ public final class AspecioProvider implements Aspecio, FindHook, EventListenerHo
     @Override
     public void event(final ServiceEvent event, final Map<BundleContext, Collection<ListenerInfo>> listeners) {
         // Is it an event we want to filter out?
-        if (event.getServiceReference().getProperty(SERVICE_ASPECT_WEAVE) == null
-                && event.getServiceReference().getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL) == null) {
+        final ServiceReference<?> ref = event.getServiceReference();
+        if (ref.getProperty(SERVICE_ASPECT_WEAVE) == null && ref.getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL) == null) {
             return;
         }
         final Iterator<BundleContext> iterator = listeners.keySet().iterator();
@@ -79,7 +79,7 @@ public final class AspecioProvider implements Aspecio, FindHook, EventListenerHo
             final Collection<ServiceReference<?>> references) {
         final long consumingBundleId = context.getBundle().getBundleId();
         if (consumingBundleId == bundleId || consumingBundleId == 0) {
-            return;
+            return; // allow self and system bundle
         }
         final Iterator<ServiceReference<?>> iterator = references.iterator();
         while (iterator.hasNext()) {

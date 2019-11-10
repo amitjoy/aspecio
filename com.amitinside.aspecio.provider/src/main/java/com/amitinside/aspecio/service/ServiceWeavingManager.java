@@ -3,11 +3,12 @@ package com.amitinside.aspecio.service;
 import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT_WEAVE;
 import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT_WEAVE_OPTIONAL;
 import static com.amitinside.aspecio.api.AspecioConstants._SERVICE_ASPECT_WOVEN;
-import static com.amitinside.aspecio.service.WovenServiceEvent.OPTIONAL_ASPECT_CHANGE;
-import static com.amitinside.aspecio.service.WovenServiceEvent.REQUIRED_ASPECT_CHANGE;
+import static com.amitinside.aspecio.service.ServiceScope.fromString;
 import static com.amitinside.aspecio.service.WovenServiceEvent.SERVICE_DEPARTURE;
-import static com.amitinside.aspecio.service.WovenServiceEvent.SERVICE_PROPERTIES_CHANGE;
 import static com.amitinside.aspecio.service.WovenServiceEvent.SERVICE_REGISTRATION;
+import static com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent.OPTIONAL_ASPECT_CHANGE;
+import static com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent.REQUIRED_ASPECT_CHANGE;
+import static com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent.SERVICE_PROPERTIES_CHANGE;
 import static com.amitinside.aspecio.service.WovenServiceEvent.EventKind.SERVICE_UPDATE;
 import static com.amitinside.aspecio.util.AspecioUtil.asStringProperties;
 import static com.amitinside.aspecio.util.AspecioUtil.asStringProperty;
@@ -31,6 +32,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -41,6 +43,7 @@ import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 import org.osgi.framework.AllServiceListener;
@@ -55,7 +58,8 @@ import org.osgi.framework.wiring.BundleRevision;
 import org.osgi.service.log.Logger;
 
 import com.amitinside.aspecio.logging.AspecioLogger;
-import com.amitinside.aspecio.util.WeakIdentityHashMap;
+import com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent;
+import com.github.gfx.util.WeakIdentityHashMap;
 
 import io.primeval.reflex.proxy.bytecode.BridgingClassLoader;
 import io.primeval.reflex.proxy.bytecode.Proxy;
@@ -74,14 +78,13 @@ public final class ServiceWeavingManager implements AllServiceListener {
     private final Map<String, List<WovenService>>        wovenServicesByAspect    = new ConcurrentHashMap<>();
     private final List<WovenServiceListener>             wovenServiceListeners    = new CopyOnWriteArrayList<>();
 
-    // Everything in here is weak, using identity equality, so it nicely cleans-up by itself as
-    // bundles are cleaned-up,
-    // if there are no stale-references on our bundles or services of course...
-    private final Map<BundleRevision, BundleRevPath> revisionMap = Collections
+    // Everything in here is weak, using identity equality, so it nicely cleans up by itself as
+    // bundles are cleaned-up, if there are no stale references on our bundles or services of course
+    private final Map<BundleRevision, BundleRevisionPath> revisionMap = Collections
             .synchronizedMap(new WeakIdentityHashMap<>());
 
     private final BundleContext bundleContext;
-    private volatile boolean    closed = false;
+    private final AtomicBoolean closed = new AtomicBoolean();
 
     public ServiceWeavingManager(final BundleContext bundleContext) {
         this.bundleContext = bundleContext;
@@ -128,9 +131,8 @@ public final class ServiceWeavingManager implements AllServiceListener {
     }
 
     public void close() {
-        closed = true;
-        bundleContext.removeServiceListener(this);
-        synchronized (this) {
+        if (closed.compareAndSet(false, true)) {
+            bundleContext.removeServiceListener(this);
             for (final ServiceReference<?> sr : wovenServiceByServiceRef.keySet()) {
                 bundleContext.ungetService(sr);
             }
@@ -140,7 +142,7 @@ public final class ServiceWeavingManager implements AllServiceListener {
 
     @Override
     public void serviceChanged(final ServiceEvent event) {
-        if (closed) {
+        if (closed.get()) {
             return;
         }
         final ServiceReference<?> sr = event.getServiceReference();
@@ -177,8 +179,7 @@ public final class ServiceWeavingManager implements AllServiceListener {
         final List<String> objectClass            = new ArrayList<>(
                 Arrays.asList(asStringProperties(reference.getProperty(OBJECTCLASS))));
         int                serviceRanking         = getIntValue(reference.getProperty(SERVICE_RANKING), 0);
-        final ServiceScope serviceScope           = ServiceScope
-                .fromString(asStringProperty(reference.getProperty(SERVICE_SCOPE)));
+        final ServiceScope serviceScope           = fromString(asStringProperty(reference.getProperty(SERVICE_SCOPE)));
 
         // Keep original properties, except for managed ones.
         final Hashtable<String, Object> serviceProperties = new Hashtable<>(); // NOSONAR
@@ -208,7 +209,7 @@ public final class ServiceWeavingManager implements AllServiceListener {
                 if (!cls.isInterface()) {
                     // Cannot weave!
                     logger.warn(
-                            "Cannot weave service ID {} because it provides service that are not interfaces, such as {}",
+                            "Cannot weave service ID {} because it does not implement well-defined service interfaces, such as {}",
                             originalServiceId, cls.getName());
                     bundleContext.ungetService(reference);
                     return;
@@ -221,7 +222,6 @@ public final class ServiceWeavingManager implements AllServiceListener {
                 return;
             }
         }
-
         serviceProperties.put(SERVICE_RANKING, serviceRanking);
 
         final AspecioServiceObject aspecioServiceObject = new AspecioServiceObject(serviceScope, reference,
@@ -281,12 +281,18 @@ public final class ServiceWeavingManager implements AllServiceListener {
         final WovenService updatedWovenService = wovenService.update(requiredAspectsToWeave, optionalAspectsToWeave,
                 serviceProperties);
 
-        int mask = requiredAspectsChanged ? REQUIRED_ASPECT_CHANGE : 0;
-        mask |= optionalAspectsChanged ? OPTIONAL_ASPECT_CHANGE : 0;
-        mask |= servicePropertiesChanged ? SERVICE_PROPERTIES_CHANGE : 0;
-
-        if (mask != 0) {
-            fireEvent(new WovenServiceEvent(SERVICE_UPDATE, mask), updatedWovenService);
+        final EnumSet<ChangeEvent> events = EnumSet.noneOf(ChangeEvent.class);
+        if (requiredAspectsChanged) {
+            events.add(REQUIRED_ASPECT_CHANGE);
+        }
+        if (optionalAspectsChanged) {
+            events.add(OPTIONAL_ASPECT_CHANGE);
+        }
+        if (servicePropertiesChanged) {
+            events.add(SERVICE_PROPERTIES_CHANGE);
+        }
+        if (!events.isEmpty()) {
+            fireEvent(new WovenServiceEvent(SERVICE_UPDATE, events), updatedWovenService);
         }
     }
 
@@ -311,18 +317,17 @@ public final class ServiceWeavingManager implements AllServiceListener {
     }
 
     private ProxyClassLoader getDynamicClassLoader(final Class<?> clazz) {
-        // Find all bundles required to instantiate the class
-        // and bridge their classloaders in case the abstract class or interface
-        // lives in non-imported packages...
-        Class<?>                           currClazz     = clazz;
-        final List<BundleRevision>         bundleRevs    = new ArrayList<>();
-        Map<BundleRevision, BundleRevPath> revisions     = revisionMap;
-        BundleRevPath                      bundleRevPath = null;
+        // Find all bundles required to instantiate the class and bridge their
+        // classloaders in case the abstract class or interface lives in non-imported packages
+        Class<?>                                currClazz     = clazz;
+        final List<BundleRevision>              bundleRevs    = new ArrayList<>();
+        Map<BundleRevision, BundleRevisionPath> revisions     = revisionMap;
+        BundleRevisionPath                      bundleRevPath = null;
         do {
             final BundleRevision bundleRev = FrameworkUtil.getBundle(currClazz).adapt(BundleRevision.class);
             if (!bundleRevs.contains(bundleRev)) {
                 bundleRevs.add(bundleRev);
-                bundleRevPath = revisions.computeIfAbsent(bundleRev, k -> new BundleRevPath());
+                bundleRevPath = revisions.computeIfAbsent(bundleRev, k -> new BundleRevisionPath());
                 revisions     = bundleRevPath
                         .computeSubMapIfAbsent(() -> Collections.synchronizedMap(new WeakIdentityHashMap<>()));
             }

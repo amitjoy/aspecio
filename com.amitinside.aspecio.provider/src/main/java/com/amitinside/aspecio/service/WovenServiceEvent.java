@@ -1,5 +1,8 @@
 package com.amitinside.aspecio.service;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 public final class WovenServiceEvent {
 
     enum EventKind {
@@ -8,23 +11,27 @@ public final class WovenServiceEvent {
         SERVICE_DEPARTURE
     }
 
-    public static final WovenServiceEvent SERVICE_REGISTRATION = new WovenServiceEvent(EventKind.SERVICE_ARRIVAL, 0);
-    public static final WovenServiceEvent SERVICE_DEPARTURE    = new WovenServiceEvent(EventKind.SERVICE_DEPARTURE, 0);
-
-    public static final int REQUIRED_ASPECT_CHANGE    = 1;
-    public static final int OPTIONAL_ASPECT_CHANGE    = 2;
-    public static final int SERVICE_PROPERTIES_CHANGE = 4;
-
-    public final EventKind kind;
-    public final int       mask;
-
-    public WovenServiceEvent(final EventKind kind, final int mask) {
-        this.kind = kind;
-        this.mask = mask;
+    enum ChangeEvent {
+        REQUIRED_ASPECT_CHANGE,
+        OPTIONAL_ASPECT_CHANGE,
+        SERVICE_PROPERTIES_CHANGE
     }
 
-    public boolean matchesCause(final int causeMask) {
-        return (mask & causeMask) != 0;
+    public static final WovenServiceEvent SERVICE_REGISTRATION = new WovenServiceEvent(EventKind.SERVICE_ARRIVAL,
+            EnumSet.noneOf(ChangeEvent.class));
+    public static final WovenServiceEvent SERVICE_DEPARTURE    = new WovenServiceEvent(EventKind.SERVICE_DEPARTURE,
+            EnumSet.noneOf(ChangeEvent.class));
+
+    public final EventKind         kind;
+    private final Set<ChangeEvent> changeEvents;
+
+    public WovenServiceEvent(final EventKind kind, final Set<ChangeEvent> changeEvents) {
+        this.kind         = kind;
+        this.changeEvents = changeEvents;
+    }
+
+    public boolean matchesCause(final ChangeEvent changeEvent) {
+        return changeEvents.contains(changeEvent);
     }
 
 }

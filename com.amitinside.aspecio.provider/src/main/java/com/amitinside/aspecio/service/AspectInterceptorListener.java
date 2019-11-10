@@ -1,5 +1,6 @@
 package com.amitinside.aspecio.service;
 
+@FunctionalInterface
 public interface AspectInterceptorListener {
 
     enum EventKind {

@@ -1,8 +1,14 @@
 package com.amitinside.aspecio.logging;
 
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+import static org.osgi.service.log.LogLevel.AUDIT;
+import static org.osgi.service.log.LogLevel.ERROR;
+import static org.osgi.service.log.LogLevel.INFO;
+import static org.osgi.service.log.LogLevel.WARN;
+
 import java.io.PrintStream;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 import org.osgi.service.log.LogLevel;
 import org.osgi.service.log.Logger;
 import org.osgi.service.log.LoggerConsumer;
@@ -86,22 +92,22 @@ class NullLogger implements Logger {
 
     @Override
     public void info(final String message) {
-        log(LogLevel.INFO, message);
+        log(INFO, message);
     }
 
     @Override
     public void info(final String format, final Object arg) {
-        log(LogLevel.INFO, format, arg);
+        log(INFO, format, arg);
     }
 
     @Override
     public void info(final String format, final Object arg1, final Object arg2) {
-        log(LogLevel.INFO, format, arg1, arg2);
+        log(INFO, format, arg1, arg2);
     }
 
     @Override
     public void info(final String format, final Object... arguments) {
-        log(LogLevel.INFO, format, arguments);
+        log(INFO, format, arguments);
     }
 
     @Override
@@ -116,22 +122,22 @@ class NullLogger implements Logger {
 
     @Override
     public void warn(final String message) {
-        log(LogLevel.WARN, message);
+        log(WARN, message);
     }
 
     @Override
     public void warn(final String format, final Object arg) {
-        log(LogLevel.WARN, format, arg);
+        log(WARN, format, arg);
     }
 
     @Override
     public void warn(final String format, final Object arg1, final Object arg2) {
-        log(LogLevel.WARN, format, arg1, arg2);
+        log(WARN, format, arg1, arg2);
     }
 
     @Override
     public void warn(final String format, final Object... arguments) {
-        log(LogLevel.WARN, format, arguments);
+        log(WARN, format, arguments);
     }
 
     @Override
@@ -146,22 +152,22 @@ class NullLogger implements Logger {
 
     @Override
     public void error(final String message) {
-        log(LogLevel.ERROR, message);
+        log(ERROR, message);
     }
 
     @Override
     public void error(final String format, final Object arg) {
-        log(LogLevel.ERROR, format, arg);
+        log(ERROR, format, arg);
     }
 
     @Override
     public void error(final String format, final Object arg1, final Object arg2) {
-        log(LogLevel.ERROR, format, arg1, arg2);
+        log(ERROR, format, arg1, arg2);
     }
 
     @Override
     public void error(final String format, final Object... arguments) {
-        log(LogLevel.ERROR, format, arguments);
+        log(ERROR, format, arguments);
     }
 
     @Override
@@ -171,33 +177,34 @@ class NullLogger implements Logger {
 
     @Override
     public void audit(final String message) {
-        log(LogLevel.AUDIT, message);
+        log(AUDIT, message);
     }
 
     @Override
     public void audit(final String format, final Object arg) {
-        log(LogLevel.AUDIT, format, arg);
+        log(AUDIT, format, arg);
     }
 
     @Override
     public void audit(final String format, final Object arg1, final Object arg2) {
-        log(LogLevel.AUDIT, format, arg1, arg2);
+        log(AUDIT, format, arg1, arg2);
     }
 
     @Override
     public void audit(final String format, final Object... arguments) {
-        log(LogLevel.AUDIT, format, arguments);
+        log(AUDIT, format, arguments);
     }
 
     private void log(final LogLevel level, final String format, final Object... arguments) {
         PrintStream stream = null;
-        if (level.ordinal() <= LogLevel.ERROR.ordinal()) {
+        if (level.ordinal() <= ERROR.ordinal()) {
             stream = System.err; // NOSONAR
         } else {
             stream = System.out; // NOSONAR
         }
-        final String datetime = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        stream.println("[" + datetime + "][" + level + "] " + String.format(format, arguments));
+        final String datetime     = LocalDateTime.now().format(ISO_LOCAL_DATE_TIME);
+        final String formattedLog = format.replaceAll("\\{\\}", "%s");
+        stream.println("[" + datetime + "][" + level + "] " + String.format(formattedLog, arguments));
         if (arguments != null && arguments.length != 0 && arguments[arguments.length - 1] instanceof Throwable) {
             ((Throwable) arguments[arguments.length - 1]).printStackTrace(); // NOSONAR
         }

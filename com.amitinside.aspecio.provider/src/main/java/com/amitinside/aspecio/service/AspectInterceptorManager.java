@@ -73,17 +73,16 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
     public void close() {
         tracker.close();
         synchronized (this) {
-            for (final ServiceReference<?> sr : aspectServiceByServiceRef.keySet()) {
-                bundleContext.ungetService(sr);
-            }
+            aspectServiceByServiceRef.keySet().forEach(bundleContext::ungetService);
             aspectServiceByServiceRef.clear();
         }
     }
 
     @Override
     public Object addingService(final ServiceReference<Object> reference) {
-        onServiceRegistration(reference);
-        return bundleContext.getService(reference);
+        final Object service = bundleContext.getService(reference);
+        onServiceRegistration(reference, service);
+        return service;
     }
 
     @Override
@@ -96,18 +95,12 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
         onServiceDeparture(reference);
     }
 
-    public synchronized void onServiceRegistration(final ServiceReference<?> reference) {
-        if (aspectServiceByServiceRef.containsKey(reference)) {
-            // This might happen if a service arrives between the listener registration and the initial
-            // getServiceReferences call
-            return;
-        }
+    public synchronized void onServiceRegistration(final ServiceReference<?> reference, final Object service) {
         final String      aspect          = asStringProperty(reference.getProperty(SERVICE_ASPECT));
         final Set<String> extraProperties = new LinkedHashSet<>(
                 Arrays.asList(asStringProperties(reference.getProperty(SERVICE_ASPECT_EXTRAPROPERTIES))));
         final int         serviceRanking  = getIntValue(reference.getProperty(SERVICE_RANKING), 0);
 
-        final Object service = bundleContext.getService(reference);
         if (!(service instanceof Interceptor)) {
             // Don't track aspects that don't implement Interceptor.
             bundleContext.ungetService(reference);
@@ -122,12 +115,10 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
         final SortedSet<AspectInterceptor> as          = aspectServicesByAspectName.computeIfAbsent(aspect,
                 k -> new TreeSet<>());
         final AspectInterceptor            firstBefore = firstOrNull(as);
-        // The trick here is that we use a SortedSet
-        // with the right compareTo method on aspectService.
+        // The trick here is that we use a SortedSet with the right compareTo method on aspectService.
         as.add(aspectService);
 
         final AspectInterceptor firstAfter = firstOrNull(as);
-
         if (firstAfter != firstBefore) {
             // still in lock, should we?
             fireEvent(NEWMATCH, aspect, firstAfter);
@@ -271,9 +262,7 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
 
     private void fireEvent(final EventKind eventKind, final String aspectName,
             final AspectInterceptor aspectInterceptor) {
-        for (final AspectInterceptorListener l : aspectInterceptorListeners) {
-            l.onAspectChange(eventKind, aspectName, aspectInterceptor);
-        }
+        aspectInterceptorListeners.forEach(l -> l.onAspectChange(eventKind, aspectName, aspectInterceptor));
     }
 
     public void addListener(final AspectInterceptorListener aspectInterceptorListener) {

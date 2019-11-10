@@ -19,6 +19,7 @@ import com.amitinside.aspecio.api.Aspecio;
 import com.amitinside.aspecio.command.AspecioGogoCommand;
 import com.amitinside.aspecio.logging.AspecioLogger;
 import com.amitinside.aspecio.service.AspecioProvider;
+import com.amitinside.aspecio.util.Exceptions;
 
 @Header(name = BUNDLE_ACTIVATOR, value = "${@class}")
 public final class AspecioActivator implements BundleActivator {
@@ -32,10 +33,9 @@ public final class AspecioActivator implements BundleActivator {
         try {
             aspecio.activate();
         } catch (final InvalidSyntaxException e) {
-            throw new RuntimeException(e);
+            throw Exceptions.duck(e);
         }
         final boolean filterServices = shouldFilterServices(context);
-
         if (filterServices) {
             context.registerService(new String[] { Aspecio.class.getName(), FindHook.class.getName(),
                     EventListenerHook.class.getName() }, aspecio, null);
@@ -59,11 +59,7 @@ public final class AspecioActivator implements BundleActivator {
 
     private boolean shouldFilterServices(final BundleContext bundleContext) {
         final String filterProp = bundleContext.getProperty(ASPECIO_FILTER_SERVICES);
-        if (filterProp == null) {
-            return true; // default to true
-        } else {
-            return Boolean.valueOf(filterProp.toLowerCase());
-        }
+        return filterProp == null ? true : Boolean.valueOf(filterProp.toLowerCase());
     }
 
 }

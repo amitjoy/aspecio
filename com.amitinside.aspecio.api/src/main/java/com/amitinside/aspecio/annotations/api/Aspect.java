@@ -1,11 +1,13 @@
 package com.amitinside.aspecio.annotations.api;
 
 import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.ElementType.TYPE_USE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static java.lang.annotation.RetentionPolicy.CLASS;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+
 import org.osgi.service.component.annotations.ComponentPropertyType;
+
 import com.amitinside.aspecio.api.AspecioConstants;
 
 /**
@@ -22,9 +24,9 @@ import com.amitinside.aspecio.api.AspecioConstants;
  *
  * @see "Component Property Types"
  */
+@Target(TYPE)
+@Retention(CLASS)
 @ComponentPropertyType
-@Retention(RUNTIME)
-@Target({ TYPE, TYPE_USE })
 public @interface Aspect {
 
     String PREFIX_ = "service.aspect.";

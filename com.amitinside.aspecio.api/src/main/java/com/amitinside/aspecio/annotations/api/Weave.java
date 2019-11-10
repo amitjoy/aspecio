@@ -1,8 +1,13 @@
 package com.amitinside.aspecio.annotations.api;
 
-import java.lang.annotation.ElementType;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.CLASS;
+
+import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+
 import org.osgi.service.component.annotations.ComponentPropertyType;
+
 import com.amitinside.aspecio.api.AspecioConstants;
 
 /**
@@ -20,8 +25,9 @@ import com.amitinside.aspecio.api.AspecioConstants;
  *
  * @see "Component Property Types"
  */
+@Target(TYPE)
+@Retention(CLASS)
 @ComponentPropertyType
-@Target(ElementType.TYPE)
 public @interface Weave {
 
     String PREFIX_ = "service.aspect.weave.";

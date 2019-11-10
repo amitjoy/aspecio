@@ -1,12 +1,8 @@
 package com.amitinside.aspecio.starter;
 
 import static com.amitinside.aspecio.api.AspecioConstants.ASPECIO_FILTER_SERVICES;
-import static com.amitinside.aspecio.command.AspecioGogoCommand.ASPECIO_GOGO_COMMANDS;
-import static com.amitinside.aspecio.command.AspecioGogoCommand.ASPECIO_GOGO_COMMAND_SCOPE;
+import static com.amitinside.aspecio.util.AspecioUtil.registerGogoCommand;
 import static org.osgi.framework.Constants.BUNDLE_ACTIVATOR;
-
-import java.util.Dictionary;
-import java.util.Hashtable;
 
 import org.osgi.annotation.bundle.Header;
 import org.osgi.framework.BundleActivator;
@@ -42,19 +38,13 @@ public final class AspecioActivator implements BundleActivator {
         } else {
             context.registerService(Aspecio.class, aspecio, null);
         }
-        final Dictionary<String, Object> props = new Hashtable<>(); // NOSONAR
-        props.put("osgi.command.scope", ASPECIO_GOGO_COMMAND_SCOPE);
-        props.put("osgi.command.function", ASPECIO_GOGO_COMMANDS);
-
         final AspecioGogoCommand gogoCommand = new AspecioGogoCommand(context, aspecio);
-        context.registerService(Object.class, gogoCommand, props);
+        registerGogoCommand(gogoCommand);
     }
 
     @Override
     public void stop(final BundleContext context) {
-        if (aspecio != null) {
-            aspecio.deactivate();
-        }
+        aspecio.deactivate();
     }
 
     private boolean shouldFilterServices(final BundleContext bundleContext) {

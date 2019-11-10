@@ -13,9 +13,6 @@ import com.amitinside.aspecio.api.InterceptorDTO;
 
 public final class AspecioGogoCommand {
 
-    public static final String   ASPECIO_GOGO_COMMAND_SCOPE = "aspecio";
-    public static final String[] ASPECIO_GOGO_COMMANDS      = new String[] { "aspects", "woven" };
-
     private final BundleContext bundleContext;
     private final Aspecio       aspecio;
 
@@ -60,8 +57,8 @@ public final class AspecioGogoCommand {
         printWoven(interceptedServices);
     }
 
-    public void woven(final String objectClassContains) {
-        final List<InterceptedServiceDTO> interceptedServices = aspecio.getInterceptedServices(objectClassContains);
+    public void woven(final String objectClass) {
+        final List<InterceptedServiceDTO> interceptedServices = aspecio.getInterceptedServices(objectClass);
         printWoven(interceptedServices);
     }
 

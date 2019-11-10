@@ -46,7 +46,7 @@ Aspecio works with any service scope, `singleton`, `bundle` and `prototype` and 
 
 Thanks to relying on OSGi's low-level service primitives, Aspecio can work with any OSGi service component framework, including any compliant implementation of Declarative Services, Blueprint, Guice + Peaberry, Apache Felix iPojo or Apache Felix Dependency Manager.
 
-Aspecio has been tested on Felix 6.3.0 but should work with any framework compliant with OSGi R7.
+Aspecio has been tested on Felix 6.0.3 but should work with any framework compliant with OSGi R7.
 
 In the following examples, Declarative Services will be used.
 

@@ -8,20 +8,5 @@
                                           io.primeval.reflex,\
                                           org.objectweb.asm
 
--runsystempackages              =         com.sun.management,\
-                                          sun.misc,\
-                                          sun.net,\
-                                          sun.reflect
-
--runproperties.bootdelegation   =         org.osgi.framework.bootdelegation="\
-		                                     com.sun.management,\
-		                                     com.sun.proxy,\
-		                                     javax.xml.parsers,\
-		                                     javax.xml.transform,\
-		                                     javax.xml.transform.dom,\
-		                                     javax.xml.transform.sax,\
-		                                     javax.xml.transform.stream,\
-		                                     javax.xml.xpath,\
-		                                     org.w3c.dom,\
-		                                     org.xml.sax,\
-		                                     sun.misc"
+-runrequires.gogo               =         bnd.identity;id='org.apache.felix.gogo.command',\
+                                          bnd.identity;id='org.apache.felix.gogo.shell'

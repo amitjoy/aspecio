@@ -2,12 +2,13 @@ Bundle-Name         : Aspecio
 Bundle-Description  : AOP Proxies for OSGi Services
 
 -privatepackage     : com.amitinside.aspecio.*
--conditionalpackage : io.primeval.reflex.*
+-conditionalpackage : com.github.gfx.util, io.primeval.reflex.*
 
 -buildpath: \
 	io.primeval.reflex,\
 	com.amitinside.aspecio.api,\
-	org.objectweb.asm
+	org.objectweb.asm,\
+	com.github.gfx.util:weak-identity-hash-map;packages=*
 
 Export-Package: \
 	io.primeval.reflex,\

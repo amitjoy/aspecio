@@ -33,7 +33,7 @@ public @interface Aspect {
 
     /**
      * The name of the aspect to provide. A class is used here to piggyback on Java's namespacing and
-     * avoid conflitcs in aspect names.
+     * avoid conflicts in aspect names.
      *
      * @return The aspect class to provide
      */

@@ -95,12 +95,9 @@ public final class ServiceWeavingManager implements AllServiceListener {
             bundleContext.addServiceListener(this, SERVICE_FILTER);
             final ServiceReference<?>[] serviceReferences = bundleContext.getAllServiceReferences((String) null,
                     SERVICE_FILTER);
-
             if (serviceReferences != null) {
                 final Set<Bundle> bundlesToRestart = new TreeSet<>();
-                for (final ServiceReference<?> sr : serviceReferences) {
-                    bundlesToRestart.add(sr.getBundle());
-                }
+                Stream.of(serviceReferences).forEach(sr -> bundlesToRestart.add(sr.getBundle()));
                 final int bundleRestartCount = bundlesToRestart.size();
                 if (bundleRestartCount > 0) {
                     final String bundlesList = bundlesToRestart.stream().map(Bundle::toString).collect(joining(", "));
@@ -133,9 +130,7 @@ public final class ServiceWeavingManager implements AllServiceListener {
     public void close() {
         if (closed.compareAndSet(false, true)) {
             bundleContext.removeServiceListener(this);
-            for (final ServiceReference<?> sr : wovenServiceByServiceRef.keySet()) {
-                bundleContext.ungetService(sr);
-            }
+            wovenServiceByServiceRef.keySet().forEach(bundleContext::ungetService);
             wovenServiceByServiceRef.clear();
         }
     }
@@ -146,7 +141,6 @@ public final class ServiceWeavingManager implements AllServiceListener {
             return;
         }
         final ServiceReference<?> sr = event.getServiceReference();
-
         switch (event.getType()) {
             case REGISTERED:
                 onServiceRegistration(sr);

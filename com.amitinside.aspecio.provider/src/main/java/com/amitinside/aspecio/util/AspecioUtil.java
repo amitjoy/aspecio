@@ -86,6 +86,10 @@ public final class AspecioUtil {
         return source.stream().collect(toSet());
     }
 
+    public static <T> Set<String> asSet(final T source) {
+        return Stream.of(asStringArray(source)).collect(toSet());
+    }
+
     public static void registerGogoCommand(final Object gogoCommand) {
         final String[]                   commandNames  = Stream.of(gogoCommand.getClass().getMethods())
                 .map(Method::getName).toArray(String[]::new);

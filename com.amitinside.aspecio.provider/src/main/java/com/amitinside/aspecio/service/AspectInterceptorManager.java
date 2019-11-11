@@ -4,18 +4,16 @@ import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT;
 import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT_EXTRAPROPERTIES;
 import static com.amitinside.aspecio.service.AspectInterceptorListener.EventKind.NEWMATCH;
 import static com.amitinside.aspecio.service.AspectInterceptorListener.EventKind.NOMATCH;
-import static com.amitinside.aspecio.util.AspecioUtil.asStringArray;
-import static com.amitinside.aspecio.util.AspecioUtil.asString;
-import static com.amitinside.aspecio.util.AspecioUtil.asSet;
-import static com.amitinside.aspecio.util.AspecioUtil.firstOrNull;
 import static com.amitinside.aspecio.util.AspecioUtil.asInt;
 import static com.amitinside.aspecio.util.AspecioUtil.asLong;
+import static com.amitinside.aspecio.util.AspecioUtil.asSet;
+import static com.amitinside.aspecio.util.AspecioUtil.asString;
+import static com.amitinside.aspecio.util.AspecioUtil.firstOrNull;
 import static org.osgi.framework.Constants.SERVICE_BUNDLEID;
 import static org.osgi.framework.Constants.SERVICE_ID;
 import static org.osgi.framework.Constants.SERVICE_RANKING;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -97,8 +95,7 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
 
     public synchronized void onServiceRegistration(final ServiceReference<?> reference, final Object service) {
         final String      aspect          = asString(reference.getProperty(SERVICE_ASPECT));
-        final Set<String> extraProperties = new LinkedHashSet<>(
-                Arrays.asList(asStringArray(reference.getProperty(SERVICE_ASPECT_EXTRAPROPERTIES))));
+        final Set<String> extraProperties = asSet(reference.getProperty(SERVICE_ASPECT_EXTRAPROPERTIES));
         final int         serviceRanking  = asInt(reference.getProperty(SERVICE_RANKING), 0);
 
         if (!(service instanceof Interceptor)) {
@@ -131,8 +128,7 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
             return;
         }
         final String      newAspect       = asString(reference.getProperty(SERVICE_ASPECT));
-        final Set<String> extraProperties = new LinkedHashSet<>(
-                Arrays.asList(asStringArray(reference.getProperty(SERVICE_ASPECT_EXTRAPROPERTIES))));
+        final Set<String> extraProperties = asSet(reference.getProperty(SERVICE_ASPECT_EXTRAPROPERTIES));
         final int         serviceRanking  = asInt(reference.getProperty(SERVICE_RANKING), 0);
 
         final boolean rankingChanged    = aspectService.serviceRanking != serviceRanking;

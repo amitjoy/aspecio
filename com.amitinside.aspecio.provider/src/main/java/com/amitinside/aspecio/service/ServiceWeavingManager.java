@@ -10,10 +10,10 @@ import static com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent.OPTIO
 import static com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent.REQUIRED_ASPECT_CHANGE;
 import static com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent.SERVICE_PROPERTIES_CHANGE;
 import static com.amitinside.aspecio.service.WovenServiceEvent.EventKind.SERVICE_UPDATE;
-import static com.amitinside.aspecio.util.AspecioUtil.asStringProperties;
-import static com.amitinside.aspecio.util.AspecioUtil.asStringProperty;
-import static com.amitinside.aspecio.util.AspecioUtil.getIntValue;
-import static com.amitinside.aspecio.util.AspecioUtil.getLongValue;
+import static com.amitinside.aspecio.util.AspecioUtil.asStringArray;
+import static com.amitinside.aspecio.util.AspecioUtil.asString;
+import static com.amitinside.aspecio.util.AspecioUtil.asInt;
+import static com.amitinside.aspecio.util.AspecioUtil.asLong;
 import static java.util.stream.Collectors.joining;
 import static org.osgi.framework.Bundle.START_TRANSIENT;
 import static org.osgi.framework.Bundle.STOP_TRANSIENT;
@@ -161,19 +161,19 @@ public final class ServiceWeavingManager implements AllServiceListener {
             // getAllServiceReferences call
             return;
         }
-        final long originalServiceId = getLongValue(reference.getProperty(SERVICE_ID));
+        final long originalServiceId = asLong(reference.getProperty(SERVICE_ID));
 
         logger.debug("Preparing the weaving service ID {} provided by {}", originalServiceId,
                 reference.getBundle().getSymbolicName());
 
         final List<String> requiredAspectsToWeave = new ArrayList<>(
-                Arrays.asList(asStringProperties(reference.getProperty(SERVICE_ASPECT_WEAVE))));
+                Arrays.asList(asStringArray(reference.getProperty(SERVICE_ASPECT_WEAVE))));
         final List<String> optionalAspectsToWeave = new ArrayList<>(
-                Arrays.asList(asStringProperties(reference.getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL))));
+                Arrays.asList(asStringArray(reference.getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL))));
         final List<String> objectClass            = new ArrayList<>(
-                Arrays.asList(asStringProperties(reference.getProperty(OBJECTCLASS))));
-        int                serviceRanking         = getIntValue(reference.getProperty(SERVICE_RANKING), 0);
-        final ServiceScope serviceScope           = fromString(asStringProperty(reference.getProperty(SERVICE_SCOPE)));
+                Arrays.asList(asStringArray(reference.getProperty(OBJECTCLASS))));
+        int                serviceRanking         = asInt(reference.getProperty(SERVICE_RANKING), 0);
+        final ServiceScope serviceScope           = fromString(asString(reference.getProperty(SERVICE_SCOPE)));
 
         // Keep original properties, except for managed ones.
         final Hashtable<String, Object> serviceProperties = new Hashtable<>(); // NOSONAR
@@ -242,10 +242,10 @@ public final class ServiceWeavingManager implements AllServiceListener {
             return;
         }
         final List<String> requiredAspectsToWeave = new ArrayList<>(
-                Arrays.asList(asStringProperties(reference.getProperty(SERVICE_ASPECT_WEAVE))));
+                Arrays.asList(asStringArray(reference.getProperty(SERVICE_ASPECT_WEAVE))));
         final List<String> optionalAspectsToWeave = new ArrayList<>(
-                Arrays.asList(asStringProperties(reference.getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL))));
-        int                serviceRanking         = getIntValue(reference.getProperty(SERVICE_RANKING), 0);
+                Arrays.asList(asStringArray(reference.getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL))));
+        int                serviceRanking         = asInt(reference.getProperty(SERVICE_RANKING), 0);
 
         // Keep original properties, except for managed ones.
         final Hashtable<String, Object> serviceProperties = new Hashtable<>(); // NOSONAR

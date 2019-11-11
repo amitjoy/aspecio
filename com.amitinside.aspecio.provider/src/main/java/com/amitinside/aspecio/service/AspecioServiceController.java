@@ -3,8 +3,8 @@ package com.amitinside.aspecio.service;
 import static com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent.OPTIONAL_ASPECT_CHANGE;
 import static com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent.REQUIRED_ASPECT_CHANGE;
 import static com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent.SERVICE_PROPERTIES_CHANGE;
-import static com.amitinside.aspecio.util.AspecioUtil.copySet;
-import static com.amitinside.aspecio.util.AspecioUtil.getLongValue;
+import static com.amitinside.aspecio.util.AspecioUtil.asSet;
+import static com.amitinside.aspecio.util.AspecioUtil.asLong;
 import static org.osgi.framework.Constants.SERVICE_BUNDLEID;
 
 import java.util.ArrayList;
@@ -146,17 +146,17 @@ public final class AspecioServiceController implements AspectInterceptorListener
     public synchronized List<InterceptedServiceDTO> getInterceptedServices() {
         final List<InterceptedServiceDTO> isds = new ArrayList<>(managedServices.size());
         for (final ManagedWovenService mws : managedServices.values()) {
-            final long bundleId = getLongValue(mws.wovenService.originalReference.getProperty(SERVICE_BUNDLEID));
+            final long bundleId = asLong(mws.wovenService.originalReference.getProperty(SERVICE_BUNDLEID));
 
             final InterceptedServiceDTO dto = new InterceptedServiceDTO();
             dto.serviceId                  = mws.wovenService.originalServiceId;
             dto.bundleId                   = bundleId;
             dto.objectClass                = new ArrayList<>(mws.wovenService.objectClass);
             dto.published                  = mws.registration != null;
-            dto.satisfiedAspects           = copySet(mws.aspectContext.satisfiedAspects);
-            dto.unsatisfiedRequiredAspects = copySet(mws.aspectContext.unsatisfiedRequiredAspects);
-            dto.requiredAspects            = copySet(mws.wovenService.requiredAspects);
-            dto.optionalAspects            = copySet(mws.wovenService.optionalAspects);
+            dto.satisfiedAspects           = asSet(mws.aspectContext.satisfiedAspects);
+            dto.unsatisfiedRequiredAspects = asSet(mws.aspectContext.unsatisfiedRequiredAspects);
+            dto.requiredAspects            = asSet(mws.wovenService.requiredAspects);
+            dto.optionalAspects            = asSet(mws.wovenService.optionalAspects);
 
             isds.add(dto);
         }

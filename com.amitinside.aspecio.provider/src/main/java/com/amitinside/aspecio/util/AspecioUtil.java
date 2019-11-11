@@ -1,10 +1,11 @@
 package com.amitinside.aspecio.util;
 
+import static java.util.stream.Collectors.toSet;
+
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.Callable;
@@ -37,7 +38,7 @@ public final class AspecioUtil {
         }
     }
 
-    public static String asStringProperty(final Object propObj) {
+    public static String asString(final Object propObj) {
         String res;
         if (propObj == null) {
             res = null;
@@ -51,7 +52,7 @@ public final class AspecioUtil {
         return res;
     }
 
-    public static String[] asStringProperties(final Object propObj) {
+    public static String[] asStringArray(final Object propObj) {
         String[] res = null;
         if (propObj == null) {
             res = new String[0];
@@ -65,7 +66,7 @@ public final class AspecioUtil {
         return res;
     }
 
-    public static long getLongValue(final Object propObj) {
+    public static long asLong(final Object propObj) {
         if (propObj instanceof Number) {
             return ((Number) propObj).longValue();
         } else {
@@ -73,7 +74,7 @@ public final class AspecioUtil {
         }
     }
 
-    public static int getIntValue(final Object propObj, final int defaultValue) {
+    public static int asInt(final Object propObj, final int defaultValue) {
         return propObj instanceof Integer ? (Integer) propObj : defaultValue;
     }
 
@@ -81,10 +82,8 @@ public final class AspecioUtil {
         return set == null || set.isEmpty() ? null : set.first();
     }
 
-    public static <T> Set<T> copySet(final Collection<T> source) {
-        final Set<T> copy = new LinkedHashSet<>(source.size());
-        copy.addAll(source);
-        return copy;
+    public static <T> Set<T> asSet(final Collection<T> source) {
+        return source.stream().collect(toSet());
     }
 
     public static void registerGogoCommand(final Object gogoCommand) {

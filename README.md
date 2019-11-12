@@ -21,6 +21,7 @@ Aside from this README, the API Javadoc also provides a detailed overview.
 ### Why Aspects?
 
 In general, aspects allow you to intercept code and alter its execution. There are several downsides to using aspects:
+
 * Scattering behaviour across the codebase
 * Making the execution model opaque by having aspects intercept any random piece of code, including internal code that might have implicit invariants that aspects break
 * Not knowing **which** aspects are being _woven_ on a piece of code at a given time
@@ -28,6 +29,7 @@ In general, aspects allow you to intercept code and alter its execution. There a
 * Sometimes aspects are implemented using JDK Proxies, which can break consuming code, for example, code relying on reflection such as annotation-driven frameworks
 
 However, there are _cross-cutting concerns_ for which aspects can be beneficial, for example:
+
 * Security: ensuring some conditions are met before being allowed into a function ; 
 * Metrics: having live metrics on critical components (e.g. using Coda Hale's Metrics library) ;
 * Ensuring a piece of code takes place in a transaction ;
@@ -38,9 +40,9 @@ Aspecio aims to make aspects predictable and bridges them with the OSGi service 
 
 ### Aspecio and OSGi
 
-While Aspecio's internal weaving code could be interesting to plug to other Dependency Injection frameworks, it currently supports OSGi R7 exclusively out of the box.
+While Aspecio's internal weaving code could be interesting to plug into other Dependency Injection frameworks, it currently supports OSGi R7 exclusively out of the box.
 
-As it is, Aspecio works with OSGi Services and can weave almost any _willing_ OSGi service. 
+Aspecio works with OSGi services and can weave almost any _willing_ OSGi service. 
 
 Aspecio works with any service scope, `singleton`, `bundle` and `prototype` and will only create as many instances as expected. In case of service frameworks using the `bundle` scope to make service creation lazy (such as Declarative Services), but still having effectively `singleton` services, Aspecio will make sure each service instance has precisely one proxy instance.
 
@@ -51,7 +53,7 @@ Aspecio has been tested on Felix 6.0.3 but should work with any framework compli
 In the following examples, Declarative Services will be used.
 
 
-### Aspecio's weaving
+### Aspecio's Weaving
 
 Aspecio picks service objects that ask for certain aspects in their service properties, hiding (by default) the original service from all bundles except the system bundle and Aspecio itself.
 

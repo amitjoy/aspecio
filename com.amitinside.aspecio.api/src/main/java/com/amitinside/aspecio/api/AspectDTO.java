@@ -1,6 +1,7 @@
 package com.amitinside.aspecio.api;
 
 import java.util.List;
+
 import org.osgi.dto.DTO;
 
 /**

@@ -2,17 +2,12 @@ package com.amitinside.aspecio.util;
 
 import static java.util.stream.Collectors.toSet;
 
-import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.Dictionary;
-import java.util.Hashtable;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.Callable;
 import java.util.stream.Stream;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.FrameworkUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,18 +82,6 @@ public final class AspecioUtil {
 
     public static <T> Set<String> asSet(final T source) {
         return Stream.of(asStringArray(source)).collect(toSet());
-    }
-
-    public static void registerGogoCommand(final Object gogoCommand) {
-        final String[]                   commandNames  = Stream.of(gogoCommand.getClass().getMethods())
-                .map(Method::getName).toArray(String[]::new);
-        final BundleContext              bundleContext = FrameworkUtil.getBundle(AspecioUtil.class).getBundleContext();
-        final Dictionary<String, Object> props         = new Hashtable<>();
-
-        props.put("osgi.command.scope", "aspecio");
-        props.put("osgi.command.function", commandNames);
-
-        bundleContext.registerService(Object.class, gogoCommand, props);
     }
 
 }

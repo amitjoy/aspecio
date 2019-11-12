@@ -1,8 +1,10 @@
 package com.amitinside.aspecio.starter;
 
 import static com.amitinside.aspecio.api.AspecioConstants.ASPECIO_FILTER_SERVICES;
-import static com.amitinside.aspecio.util.AspecioUtil.registerGogoCommand;
 import static org.osgi.framework.Constants.BUNDLE_ACTIVATOR;
+
+import java.util.Dictionary;
+import java.util.Hashtable;
 
 import org.osgi.annotation.bundle.Header;
 import org.osgi.framework.BundleActivator;
@@ -31,8 +33,13 @@ public final class AspecioActivator implements BundleActivator {
         } else {
             context.registerService(Aspecio.class, aspecio, null);
         }
-        final AspecioGogoCommand gogoCommand = new AspecioGogoCommand(context, aspecio);
-        registerGogoCommand(gogoCommand);
+        final AspecioGogoCommand         gogoCommand = new AspecioGogoCommand(context, aspecio);
+        final Dictionary<String, Object> props       = new Hashtable<>();                       // NOSONAR
+
+        props.put("osgi.command.scope", "aspecio");
+        props.put("osgi.command.function", new String[] { "aspects", "woven" });
+
+        context.registerService(Object.class, gogoCommand, props);
     }
 
     @Override

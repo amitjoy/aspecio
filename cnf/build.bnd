@@ -1,5 +1,3 @@
--baselinerepo           : *
--contract               : *
 -includeresource.all    : -src/main/resources
 -donotcopy              : \.gitignore|\.DS_Store
 
@@ -7,11 +5,16 @@ bin.directory           : ${if;${is;${driver};gradle};target/gradle/classes;targ
 testbin.directory       : ${if;${is;${driver};gradle};target/gradle/test-classes;target/test-classes}
 bin.testbin.directory   : ${if;${is;${driver};gradle};target/gradle/classes,target/gradle/test-classes;target/classes,target/test-classes}
 
+-builderignore          : ${bin.testbin.directory}
+-remoteworkspace        : true
+
 src                     : src/main/java, src/main/resources
 bin                     : ${bin.directory}
 testsrc                 : src/test/java
 testbin                 : ${testbin.directory}
 target-dir              : target
+
+Bundle-Version          : 1.0.0.${tstamp}
 
 Bundle-License          : http://opensource.org/licenses/apache2.0.php;\
                             link="http://www.apache.org/licenses/LICENSE-2.0";\
@@ -29,6 +32,9 @@ Bundle-Developers       : Simon;\
                             name="Amit Kumar Mondal";\
                             email="admin@amitinside.com";\
                             url=http://www.amitinside.com
+
+-resolve.effective      : resolve, active
+
 -buildpath.all          : \
           osgi.cmpn,\
           osgi.core,\

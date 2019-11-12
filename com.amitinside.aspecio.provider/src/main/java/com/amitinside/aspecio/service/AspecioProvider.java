@@ -25,6 +25,7 @@ import com.amitinside.aspecio.api.Aspecio;
 import com.amitinside.aspecio.api.AspectDTO;
 import com.amitinside.aspecio.api.InterceptedServiceDTO;
 import com.amitinside.aspecio.logging.AspecioLogger;
+import com.amitinside.aspecio.util.Exceptions;
 
 @Capability(namespace = SERVICE_NAMESPACE, attribute = "objectClass:List<String>=com.amitinside.aspecio.api.Aspecio")
 public final class AspecioProvider implements Aspecio, FindHook, EventListenerHook {
@@ -44,9 +45,13 @@ public final class AspecioProvider implements Aspecio, FindHook, EventListenerHo
         aspecioServiceController = new AspecioServiceController(aspectInterceptorManager, serviceWeavingManager);
     }
 
-    public void activate() throws InvalidSyntaxException {
+    public void activate() {
         logger.info("Activating Aspecio");
-        aspecioServiceController.open();
+        try {
+            aspecioServiceController.open();
+        } catch (final InvalidSyntaxException e) {
+            throw Exceptions.duck(e);
+        }
         logger.info("Aspecio activated");
     }
 
@@ -64,10 +69,10 @@ public final class AspecioProvider implements Aspecio, FindHook, EventListenerHo
         }
         final Iterator<BundleContext> iterator = listeners.keySet().iterator();
         while (iterator.hasNext()) {
-            final BundleContext consumingBc       = iterator.next();
-            final long          consumingBundleId = consumingBc.getBundle().getBundleId();
+            final BundleContext consumingBundleContext = iterator.next();
+            final long          consumingBundleID      = consumingBundleContext.getBundle().getBundleId();
 
-            if (consumingBundleId == bundleId || consumingBundleId == 0) {
+            if (consumingBundleID == bundleId || consumingBundleID == 0) {
                 continue; // allow self and system bundle
             }
             iterator.remove();
@@ -83,9 +88,10 @@ public final class AspecioProvider implements Aspecio, FindHook, EventListenerHo
         }
         final Iterator<ServiceReference<?>> iterator = references.iterator();
         while (iterator.hasNext()) {
-            final ServiceReference<?> reference = iterator.next();
-            if (reference.getProperty(SERVICE_ASPECT_WEAVE) == null
-                    && reference.getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL) == null) {
+            final ServiceReference<?> reference           = iterator.next();
+            final Object              aspectWeave         = reference.getProperty(SERVICE_ASPECT_WEAVE);
+            final Object              aspectWeaveOptional = reference.getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL);
+            if (aspectWeave == null && aspectWeaveOptional == null) {
                 continue;
             }
             iterator.remove();

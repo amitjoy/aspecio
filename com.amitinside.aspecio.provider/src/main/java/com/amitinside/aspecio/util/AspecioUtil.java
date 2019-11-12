@@ -29,7 +29,7 @@ public final class AspecioUtil {
     public static <T> T trust(final Callable<T> block) {
         try {
             return block.call();
-        } catch (RuntimeException | Error e) {
+        } catch (final RuntimeException e) {
             logger.error("Error while running code", e);
             throw e;
         } catch (final Exception e) {

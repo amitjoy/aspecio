@@ -9,6 +9,7 @@ import static com.amitinside.aspecio.util.AspecioUtil.asLong;
 import static com.amitinside.aspecio.util.AspecioUtil.asSet;
 import static com.amitinside.aspecio.util.AspecioUtil.asString;
 import static com.amitinside.aspecio.util.AspecioUtil.firstOrNull;
+import static java.util.Comparator.comparing;
 import static org.osgi.framework.Constants.SERVICE_BUNDLEID;
 import static org.osgi.framework.Constants.SERVICE_ID;
 import static org.osgi.framework.Constants.SERVICE_RANKING;
@@ -211,21 +212,13 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
 
     public synchronized AspectInterceptorContext getContext(final List<String> requiredAspects,
             final List<String> optionalAspects) {
-        final Set<AspectInterceptor> interceptors = new TreeSet<>((o1, o2) -> {
-            final int res = o1.aspect.compareTo(o2.aspect);
-            if (res != 0) {
-                return res;
-            }
-            final int a = o1.serviceRanking;
-            final int b = o2.serviceRanking;
-            return a < b ? -1 : a > b ? 1 : 0;
-        });
-
-        final Set<String> satisfiedRequiredAspects   = new LinkedHashSet<>();
-        final Set<String> unsatisfiedRequiredAspects = new LinkedHashSet<>();
-        final Set<String> satisfiedOptionalAspects   = new LinkedHashSet<>();
-        final Set<String> unsatisfiedOptionalAspects = new LinkedHashSet<>();
-        final Set<String> extraProperties            = new LinkedHashSet<>();
+        final Set<AspectInterceptor> interceptors               = new TreeSet<>(
+                comparing((final AspectInterceptor a) -> a.aspect).thenComparingInt(a -> a.serviceRanking));
+        final Set<String>            satisfiedRequiredAspects   = new LinkedHashSet<>();
+        final Set<String>            unsatisfiedRequiredAspects = new LinkedHashSet<>();
+        final Set<String>            satisfiedOptionalAspects   = new LinkedHashSet<>();
+        final Set<String>            unsatisfiedOptionalAspects = new LinkedHashSet<>();
+        final Set<String>            extraProperties            = new LinkedHashSet<>();
 
         for (final String aspect : requiredAspects) {
             final AspectInterceptor aspectInterceptor = getAspectInterceptor(aspect);

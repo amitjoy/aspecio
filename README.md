@@ -241,29 +241,35 @@ g! aspects
 * com.amitinside.aspecio.examples.aspect.metric.MetricAspect$All
   [ --- ACTIVE --- ] Service ID 22, class com.amitinside.aspecio.examples.aspect.metric.internal.AllMetricInterceptorImpl, extra properties: [measured]
                      Provided by: com.amitinside.aspecio.examples 0.0.0 [1]
+
 * com.amitinside.aspecio.examples.aspect.counting.CountingAspect
   [ --- ACTIVE --- ] Service ID 21, class com.amitinside.aspecio.examples.aspect.counting.internal.CountingAspectImpl, extra properties: []
                      Provided by: com.amitinside.aspecio.examples 0.0.0 [1]
+
 * com.amitinside.aspecio.examples.aspect.metric.MetricAspect$AnnotatedOnly
   [ --- ACTIVE --- ] Service ID 23, class com.amitinside.aspecio.examples.aspect.metric.internal.AnnotatedMetricInterceptorImpl, extra properties: [measured]
                      Provided by: com.amitinside.aspecio.examples 0.0.0 [1]
+
 g! woven
-[0] Service ID: 26, objectClass: [com.amitinside.aspecio.examples.greetings.Hello, com.amitinside.aspecio.examples.greetings.Goodbye]
-    Required Aspects: [com.amitinside.aspecio.examples.aspect.counting.CountingAspect], Optional Aspects: [com.amitinside.aspecio.examples.aspect.metric.MetricAspect$All]
-    Provided by: com.amitinside.aspecio.examples 0.0.0 [1]
-    Satisfied: true
-    Active Aspects: [com.amitinside.aspecio.examples.aspect.counting.CountingAspect, com.amitinside.aspecio.examples.aspect.metric.MetricAspect$All]
-[1] Service ID: 29, objectClass: [com.amitinside.aspecio.examples.misc.Stuff]
+[0] Service ID: 29, objectClass: [com.amitinside.aspecio.examples.misc.Stuff]
     Required Aspects: [com.amitinside.aspecio.examples.aspect.metric.Timed], Optional Aspects: []
     Provided by: com.amitinside.aspecio.examples 0.0.0 [1]
     Satisfied: false
     Missing Required Aspects: [com.amitinside.aspecio.examples.aspect.metric.Timed]
-[2] Service ID: 24, objectClass: [com.amitinside.aspecio.examples.async.SuperSlowService]
+
+[1] Service ID: 24, objectClass: [com.amitinside.aspecio.examples.async.SuperSlowService]
     Required Aspects: [com.amitinside.aspecio.examples.aspect.metric.MetricAspect$AnnotatedOnly], Optional Aspects: [com.amitinside.aspecio.examples.aspect.counting.CountingAspect]
     Provided by: com.amitinside.aspecio.examples 0.0.0 [1]
     Satisfied: true
-    Active Aspects: [com.amitinside.aspecio.examples.aspect.metric.MetricAspect$AnnotatedOnly, com.amitinside.aspecio.examples.aspect.counting.CountingAspect]
-g! 
+    Active Aspects: [com.amitinside.aspecio.examples.aspect.counting.CountingAspect, com.amitinside.aspecio.examples.aspect.metric.MetricAspect$AnnotatedOnly]
+
+[2] Service ID: 26, objectClass: [com.amitinside.aspecio.examples.greetings.Hello, com.amitinside.aspecio.examples.greetings.Goodbye]
+    Required Aspects: [com.amitinside.aspecio.examples.aspect.counting.CountingAspect], Optional Aspects: [com.amitinside.aspecio.examples.aspect.metric.MetricAspect$All]
+    Provided by: com.amitinside.aspecio.examples 0.0.0 [1]
+    Satisfied: true
+    Active Aspects: [com.amitinside.aspecio.examples.aspect.metric.MetricAspect$All, com.amitinside.aspecio.examples.aspect.counting.CountingAspect]
+
+g!
 ```
 
 # Author

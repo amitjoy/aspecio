@@ -49,6 +49,7 @@ public final class AspecioGogoCommand {
         final Bundle bundle          = bundleContext.getBundle(serviceBundleId);
         System.out.println(shift + "Provided by: " + bundle.getSymbolicName() + " " + bundle.getVersion() + " ["
                 + serviceBundleId + "]");
+        System.out.println();
     }
 
     // Gogo command "aspect:woven"
@@ -81,6 +82,7 @@ public final class AspecioGogoCommand {
             } else {
                 System.out.println(shift + "Active Aspects: " + mws.satisfiedAspects);
             }
+            System.out.println();
             i++;
         }
     }

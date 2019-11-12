@@ -1,4 +1,5 @@
 -buildpath: \
 	io.primeval.reflex,\
 	com.amitinside.aspecio.api,\
-	com.google.guava
+	com.google.guava,\
+	org.apache.felix.gogo.runtime

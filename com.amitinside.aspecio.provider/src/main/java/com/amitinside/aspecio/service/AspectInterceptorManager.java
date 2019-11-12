@@ -34,13 +34,13 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.Filter;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.log.Logger;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.amitinside.aspecio.api.AspectDTO;
 import com.amitinside.aspecio.api.InterceptorDTO;
-import com.amitinside.aspecio.logging.AspecioLogger;
 import com.amitinside.aspecio.service.AspectInterceptorListener.EventKind;
 
 import io.primeval.reflex.proxy.Interceptor;
@@ -50,7 +50,7 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
 
     private static final String SERVICE_FILTER = "(" + SERVICE_ASPECT + "=*)";
 
-    private final Logger        logger = AspecioLogger.getLogger(AspectInterceptorManager.class);
+    private final Logger        logger = LoggerFactory.getLogger(AspectInterceptorManager.class);
     private final BundleContext bundleContext;
 
     private final SortedMap<ServiceReference<?>, AspectInterceptor> aspectServiceByServiceRef  = new ConcurrentSkipListMap<>();

@@ -12,7 +12,6 @@ import org.osgi.framework.hooks.service.FindHook;
 
 import com.amitinside.aspecio.api.Aspecio;
 import com.amitinside.aspecio.command.AspecioGogoCommand;
-import com.amitinside.aspecio.logging.AspecioLogger;
 import com.amitinside.aspecio.service.AspecioProvider;
 
 @Header(name = BUNDLE_ACTIVATOR, value = "${@class}")
@@ -22,8 +21,6 @@ public final class AspecioActivator implements BundleActivator {
 
     @Override
     public void start(final BundleContext context) {
-        AspecioLogger.init(context);
-
         aspecio = new AspecioProvider(context);
         aspecio.activate();
 

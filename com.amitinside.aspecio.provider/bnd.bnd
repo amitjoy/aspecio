@@ -8,6 +8,7 @@ Bundle-Description  : AOP Proxies for OSGi Services
 	io.primeval.reflex,\
 	com.amitinside.aspecio.api,\
 	org.objectweb.asm,\
+	slf4j.api,\
 	com.github.gfx.util:weak-identity-hash-map;packages=*
 
 Export-Package: \
@@ -24,7 +25,3 @@ Export-Package: \
 	io.primeval.reflex.service.adt.spi,\
 	org.objectweb.asm,\
 	org.objectweb.asm.signature
-
-Import-Package: \
-	org.slf4j;resolution:=optional,\
-	*

@@ -19,18 +19,18 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.hooks.service.EventListenerHook;
 import org.osgi.framework.hooks.service.FindHook;
 import org.osgi.framework.hooks.service.ListenerHook.ListenerInfo;
-import org.osgi.service.log.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.amitinside.aspecio.api.Aspecio;
 import com.amitinside.aspecio.api.AspectDTO;
 import com.amitinside.aspecio.api.InterceptedServiceDTO;
-import com.amitinside.aspecio.logging.AspecioLogger;
 import com.amitinside.aspecio.util.Exceptions;
 
 @Capability(namespace = SERVICE_NAMESPACE, attribute = "objectClass:List<String>=com.amitinside.aspecio.api.Aspecio")
 public final class AspecioProvider implements Aspecio, FindHook, EventListenerHook {
 
-    private final Logger logger = AspecioLogger.getLogger(AspecioProvider.class);
+    private final Logger logger = LoggerFactory.getLogger(AspecioProvider.class);
 
     private final long                     bundleId;
     private final ServiceWeavingManager    serviceWeavingManager;

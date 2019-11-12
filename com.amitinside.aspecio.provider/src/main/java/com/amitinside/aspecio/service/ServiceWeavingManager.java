@@ -10,10 +10,10 @@ import static com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent.OPTIO
 import static com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent.REQUIRED_ASPECT_CHANGE;
 import static com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent.SERVICE_PROPERTIES_CHANGE;
 import static com.amitinside.aspecio.service.WovenServiceEvent.EventKind.SERVICE_UPDATE;
-import static com.amitinside.aspecio.util.AspecioUtil.asStringArray;
-import static com.amitinside.aspecio.util.AspecioUtil.asString;
 import static com.amitinside.aspecio.util.AspecioUtil.asInt;
 import static com.amitinside.aspecio.util.AspecioUtil.asLong;
+import static com.amitinside.aspecio.util.AspecioUtil.asString;
+import static com.amitinside.aspecio.util.AspecioUtil.asStringArray;
 import static java.util.stream.Collectors.joining;
 import static org.osgi.framework.Bundle.START_TRANSIENT;
 import static org.osgi.framework.Bundle.STOP_TRANSIENT;
@@ -55,9 +55,9 @@ import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.wiring.BundleRevision;
-import org.osgi.service.log.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.amitinside.aspecio.logging.AspecioLogger;
 import com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent;
 import com.github.gfx.util.WeakIdentityHashMap;
 
@@ -69,7 +69,7 @@ import io.primeval.reflex.proxy.bytecode.ProxyClassLoader;
 
 public final class ServiceWeavingManager implements AllServiceListener {
 
-    private final Logger logger = AspecioLogger.getLogger(ServiceWeavingManager.class);
+    private final Logger logger = LoggerFactory.getLogger(ServiceWeavingManager.class);
 
     private static final String SERVICE_FILTER = MessageFormat.format("(&(|({0}=*)({1}=*))(!({2}=*)))",
             SERVICE_ASPECT_WEAVE, SERVICE_ASPECT_WEAVE_OPTIONAL, _SERVICE_ASPECT_WOVEN);

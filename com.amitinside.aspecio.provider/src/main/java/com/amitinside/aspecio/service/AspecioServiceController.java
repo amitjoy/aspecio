@@ -3,8 +3,8 @@ package com.amitinside.aspecio.service;
 import static com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent.OPTIONAL_ASPECT_CHANGE;
 import static com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent.REQUIRED_ASPECT_CHANGE;
 import static com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent.SERVICE_PROPERTIES_CHANGE;
-import static com.amitinside.aspecio.util.AspecioUtil.asSet;
 import static com.amitinside.aspecio.util.AspecioUtil.asLong;
+import static com.amitinside.aspecio.util.AspecioUtil.asSet;
 import static org.osgi.framework.Constants.SERVICE_BUNDLEID;
 
 import java.util.ArrayList;
@@ -14,14 +14,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.log.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.amitinside.aspecio.api.InterceptedServiceDTO;
-import com.amitinside.aspecio.logging.AspecioLogger;
 
 public final class AspecioServiceController implements AspectInterceptorListener, WovenServiceListener {
 
-    private final Logger logger = AspecioLogger.getLogger(AspecioServiceController.class);
+    private final Logger logger = LoggerFactory.getLogger(AspecioServiceController.class);
 
     private final AspectInterceptorManager aspectInterceptorManager;
     private final ServiceWeavingManager    serviceWeavingManager;

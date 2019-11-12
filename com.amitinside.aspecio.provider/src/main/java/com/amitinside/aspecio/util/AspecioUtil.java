@@ -13,13 +13,12 @@ import java.util.stream.Stream;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
-import org.osgi.service.log.Logger;
-
-import com.amitinside.aspecio.logging.AspecioLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class AspecioUtil {
 
-    private static final Logger logger = AspecioLogger.getLogger(AspecioUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(AspecioUtil.class);
 
     private AspecioUtil() {
         throw new IllegalAccessError("Cannot be instantiated");

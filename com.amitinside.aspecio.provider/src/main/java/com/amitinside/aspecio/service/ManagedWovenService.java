@@ -6,15 +6,15 @@ import java.util.Dictionary;
 import java.util.Hashtable;
 
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.log.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.amitinside.aspecio.logging.AspecioLogger;
 import com.amitinside.aspecio.util.Exceptions;
 
 // Owned by AspecioServiceController (i.e, sync is done there)
 public final class ManagedWovenService {
 
-    private final Logger logger = AspecioLogger.getLogger(ManagedWovenService.class);
+    private final Logger logger = LoggerFactory.getLogger(ManagedWovenService.class);
 
     // can be null if unsatisfied
     public WovenService             wovenService;

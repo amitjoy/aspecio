@@ -2,6 +2,8 @@ package com.amitinside.aspecio.starter;
 
 import static com.amitinside.aspecio.api.AspecioConstants.ASPECIO_FILTER_SERVICES;
 import static org.osgi.framework.Constants.BUNDLE_ACTIVATOR;
+import static org.osgi.framework.Constants.BUNDLE_DESCRIPTION;
+import static org.osgi.framework.Constants.BUNDLE_NAME;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -16,7 +18,9 @@ import com.amitinside.aspecio.api.Aspecio;
 import com.amitinside.aspecio.command.AspecioGogoCommand;
 import com.amitinside.aspecio.service.AspecioProvider;
 
+@Header(name = BUNDLE_NAME, value = "Aspecio")
 @Header(name = BUNDLE_ACTIVATOR, value = "${@class}")
+@Header(name = BUNDLE_DESCRIPTION, value = "AOP Proxies for OSGi Services")
 public final class AspecioActivator implements BundleActivator {
 
     private AspecioProvider aspecio;

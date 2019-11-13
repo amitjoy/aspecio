@@ -1,9 +1,6 @@
 # Aspecio - AOP Proxies for OSGi Services
 
-Aspecio is a 'micro-framework' that provide AOP Proxies in OSGi R7. It brings a mix of component-oriented and aspect-oriented programming to your application. Aspecio lets you define _Aspects_ that you can later pick to add behaviour to your components and avoid duplicating boilerplate dealing with cross-cutting concerns.
-
-Simon Chemouil has developed the [initial version](https://github.com/primeval-io/aspecio), and this is a revamped version that makes it OSGi R7 compatible and encapsulates all required dependencies in one bundle. This also includes several enhancements and fixes to make it work efficiently.
-
+Aspecio is a 'micro-framework' providing AOP Proxies in OSGi environment. It brings a mix of component-oriented and aspect-oriented programming to your application. Aspecio lets you define _Aspects_ that you can later pick to add behaviour to your service components and avoid duplicating boilerplate dealing with cross-cutting concerns.
 
 ## Aspecio 1.0.0
 
@@ -15,10 +12,16 @@ Aspecio 1.0.0 is a complete overhaul with a new proxy model that is simpler, com
 Aside from this README, the API Javadoc also provides a detailed overview.
 
 
+## Requirements
+
+1. Java 8
+2. OSGi R7
+
+
 ## Overview
 
 
-### Why Aspects?
+### Why Aspects? [![start with what and why](https://img.shields.io/badge/start%20with-why%3F-brightgreen.svg?style=flat)]
 
 In general, aspects allow you to intercept code and alter its execution. There are several downsides to using aspects:
 
@@ -75,7 +78,7 @@ If there are already registered services with the weaving property, Aspecio will
 Aspecio first collects the set of bundles providing services to weave, sorts them using the natural `Bundle` comparator (based on bundle IDs). It stops them all in that order, then starts them all. The ordering should allow to keep the original installation order, and stopping and starting them by batch is aiming to minimize service level interactions between these bundles (such as re-creating components with static references too many times).
 
 
-## Defining an Aspect with Aspecio
+## Defining an aspect with Aspecio
 
 In Aspecio, we use Java to declare an Aspect.
 
@@ -105,12 +108,12 @@ public final class CountingAspectImpl implements Interceptor {
 }
 ```
 
-Aspecio finds Aspects by:
+Aspecio finds aspects by:
 
 * Looking for OSGi Services; in the example above, provided using the `@Component` Declarative Service annotation)
-* That provides the OSGi service String property `AspecioConstants.SERVICE_ASPECT` (`"service.aspect.name"`) declared using the `@Aspect` annotation.
+* That provide the OSGi service string property `AspecioConstants.SERVICE_ASPECT` (`"service.aspect.name"`) declared using the `@Aspect` annotation.
 * That implement the interface `io.primeval.reflect.proxy.Interceptor` (it need not be provided as the service's `"objectClass"`).
-* If several services provide an aspect, Aspecio will pick the one with the highest-service ranking; in case of equal service rankings, Aspecio will pick the one with the lowest service id. Aspecio supports OSGi's service dynamics and will happily replace or update Aspects live. Aspecio is always 'greedy': if a "better" interceptor is registered for a given aspect, all the services using it will have it updated immediately. 
+* If several services provide the same aspect, Aspecio will pick the one with the highest-service ranking; in case of equal service rankings, Aspecio will pick the one with the lowest service ID. Aspecio supports OSGi's service dynamics and will gladly replace or update Aspects' lifecycles. Aspecio is always 'greedy': if a "better" interceptor is registered for a given aspect, all the services using it will have it updated immediately. 
 
 In the example above, our component `CountingAspectImpl` provides the aspect named `"CountingAspect"` (a Java String). You can call your aspects with any String, but it is practical to use Java classes to piggyback on the namespaces. 
 
@@ -152,9 +155,9 @@ Also, because `"CountingAspect.class"` is `required` by `HelloGoodbyeImpl`, the 
 Having `"AnotherOptionalAspect.class"` as an optional aspect will not prevent Aspecio's proxy of `HelloGoodbyeImpl` of being registered even in case `"AnotherOptionalAspect.class"` is missing; however, if it becomes available during `HelloGoodbyImpl`'s lifetime, it will start intercepting its methods as well.
 
 
-## Aspect patterns
+## Aspect Patterns
 
-### Annotation-based interception
+### Annotation-based Interception
 
 * When you want to intercept only specific annotated methods, and you can use the annotation to pass configuration to the interceptor
 * When you annotate specific method parameters to guide your aspect
@@ -222,15 +225,15 @@ public final class MySecurityAspectImpl implements Interceptor {
 }
 ```
 
-The proxy service object registered by Aspecio will have the OSGi service Boolean property `"secured"` set to `Boolean.TRUE`. Now consuming code can check for that property to know if a service is secure, on the only select secured services using a target filter. The consuming code doesn't need to know whether a service was obtained manually or using an aspect, and this enables just that.
+The proxy service object registered by Aspecio will have the OSGi service boolean property `"secured"` set to `Boolean.TRUE`. Now consuming code can check for that property using a target filter to know if a service is secure. The consuming code doesn't need to know whether a service was obtained manually or using an aspect.
 
 
 ## Debugging Aspecio
 
 Aspecio provides a service aptly named `Aspecio` that can show you what Aspecio sees at any time:
 
-* which aspects are present
-* what services are woven
+* which aspects are available
+* which services are woven
 
 Aspecio provides two Gogo commands to get the same information in the Gogo shell, `aspecio:aspects` and `aspecio:woven`.
 
@@ -239,39 +242,39 @@ Here's a sample output of these two commands:
 ```
 g! aspects
 * com.amitinside.aspecio.examples.aspect.metric.MetricAspect$All
-  [ --- ACTIVE --- ] Service ID 22, class com.amitinside.aspecio.examples.aspect.metric.internal.AllMetricInterceptorImpl, extra properties: [measured]
-                     Provided by: com.amitinside.aspecio.examples 0.0.0 [1]
+  [ --- ACTIVE --- ] Service ID 29, class com.amitinside.aspecio.examples.aspect.metric.internal.AllMetricInterceptorImpl, extra properties: [measured]
+                     Provided by: com.amitinside.aspecio.examples 1.0.0.201911130609 [10]
 
 * com.amitinside.aspecio.examples.aspect.counting.CountingAspect
-  [ --- ACTIVE --- ] Service ID 21, class com.amitinside.aspecio.examples.aspect.counting.internal.CountingAspectImpl, extra properties: []
-                     Provided by: com.amitinside.aspecio.examples 0.0.0 [1]
+  [ --- ACTIVE --- ] Service ID 28, class com.amitinside.aspecio.examples.aspect.counting.internal.CountingAspectImpl, extra properties: []
+                     Provided by: com.amitinside.aspecio.examples 1.0.0.201911130609 [10]
 
 * com.amitinside.aspecio.examples.aspect.metric.MetricAspect$AnnotatedOnly
-  [ --- ACTIVE --- ] Service ID 23, class com.amitinside.aspecio.examples.aspect.metric.internal.AnnotatedMetricInterceptorImpl, extra properties: [measured]
-                     Provided by: com.amitinside.aspecio.examples 0.0.0 [1]
+  [ --- ACTIVE --- ] Service ID 30, class com.amitinside.aspecio.examples.aspect.metric.internal.AnnotatedMetricInterceptorImpl, extra properties: [measured]
+                     Provided by: com.amitinside.aspecio.examples 1.0.0.201911130609 [10]
 
 g! woven
-[0] Service ID: 29, objectClass: [com.amitinside.aspecio.examples.misc.Stuff]
+[0] Service ID: 34, objectClass: [com.amitinside.aspecio.examples.greetings.Hello, com.amitinside.aspecio.examples.greetings.Goodbye]
+    Required Aspects: [com.amitinside.aspecio.examples.aspect.counting.CountingAspect], Optional Aspects: [com.amitinside.aspecio.examples.aspect.metric.MetricAspect$All]
+    Provided by: com.amitinside.aspecio.examples 1.0.0.201911130609 [10]
+    Satisfied: true
+    Active Aspects: [com.amitinside.aspecio.examples.aspect.metric.MetricAspect$All, com.amitinside.aspecio.examples.aspect.counting.CountingAspect]
+
+[1] Service ID: 37, objectClass: [com.amitinside.aspecio.examples.misc.Stuff]
     Required Aspects: [com.amitinside.aspecio.examples.aspect.metric.Timed], Optional Aspects: []
-    Provided by: com.amitinside.aspecio.examples 0.0.0 [1]
+    Provided by: com.amitinside.aspecio.examples 1.0.0.201911130609 [10]
     Satisfied: false
     Missing Required Aspects: [com.amitinside.aspecio.examples.aspect.metric.Timed]
 
-[1] Service ID: 24, objectClass: [com.amitinside.aspecio.examples.async.SuperSlowService]
+[2] Service ID: 31, objectClass: [com.amitinside.aspecio.examples.async.SuperSlowService]
     Required Aspects: [com.amitinside.aspecio.examples.aspect.metric.MetricAspect$AnnotatedOnly], Optional Aspects: [com.amitinside.aspecio.examples.aspect.counting.CountingAspect]
-    Provided by: com.amitinside.aspecio.examples 0.0.0 [1]
+    Provided by: com.amitinside.aspecio.examples 1.0.0.201911130609 [10]
     Satisfied: true
     Active Aspects: [com.amitinside.aspecio.examples.aspect.counting.CountingAspect, com.amitinside.aspecio.examples.aspect.metric.MetricAspect$AnnotatedOnly]
-
-[2] Service ID: 26, objectClass: [com.amitinside.aspecio.examples.greetings.Hello, com.amitinside.aspecio.examples.greetings.Goodbye]
-    Required Aspects: [com.amitinside.aspecio.examples.aspect.counting.CountingAspect], Optional Aspects: [com.amitinside.aspecio.examples.aspect.metric.MetricAspect$All]
-    Provided by: com.amitinside.aspecio.examples 0.0.0 [1]
-    Satisfied: true
-    Active Aspects: [com.amitinside.aspecio.examples.aspect.metric.MetricAspect$All, com.amitinside.aspecio.examples.aspect.counting.CountingAspect]
 
 g!
 ```
 
-# Author
+# Credits
 
-Simon Chemouil initially developed Aspecio and Amit Kumar Mondal maintains this revamped version with several fixes and enhancements.
+Simon Chemouil has contributed to the development of the [initial version](https://github.com/primeval-io/aspecio). Due to inactivity, this version has been forked by Amit Kumar Mondal, making it OSGi R7 compatible and providing several fixes and enhancements to the source code.

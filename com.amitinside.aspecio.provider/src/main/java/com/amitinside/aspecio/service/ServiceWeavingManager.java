@@ -11,6 +11,7 @@ import static com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent.REQUI
 import static com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent.SERVICE_PROPERTIES_CHANGE;
 import static com.amitinside.aspecio.service.WovenServiceEvent.EventKind.SERVICE_UPDATE;
 import static com.amitinside.aspecio.util.AspecioUtil.asInt;
+import static com.amitinside.aspecio.util.AspecioUtil.asList;
 import static com.amitinside.aspecio.util.AspecioUtil.asLong;
 import static com.amitinside.aspecio.util.AspecioUtil.asString;
 import static com.amitinside.aspecio.util.AspecioUtil.asStringArray;
@@ -166,12 +167,9 @@ public final class ServiceWeavingManager implements AllServiceListener {
         logger.debug("Preparing the weaving service ID {} provided by {}", originalServiceId,
                 reference.getBundle().getSymbolicName());
 
-        final List<String> requiredAspectsToWeave = new ArrayList<>(
-                Arrays.asList(asStringArray(reference.getProperty(SERVICE_ASPECT_WEAVE))));
-        final List<String> optionalAspectsToWeave = new ArrayList<>(
-                Arrays.asList(asStringArray(reference.getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL))));
-        final List<String> objectClass            = new ArrayList<>(
-                Arrays.asList(asStringArray(reference.getProperty(OBJECTCLASS))));
+        final List<String> requiredAspectsToWeave = asList(reference.getProperty(SERVICE_ASPECT_WEAVE));
+        final List<String> optionalAspectsToWeave = asList(reference.getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL));
+        final List<String> objectClass            = asList(reference.getProperty(OBJECTCLASS));
         int                serviceRanking         = asInt(reference.getProperty(SERVICE_RANKING), 0);
         final ServiceScope serviceScope           = fromString(asString(reference.getProperty(SERVICE_SCOPE)));
 

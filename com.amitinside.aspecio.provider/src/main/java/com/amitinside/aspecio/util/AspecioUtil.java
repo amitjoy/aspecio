@@ -1,8 +1,10 @@
 package com.amitinside.aspecio.util;
 
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.Callable;
@@ -82,6 +84,10 @@ public final class AspecioUtil {
 
     public static <T> Set<String> asSet(final T source) {
         return Stream.of(asStringArray(source)).collect(toSet());
+    }
+
+    public static <T> List<String> asList(final T source) {
+        return Stream.of(asStringArray(source)).collect(toList());
     }
 
 }

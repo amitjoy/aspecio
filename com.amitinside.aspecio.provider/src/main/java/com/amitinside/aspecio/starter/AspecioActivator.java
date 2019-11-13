@@ -38,7 +38,7 @@ public final class AspecioActivator implements BundleActivator {
             context.registerService(Aspecio.class, aspecio, null);
         }
         final AspecioGogoCommand         gogoCommand = new AspecioGogoCommand(context, aspecio);
-        final Dictionary<String, Object> props       = new Hashtable<>();                       // NOSONAR
+        final Dictionary<String, Object> props       = new Hashtable<>();
 
         props.put("osgi.command.scope", "aspecio");
         props.put("osgi.command.function", new String[] { "aspects", "woven" });

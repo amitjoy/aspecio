@@ -21,7 +21,7 @@ public final class AspecioGogoCommand {
         this.aspecio       = aspecio;
     }
 
-    // Gogo command "aspect:aspects"
+    // Gogo command "aspecio:aspects"
     public void aspects() {
         for (final String aspectName : aspecio.getRegisteredAspects()) {
             System.out.println("* " + aspectName);
@@ -52,7 +52,7 @@ public final class AspecioGogoCommand {
         System.out.println();
     }
 
-    // Gogo command "aspect:woven"
+    // Gogo command "aspecio:woven"
     public void woven() {
         final List<InterceptedServiceDTO> interceptedServices = aspecio.getInterceptedServices();
         printWoven(interceptedServices);

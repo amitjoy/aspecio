@@ -21,7 +21,7 @@ Aside from this README, the API Javadoc also provides a detailed overview.
 ## Overview
 
 
-### Why Aspects? [![start with what and why](https://img.shields.io/badge/start%20with-why%3F-brightgreen.svg?style=flat)]
+### Why Aspects?
 
 In general, aspects allow you to intercept code and alter its execution. There are several downsides to using aspects:
 
@@ -126,7 +126,7 @@ In Aspecio, we can only weave OSGi services that opt-in to one or several aspect
 
 Services must declare the OSGi service `String` or `String[]` property `"service.aspect.weave.required"` (for required aspects) or `"service.aspect.weave.optional"` (for optional aspects), with the aspect names as value, to be candidate for weaving.
 
-### A simple example
+### Example
 
 Here is a Declarative Services component that will be woven by Aspecio using our `CountingAspect` declared earlier.
 

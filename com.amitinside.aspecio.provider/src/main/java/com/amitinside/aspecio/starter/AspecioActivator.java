@@ -5,8 +5,9 @@ import static org.osgi.framework.Constants.BUNDLE_ACTIVATOR;
 import static org.osgi.framework.Constants.BUNDLE_DESCRIPTION;
 import static org.osgi.framework.Constants.BUNDLE_NAME;
 
-import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.osgi.annotation.bundle.Header;
 import org.osgi.framework.BundleActivator;
@@ -37,13 +38,13 @@ public final class AspecioActivator implements BundleActivator {
         } else {
             context.registerService(Aspecio.class, aspecio, null);
         }
-        final AspecioGogoCommand         gogoCommand = new AspecioGogoCommand(context, aspecio);
-        final Dictionary<String, Object> props       = new Hashtable<>();
+        final AspecioGogoCommand  gogoCommand = new AspecioGogoCommand(context, aspecio);
+        final Map<String, Object> props       = new HashMap<>();
 
         props.put("osgi.command.scope", "aspecio");
         props.put("osgi.command.function", new String[] { "aspects", "woven" });
 
-        context.registerService(Object.class, gogoCommand, props);
+        context.registerService(Object.class, gogoCommand, new Hashtable<>(props));
     }
 
     @Override

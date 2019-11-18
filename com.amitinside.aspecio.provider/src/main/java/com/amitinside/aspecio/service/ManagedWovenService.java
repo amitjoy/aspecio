@@ -3,7 +3,9 @@ package com.amitinside.aspecio.service;
 import static com.amitinside.aspecio.api.AspecioConstants._SERVICE_ASPECT_WOVEN;
 
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
@@ -17,16 +19,16 @@ public final class ManagedWovenService {
     private final Logger logger = LoggerFactory.getLogger(ManagedWovenService.class);
 
     // can be null if unsatisfied
-    public WovenService             wovenService;
-    public AspectInterceptorContext aspectContext;
-    public ServiceRegistration<?>   registration;
+    WovenService             wovenService;
+    AspectInterceptorContext aspectContext;
+    ServiceRegistration<?>   registration;
 
     public Dictionary<String, Object> getProperties() {
-        final Hashtable<String, Object> props = new Hashtable<>();
+        final Map<String, Object> props = new HashMap<>();
         props.putAll(wovenService.serviceProperties);
         props.put(_SERVICE_ASPECT_WOVEN, aspectContext.satisfiedAspects.toArray(new String[0]));
 
-        return props;
+        return new Hashtable<>(props);
     }
 
     public void register() {

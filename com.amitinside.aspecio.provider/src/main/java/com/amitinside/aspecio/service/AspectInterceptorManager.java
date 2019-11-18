@@ -2,8 +2,8 @@ package com.amitinside.aspecio.service;
 
 import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT;
 import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT_EXTRAPROPERTIES;
-import static com.amitinside.aspecio.service.AspectInterceptorListener.EventKind.NEWMATCH;
-import static com.amitinside.aspecio.service.AspectInterceptorListener.EventKind.NOMATCH;
+import static com.amitinside.aspecio.service.AspectInterceptorListener.EventKind.NEW_MATCH;
+import static com.amitinside.aspecio.service.AspectInterceptorListener.EventKind.NO_MATCH;
 import static com.amitinside.aspecio.util.AspecioUtil.asInt;
 import static com.amitinside.aspecio.util.AspecioUtil.asLong;
 import static com.amitinside.aspecio.util.AspecioUtil.asSet;
@@ -119,7 +119,7 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
         final AspectInterceptor firstAfter = firstOrNull(as);
         if (firstAfter != firstBefore) {
             // still in lock, should we?
-            fireEvent(NEWMATCH, aspect, firstAfter);
+            fireEvent(NEW_MATCH, aspect, firstAfter);
         }
     }
 
@@ -178,7 +178,7 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
                 final AspectInterceptor firstAfter = firstOrNull(as);
                 if (firstAfter != firstBefore) {
                     // still in lock, should we?
-                    fireEvent(firstAfter != null ? NEWMATCH : NOMATCH, aspect, firstAfter);
+                    fireEvent(firstAfter != null ? NEW_MATCH : NO_MATCH, aspect, firstAfter);
                 }
             }
         }
@@ -206,7 +206,7 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
         final AspectInterceptor firstAfter = firstOrNull(as);
         if (firstAfter != firstBefore) {
             // still in lock, should we?
-            fireEvent(firstAfter != null ? NEWMATCH : NOMATCH, aspect, firstAfter);
+            fireEvent(firstAfter != null ? NEW_MATCH : NO_MATCH, aspect, firstAfter);
         }
     }
 

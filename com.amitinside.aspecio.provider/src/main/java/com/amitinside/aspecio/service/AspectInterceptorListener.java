@@ -4,8 +4,8 @@ package com.amitinside.aspecio.service;
 public interface AspectInterceptorListener {
 
     enum EventKind {
-        NEWMATCH,
-        NOMATCH
+        NEW_MATCH,
+        NO_MATCH
     }
 
     void onAspectChange(EventKind eventKind, String aspectName, AspectInterceptor aspectInterceptor);

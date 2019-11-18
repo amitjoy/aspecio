@@ -107,20 +107,8 @@ public final class ServiceWeavingManager implements AllServiceListener {
                     } else if (bundlesToRestart.size() > 1) {
                         logger.info("Aspecio: active bundles {} require weaving... restarting them", bundlesList);
                     }
-                    for (final Bundle b : bundlesToRestart) {
-                        try {
-                            b.stop(STOP_TRANSIENT);
-                        } catch (final BundleException e) {
-                            logger.error("Could not stop bundle {}", b, e);
-                        }
-                    }
-                    for (final Bundle b : bundlesToRestart) {
-                        try {
-                            b.start(START_TRANSIENT);
-                        } catch (final BundleException e) {
-                            logger.error("Could not start bundle {}", b, e);
-                        }
-                    }
+                    bundlesToRestart.forEach(this::stopBundle);
+                    bundlesToRestart.forEach(this::startBundle);
                 }
             }
         } catch (final InvalidSyntaxException e) {
@@ -332,6 +320,22 @@ public final class ServiceWeavingManager implements AllServiceListener {
                     .toArray(ClassLoader[]::new);
             return new ProxyClassLoader(new BridgingClassLoader(classLoaders));
         });
+    }
+
+    private void startBundle(final Bundle b) {
+        try {
+            b.start(START_TRANSIENT);
+        } catch (final BundleException e) {
+            logger.error("Could not start bundle {}", b, e);
+        }
+    }
+
+    private void stopBundle(final Bundle b) {
+        try {
+            b.stop(STOP_TRANSIENT);
+        } catch (final BundleException e) {
+            logger.error("Could not stop bundle {}", b, e);
+        }
     }
 
     private void fireEvent(final WovenServiceEvent event, final WovenService wovenService) {

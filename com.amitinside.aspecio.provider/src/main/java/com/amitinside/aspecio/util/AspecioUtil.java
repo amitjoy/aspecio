@@ -10,12 +10,7 @@ import java.util.SortedSet;
 import java.util.concurrent.Callable;
 import java.util.stream.Stream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public final class AspecioUtil {
-
-    private static final Logger logger = LoggerFactory.getLogger(AspecioUtil.class);
 
     private AspecioUtil() {
         throw new IllegalAccessError("Cannot be instantiated");
@@ -26,10 +21,8 @@ public final class AspecioUtil {
         try {
             return block.call();
         } catch (final RuntimeException e) {
-            logger.error("Error while running code", e);
             throw e;
         } catch (final Exception e) {
-            logger.error("Exception while running code", e);
             throw Exceptions.duck(e);
         }
     }

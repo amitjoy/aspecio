@@ -21,7 +21,7 @@ import com.amitinside.aspecio.api.AspecioConstants;
  * </ul>
  *
  * <p>
- * This annotation can be used on a {@link Component} to request Aspects to be woven.
+ * This annotation can be used on a {@link Component} to request aspects to be woven.
  *
  * @see "Component Property Types"
  */

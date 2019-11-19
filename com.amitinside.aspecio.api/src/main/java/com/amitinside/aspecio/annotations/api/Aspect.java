@@ -20,7 +20,7 @@ import com.amitinside.aspecio.api.AspecioConstants;
  *
  * <p>
  * This annotation can be used on a {@link Component} to define aspects. The component class must be
- * assignable to Interceptor to be recognized as an Aspect.
+ * assignable to {@code io.primeval.reflex.proxy.Interceptor} to be recognized as an aspect.
  *
  * @see "Component Property Types"
  */

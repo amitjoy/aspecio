@@ -1,5 +1,6 @@
 /**
- * This package provides property annotations to define Aspects or request a service to be woven.
+ * This package provides component property annotations to define Aspects
+ * or request a service to be woven.
  */
 @org.osgi.annotation.bundle.Export
 @org.osgi.annotation.versioning.Version("1.0")

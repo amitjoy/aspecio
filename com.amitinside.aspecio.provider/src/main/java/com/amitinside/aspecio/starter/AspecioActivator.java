@@ -1,6 +1,8 @@
 package com.amitinside.aspecio.starter;
 
 import static com.amitinside.aspecio.api.AspecioConstants.ASPECIO_FILTER_SERVICES;
+import static org.apache.felix.service.command.CommandProcessor.COMMAND_FUNCTION;
+import static org.apache.felix.service.command.CommandProcessor.COMMAND_SCOPE;
 import static org.osgi.framework.Constants.BUNDLE_ACTIVATOR;
 import static org.osgi.framework.Constants.BUNDLE_DESCRIPTION;
 import static org.osgi.framework.Constants.BUNDLE_NAME;
@@ -41,8 +43,8 @@ public final class AspecioActivator implements BundleActivator {
         final AspecioGogoCommand  gogoCommand = new AspecioGogoCommand(context, aspecio);
         final Map<String, Object> props       = new HashMap<>();
 
-        props.put("osgi.command.scope", "aspecio");
-        props.put("osgi.command.function", new String[] { "aspects", "woven" });
+        props.put(COMMAND_SCOPE, "aspecio");
+        props.put(COMMAND_FUNCTION, new String[] { "aspects", "woven" });
 
         context.registerService(Object.class, gogoCommand, new Hashtable<>(props));
     }

@@ -2,6 +2,7 @@
 	com.amitinside.aspecio.api,\
 	com.github.gfx.util:weak-identity-hash-map;packages=*,\
 	io.primeval.reflex,\
+	org.apache.felix.gogo.runtime,\
 	org.objectweb.asm,\
 	slf4j.api
 

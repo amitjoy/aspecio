@@ -275,6 +275,18 @@ g! woven
 g!
 ```
 
+## Project Import
+
+**Import as Eclipse Projects**
+
+1. Install bndtools
+2. Import all the projects (`File -> Import -> General -> Existing Projects into Workspace`)
+
+
+## Building from Source
+
+Run `./gradlew clean build` in the project root directory
+
 # Credits
 
 Simon Chemouil has contributed to the development of the [initial version](https://github.com/primeval-io/aspecio). Due to inactivity, this version has been forked by Amit Kumar Mondal, making it OSGi R7 compatible and providing several fixes and enhancements to the source code.

@@ -38,7 +38,8 @@ Bundle-Developers       : Simon;\
 -buildpath.all          : \
           osgi.cmpn,\
           osgi.core,\
-          osgi.annotation
+          osgi.annotation,\
+          slf4j.api
 
 -plugin.1.R7.API        : \
 	aQute.bnd.repository.maven.pom.provider.BndPomRepository; \

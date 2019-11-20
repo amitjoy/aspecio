@@ -1,27 +1,15 @@
--buildpath: \
+-conditionalpackage : com.github.gfx.util, io.primeval.reflex.*
+-privatepackage     : com.amitinside.aspecio.*
+
+-buildpath          : \
 	com.amitinside.aspecio.api,\
 	com.github.gfx.util:weak-identity-hash-map;packages=*,\
 	io.primeval.reflex,\
 	org.apache.felix.gogo.runtime,\
-	org.objectweb.asm,\
-	slf4j.api
+	org.objectweb.asm
 
--privatepackage     : \
-	com.amitinside.aspecio.*,\
-	com.github.gfx.util,\
-	io.primeval.reflex.*
-
-Export-Package: \
-	io.primeval.reflex,\
-	io.primeval.reflex.arguments,\
-	io.primeval.reflex.objectmap,\
-	io.primeval.reflex.proxy,\
-	io.primeval.reflex.proxy.annotation,\
-	io.primeval.reflex.proxy.bytecode,\
-	io.primeval.reflex.proxy.bytecode.gen,\
-	io.primeval.reflex.proxy.handler,\
-	io.primeval.reflex.proxy.handler.helper,\
-	io.primeval.reflex.service.adt,\
-	io.primeval.reflex.service.adt.spi,\
-	org.objectweb.asm,\
-	org.objectweb.asm.signature
+Export-Package      : \
+	!io.primeval.reflex.service.adt.internal,\
+	!io.primeval.reflex.proxy.shared,\
+	io.primeval.reflex.*,\
+	org.objectweb.asm.*

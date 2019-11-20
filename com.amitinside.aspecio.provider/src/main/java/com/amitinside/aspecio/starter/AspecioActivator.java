@@ -1,6 +1,7 @@
 package com.amitinside.aspecio.starter;
 
 import static com.amitinside.aspecio.api.AspecioConstants.ASPECIO_FILTER_SERVICES;
+import static java.util.Optional.ofNullable;
 import static org.apache.felix.service.command.CommandProcessor.COMMAND_FUNCTION;
 import static org.apache.felix.service.command.CommandProcessor.COMMAND_SCOPE;
 import static org.osgi.framework.Constants.BUNDLE_ACTIVATOR;
@@ -35,8 +36,15 @@ public final class AspecioActivator implements BundleActivator {
 
         final boolean filterServices = shouldFilterServices(context);
         if (filterServices) {
-            context.registerService(new String[] { Aspecio.class.getName(), FindHook.class.getName(),
-                    EventListenerHook.class.getName() }, aspecio, null);
+            // @formatter:off
+            context.registerService(
+                    new String[] {
+                            Aspecio.class.getName(),
+                            FindHook.class.getName(),
+                            EventListenerHook.class.getName()
+                    },
+                    aspecio, null);
+            // @formatter:on
         } else {
             context.registerService(Aspecio.class, aspecio, null);
         }
@@ -55,8 +63,8 @@ public final class AspecioActivator implements BundleActivator {
     }
 
     private boolean shouldFilterServices(final BundleContext bundleContext) {
-        final String filterProp = bundleContext.getProperty(ASPECIO_FILTER_SERVICES);
-        return filterProp == null ? true : Boolean.valueOf(filterProp.toLowerCase());
+        final String filterProp = ofNullable(bundleContext.getProperty(ASPECIO_FILTER_SERVICES)).orElse("true");
+        return Boolean.valueOf(filterProp);
     }
 
 }

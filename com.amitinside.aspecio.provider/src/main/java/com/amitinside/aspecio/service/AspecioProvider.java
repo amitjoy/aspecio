@@ -63,8 +63,11 @@ public final class AspecioProvider implements Aspecio, FindHook, EventListenerHo
     @Override
     public void event(final ServiceEvent event, final Map<BundleContext, Collection<ListenerInfo>> listeners) {
         // Is it an event we want to filter out?
-        final ServiceReference<?> ref = event.getServiceReference();
-        if (ref.getProperty(SERVICE_ASPECT_WEAVE) == null && ref.getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL) == null) {
+        final ServiceReference<?> ref                   = event.getServiceReference();
+        final Object              weaveProperty         = ref.getProperty(SERVICE_ASPECT_WEAVE);
+        final Object              optionalWeaveProperty = ref.getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL);
+
+        if (weaveProperty == null && optionalWeaveProperty == null) {
             return;
         }
         final Iterator<BundleContext> iterator = listeners.keySet().iterator();
@@ -88,10 +91,11 @@ public final class AspecioProvider implements Aspecio, FindHook, EventListenerHo
         }
         final Iterator<ServiceReference<?>> iterator = references.iterator();
         while (iterator.hasNext()) {
-            final ServiceReference<?> reference           = iterator.next();
-            final Object              aspectWeave         = reference.getProperty(SERVICE_ASPECT_WEAVE);
-            final Object              aspectWeaveOptional = reference.getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL);
-            if (aspectWeave == null && aspectWeaveOptional == null) {
+            final ServiceReference<?> reference             = iterator.next();
+            final Object              weaveProperty         = reference.getProperty(SERVICE_ASPECT_WEAVE);
+            final Object              optionalWeaveProperty = reference.getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL);
+
+            if (weaveProperty == null && optionalWeaveProperty == null) {
                 continue;
             }
             iterator.remove();

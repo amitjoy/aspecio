@@ -1,6 +1,7 @@
 package com.amitinside.aspecio.service;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.osgi.framework.wiring.BundleRevision;
@@ -14,12 +15,14 @@ public final class BundleRevisionPath {
 
     public synchronized ProxyClassLoader computeClassLoaderIfAbsent(
             final Supplier<ProxyClassLoader> classLoaderSupplier) {
-        return classLoader == null ? classLoaderSupplier.get() : classLoader;
+        classLoader = Optional.ofNullable(classLoader).orElse(classLoaderSupplier.get());
+        return classLoader;
     }
 
     public synchronized Map<BundleRevision, BundleRevisionPath> computeSubMapIfAbsent(
             final Supplier<Map<BundleRevision, BundleRevisionPath>> subMapSupplier) {
-        return subMap == null ? subMapSupplier.get() : subMap;
+        subMap = Optional.ofNullable(subMap).orElse(subMapSupplier.get());
+        return subMap;
     }
 
 }

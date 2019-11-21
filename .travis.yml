@@ -7,4 +7,6 @@ jdk:
 
 install: ./gradlew --version
 
-script: ./gradlew --continue
+before_script: ./gradlew --no-daemon --version
+
+script: ./gradlew --no-daemon --continue :build

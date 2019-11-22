@@ -16,4 +16,4 @@ install: ./gradlew --version
 
 before_script: ./gradlew --no-daemon --version
 
-script: ./gradlew --no-daemon --continue :build
+script: ./gradlew --no-daemon --continue build

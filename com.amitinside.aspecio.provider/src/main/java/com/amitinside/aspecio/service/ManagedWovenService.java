@@ -1,6 +1,6 @@
 package com.amitinside.aspecio.service;
 
-import static com.amitinside.aspecio.api.AspecioConstants._SERVICE_ASPECT_WOVEN;
+import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT_WOVEN;
 
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -26,7 +26,7 @@ public final class ManagedWovenService {
     public Dictionary<String, Object> getProperties() {
         final Map<String, Object> props = new HashMap<>();
         props.putAll(wovenService.serviceProperties);
-        props.put(_SERVICE_ASPECT_WOVEN, aspectContext.satisfiedAspects.toArray(new String[0]));
+        props.put(SERVICE_ASPECT_WOVEN, aspectContext.satisfiedAspects.toArray(new String[0]));
 
         return new Hashtable<>(props);
     }

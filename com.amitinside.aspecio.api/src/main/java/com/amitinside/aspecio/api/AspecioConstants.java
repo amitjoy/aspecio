@@ -45,6 +45,6 @@ public final class AspecioConstants {
      * The hidden property containing the array of Aspects effectively woven at any given time, for a
      * woven service.
      */
-    public static final String _SERVICE_ASPECT_WOVEN = ".service.aspect.woven";
+    public static final String SERVICE_ASPECT_WOVEN = ".service.aspect.woven";
 
 }

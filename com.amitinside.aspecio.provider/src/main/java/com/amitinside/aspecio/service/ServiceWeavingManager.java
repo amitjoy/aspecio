@@ -2,7 +2,7 @@ package com.amitinside.aspecio.service;
 
 import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT_WEAVE;
 import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT_WEAVE_OPTIONAL;
-import static com.amitinside.aspecio.api.AspecioConstants._SERVICE_ASPECT_WOVEN;
+import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT_WOVEN;
 import static com.amitinside.aspecio.service.ServiceScope.fromString;
 import static com.amitinside.aspecio.service.WovenServiceEvent.SERVICE_DEPARTURE;
 import static com.amitinside.aspecio.service.WovenServiceEvent.SERVICE_REGISTRATION;
@@ -73,7 +73,7 @@ public final class ServiceWeavingManager implements AllServiceListener {
     private final Logger logger = LoggerFactory.getLogger(ServiceWeavingManager.class);
 
     private static final String SERVICE_FILTER = MessageFormat.format("(&(|({0}=*)({1}=*))(!({2}=*)))",
-            SERVICE_ASPECT_WEAVE, SERVICE_ASPECT_WEAVE_OPTIONAL, _SERVICE_ASPECT_WOVEN);
+            SERVICE_ASPECT_WEAVE, SERVICE_ASPECT_WEAVE_OPTIONAL, SERVICE_ASPECT_WOVEN);
 
     private final Map<ServiceReference<?>, WovenService> wovenServiceByServiceRef = new ConcurrentSkipListMap<>();
     private final Map<String, List<WovenService>>        wovenServicesByAspect    = new ConcurrentHashMap<>();

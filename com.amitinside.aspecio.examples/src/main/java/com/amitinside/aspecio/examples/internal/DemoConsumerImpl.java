@@ -1,7 +1,9 @@
 package com.amitinside.aspecio.examples.internal;
 
 import java.io.PrintStream;
+import java.util.concurrent.Executors;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.util.promise.Deferred;
@@ -25,7 +27,12 @@ public final class DemoConsumerImpl implements DemoConsumer {
     @Reference
     private SuperSlowService superSlowService;
 
-    private PromiseFactory promiseFactory;
+    private final PromiseFactory promiseFactory;
+
+    @Activate
+    public DemoConsumerImpl() {
+        promiseFactory = new PromiseFactory(Executors.newSingleThreadExecutor());
+    }
 
     @Override
     public void consumeTo(final PrintStream out) {

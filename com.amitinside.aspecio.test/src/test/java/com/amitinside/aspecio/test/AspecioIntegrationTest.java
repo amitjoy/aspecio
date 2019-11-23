@@ -41,13 +41,22 @@ import aQute.launchpad.Service;
 import aQute.launchpad.junit.LaunchpadRunner;
 
 @RunWith(LaunchpadRunner.class)
-public class AspecioIntegrationTest {
+public final class AspecioIntegrationTest {
 
     @Service
     private Aspecio aspecio;
 
     @Service
     private Launchpad launchpad;
+
+    @Service
+    private DemoConsumer demoConsumer;
+
+    @Service
+    private CountingAspect countingAspect;
+
+    @Service
+    private ServiceReference<DemoConsumer> demoConsumerRef;
 
     @Service(target = "(" + SERVICE_ASPECT_WOVEN + "=*)")
     private Hello hello;
@@ -60,15 +69,6 @@ public class AspecioIntegrationTest {
 
     @Service(target = "(" + SERVICE_ASPECT_WOVEN + "=*)")
     private ServiceReference<Goodbye> goodbyeRef;
-
-    @Service
-    private DemoConsumer demoConsumer;
-
-    @Service
-    private ServiceReference<DemoConsumer> demoConsumerRef;
-
-    @Service
-    private CountingAspect countingAspect;
 
     @Service(target = "(" + SERVICE_ASPECT_WOVEN + "=*)")
     private SuperSlowService superSlowService;

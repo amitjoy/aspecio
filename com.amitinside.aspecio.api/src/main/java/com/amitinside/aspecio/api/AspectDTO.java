@@ -7,7 +7,7 @@ import org.osgi.dto.DTO;
 /**
  * The data transfer object of an aspect and the interceptors providing it.
  */
-public final class AspectDTO extends DTO {
+public class AspectDTO extends DTO {
 
     /**
      * The aspect name.

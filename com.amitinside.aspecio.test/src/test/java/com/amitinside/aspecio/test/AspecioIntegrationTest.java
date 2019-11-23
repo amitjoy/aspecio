@@ -10,7 +10,6 @@ import static org.osgi.framework.Constants.OBJECTCLASS;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -78,11 +77,11 @@ public class AspecioIntegrationTest {
 
     @Test
     public void testExampleApplication() throws Exception {
+        launchpad.reportServices();
         checkExampleApplicationIsProperlyWoven();
     }
 
-    private void checkExampleApplicationIsProperlyWoven()
-            throws InterruptedException, IOException, InvocationTargetException {
+    private void checkExampleApplicationIsProperlyWoven() throws Exception {
         // Check if all aspects are accounted for
         final Set<String> aspects = aspecio.getRegisteredAspects();
         assertThat(aspects).contains(MetricAspect.All.class.getName(), MetricAspect.AnnotatedOnly.class.getName(),
@@ -131,44 +130,44 @@ public class AspecioIntegrationTest {
                 + "=*))";
         final Filter filter     = launchpad.getBundleContext().createFilter(ldapFilter);
 
-        final ServiceTracker<Randomizer, Randomizer> rmdnTracker = new ServiceTracker<>(launchpad.getBundleContext(),
-                filter, null);
-        rmdnTracker.open();
+        final ServiceTracker<Randomizer, Randomizer> randomizerTracker = new ServiceTracker<>(
+                launchpad.getBundleContext(), filter, null);
+        randomizerTracker.open();
 
         final String                          fakeAspect     = "tested.aspect";
-        final RandomizerImpl                  randomizerImpl = new RandomizerImpl();
+        final Randomizer                      randomizerImpl = new RandomizerImpl();
         final ServiceRegistration<Randomizer> serviceReg     = launchpad.register(Randomizer.class, randomizerImpl,
                 SERVICE_ASPECT_WEAVE, fakeAspect);
 
         // Check that the service is not available, because our fakeAspect is not provided.
-        assertThat(rmdnTracker.size()).isEqualTo(0);
+        assertThat(randomizerTracker.size()).isEqualTo(0);
 
         final NoopAspect                  noopAspect = new NoopAspect();
         final ServiceRegistration<Object> aspectReg  = launchpad.register(Object.class, noopAspect, SERVICE_ASPECT,
                 fakeAspect);
 
         // Check that the service is available, because our fakeAspect is provided.
-        assertThat(rmdnTracker.size()).isEqualTo(1);
-        assertThat((String[]) rmdnTracker.getServiceReference().getProperty(SERVICE_ASPECT_WOVEN))
+        assertThat(randomizerTracker.size()).isEqualTo(1);
+        assertThat((String[]) randomizerTracker.getServiceReference().getProperty(SERVICE_ASPECT_WOVEN))
                 .containsExactly(fakeAspect);
 
         aspectReg.unregister();
         // Check that the service is available, because our fakeAspect is gone.
-        assertThat(rmdnTracker.size()).isEqualTo(0);
+        assertThat(randomizerTracker.size()).isEqualTo(0);
 
         // Register the aspect again
         launchpad.register(Object.class, noopAspect, SERVICE_ASPECT, fakeAspect);
-        assertThat(rmdnTracker.size()).isEqualTo(1);
+        assertThat(randomizerTracker.size()).isEqualTo(1);
 
         // Let the service go
         serviceReg.unregister();
-        assertThat(rmdnTracker.size()).isEqualTo(0);
+        assertThat(randomizerTracker.size()).isEqualTo(0);
 
         // Register the service again, it should be immediately available
         launchpad.register(Randomizer.class, randomizerImpl, SERVICE_ASPECT_WEAVE, fakeAspect);
-        assertThat(rmdnTracker.size()).isEqualTo(1);
+        assertThat(randomizerTracker.size()).isEqualTo(1);
 
-        rmdnTracker.close();
+        randomizerTracker.close();
     }
 
     private String extractFromPrintStream(final Consumer<PrintStream> psConsumer) throws IOException {

@@ -63,8 +63,7 @@ public final class AspecioActivator implements BundleActivator {
     }
 
     private boolean shouldFilterServices(final BundleContext bundleContext) {
-        final String filterProp = ofNullable(bundleContext.getProperty(ASPECIO_FILTER_SERVICES)).orElse("true");
-        return Boolean.valueOf(filterProp);
+        return ofNullable(bundleContext.getProperty(ASPECIO_FILTER_SERVICES)).map(Boolean::valueOf).orElse(true);
     }
 
 }

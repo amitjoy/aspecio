@@ -15,6 +15,7 @@ import static com.amitinside.aspecio.util.AspecioUtil.asList;
 import static com.amitinside.aspecio.util.AspecioUtil.asLong;
 import static com.amitinside.aspecio.util.AspecioUtil.asString;
 import static com.amitinside.aspecio.util.AspecioUtil.asStringArray;
+import static java.util.Collections.synchronizedMap;
 import static java.util.stream.Collectors.joining;
 import static org.osgi.framework.Bundle.START_TRANSIENT;
 import static org.osgi.framework.Bundle.STOP_TRANSIENT;
@@ -32,7 +33,6 @@ import static org.osgi.framework.ServiceEvent.UNREGISTERING;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -70,10 +70,10 @@ import io.primeval.reflex.proxy.bytecode.ProxyClassLoader;
 
 public final class ServiceWeavingManager implements AllServiceListener {
 
-    private final Logger logger = LoggerFactory.getLogger(ServiceWeavingManager.class);
-
     private static final String SERVICE_FILTER = MessageFormat.format("(&(|({0}=*)({1}=*))(!({2}=*)))",
             SERVICE_ASPECT_WEAVE, SERVICE_ASPECT_WEAVE_OPTIONAL, SERVICE_ASPECT_WOVEN);
+
+    private final Logger logger = LoggerFactory.getLogger(ServiceWeavingManager.class);
 
     private final Map<ServiceReference<?>, WovenService> wovenServiceByServiceRef = new ConcurrentSkipListMap<>();
     private final Map<String, List<WovenService>>        wovenServicesByAspect    = new ConcurrentHashMap<>();
@@ -81,8 +81,7 @@ public final class ServiceWeavingManager implements AllServiceListener {
 
     // Everything in here is weak, using identity equality, so it nicely cleans up by itself as
     // bundles are cleaned-up, if there are no stale references on our bundles or services of course
-    private final Map<BundleRevision, BundleRevisionPath> revisionMap = Collections
-            .synchronizedMap(new WeakIdentityHashMap<>());
+    private final Map<BundleRevision, BundleRevisionPath> revisionMap = synchronizedMap(new WeakIdentityHashMap<>());
 
     private final BundleContext bundleContext;
     private final AtomicBoolean closed = new AtomicBoolean();
@@ -140,6 +139,8 @@ public final class ServiceWeavingManager implements AllServiceListener {
             case MODIFIED_ENDMATCH:
             case UNREGISTERING:
                 onServiceDeparture(sr);
+                break;
+            default:
                 break;
         }
     }
@@ -308,8 +309,7 @@ public final class ServiceWeavingManager implements AllServiceListener {
             if (!bundleRevs.contains(bundleRev)) {
                 bundleRevs.add(bundleRev);
                 bundleRevPath = revisions.computeIfAbsent(bundleRev, k -> new BundleRevisionPath());
-                revisions     = bundleRevPath
-                        .computeSubMapIfAbsent(() -> Collections.synchronizedMap(new WeakIdentityHashMap<>()));
+                revisions     = bundleRevPath.computeSubMapIfAbsent(() -> synchronizedMap(new WeakIdentityHashMap<>()));
             }
             currClazz = currClazz.getSuperclass();
         } while (currClazz != null && currClazz != Object.class);

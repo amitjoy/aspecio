@@ -16,6 +16,7 @@ import java.util.function.Consumer;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.osgi.framework.BundleContext;
 import org.osgi.framework.Filter;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
@@ -73,6 +74,9 @@ public final class AspecioIntegrationTest {
     @Service(target = "(" + SERVICE_ASPECT_WOVEN + "=*)")
     private SuperSlowService superSlowService;
 
+    @Service
+    private BundleContext bundleContext;
+
     static LaunchpadBuilder builder = new LaunchpadBuilder().bndrun("test.bndrun").debug();
 
     @Test
@@ -128,10 +132,10 @@ public final class AspecioIntegrationTest {
 
         final String ldapFilter = "(&(" + OBJECTCLASS + "=" + Randomizer.class.getName() + ")(" + SERVICE_ASPECT_WOVEN
                 + "=*))";
-        final Filter filter     = launchpad.getBundleContext().createFilter(ldapFilter);
+        final Filter filter     = bundleContext.createFilter(ldapFilter);
 
-        final ServiceTracker<Randomizer, Randomizer> randomizerTracker = new ServiceTracker<>(
-                launchpad.getBundleContext(), filter, null);
+        final ServiceTracker<Randomizer, Randomizer> randomizerTracker = new ServiceTracker<>(bundleContext, filter,
+                null);
         randomizerTracker.open();
 
         final String                          fakeAspect     = "tested.aspect";

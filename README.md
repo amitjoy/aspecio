@@ -209,7 +209,7 @@ public final class MyFeatureAspectImpl implements Interceptor {
 }
 ```
 
-### Interceptors that register extra service properties
+### Interceptors registering extra service properties
 
 
 ```java

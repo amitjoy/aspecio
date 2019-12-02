@@ -20,6 +20,10 @@ import io.primeval.reflex.proxy.handler.InterceptionHandler;
 @Aspect(name = CountingAspect.class)
 public final class CountingAspectImpl implements Interceptor, CountingAspect {
 
+    @interface CountAspectConfig {
+        boolean countOnlySuccessful() default false;
+    }
+
     private final Map<Method, Integer> methodCallCount = new ConcurrentHashMap<>();
 
     private volatile boolean countOnlySuccessful = false;

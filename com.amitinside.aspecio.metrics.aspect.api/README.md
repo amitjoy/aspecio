@@ -31,7 +31,7 @@ Also note that a service property named `aspecio.metrics.measured` will be set t
 
 # Adding MetricsAspect to your service
 
-To add MetricsAspect to your service, set your OSGi service property `service.aspect.weave.optional` (or `service.aspect.weave` if you want mandatory weaving) to `io.primeval.metrics.aspect.MetricsAspect`. Don't forget your implementation must add `@Measured` to intercepted methods you wish to measure (Aspecio and Primeval Metrics must be active).
+To add MetricsAspect to your service, set your OSGi service property `service.aspect.weave.optional` (or `service.aspect.weave.required` if you want mandatory weaving) to `com.amitinside.aspecio.metrics.aspect.api.MetricsAspect`. Don't forget to add `@Measured` to your implementation to the intercepted methods you wish to measure (Aspecio and Metrics bundles must be active).
 
 If you use Declarative Services, use the annotations from `com.amitinside.aspecio.annotations.api` package:
 

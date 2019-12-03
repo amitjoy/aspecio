@@ -1,0 +1,7 @@
+-privatepackage: com.amitinside.aspecio.metrics.aspect.* 
+-buildpath     : \
+	com.amitinside.aspecio.api,\
+	com.amitinside.aspecio.metrics.api,\
+	com.amitinside.aspecio.metrics.aspect.api,\
+	io.dropwizard.metrics.core,\
+	io.primeval.reflex

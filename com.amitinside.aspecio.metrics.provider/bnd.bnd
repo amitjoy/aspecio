@@ -1,0 +1,4 @@
+-privatepackage     : com.amitinside.aspecio.metrics.*
+-buildpath          : \
+	com.amitinside.aspecio.metrics.api,\
+	io.dropwizard.metrics.core

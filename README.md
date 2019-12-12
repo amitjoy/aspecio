@@ -88,7 +88,7 @@ Here is a simple Aspect counting how many times a method has been called. Depend
 
 ```java
 @Component
-@Aspect(provides = CountingAspect.class)
+@Aspect(name = CountingAspect.class)
 public final class CountingAspectImpl implements Interceptor {
 
     private final Map<Method, Integer> methodCallCount = new ConcurrentHashMap();

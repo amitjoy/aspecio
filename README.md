@@ -187,7 +187,7 @@ public final class MyAnnotationDrivenAspectImpl implements AnnotationInterceptor
 See `AnnotationInterceptor` in [Primeval Reflex](http://github.com/primeval-io/primeval-reflex).
 
 
-### Aspects that bridge services
+### Aspects bridging services
 
 Because we rarely want the actual cross-cutting behaviour to reside in our interceptor, it is a better approach to use your favourite component framework to make your aspects merely bring a functionality provided elsewhere:
 

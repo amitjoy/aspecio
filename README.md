@@ -6,7 +6,7 @@ Aspecio is a 'micro-framework' providing AOP Proxies in OSGi environment. It bri
 
 ## Aspecio 1.0.0
 
-Aspecio 1.0.0 is a complete overhaul with a new proxy model that is simpler, completely unrestricted and faster. See [Primeval Reflex](http://github.com/primeval-io/primeval-reflex) for proxy capabilities.
+Aspecio 1.0.0 is a complete overhaul with a new proxy model that is simpler, completely unrestricted and faster. Refer to [Primeval Reflex](http://github.com/primeval-io/primeval-reflex) for proxy capabilities.
 
 
 ## Documentation

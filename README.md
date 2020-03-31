@@ -27,7 +27,7 @@ Apart from this README, the API Javadoc does provide a detailed overview.
 
 In general, aspects allow you to intercept code and alter its execution. There are several downsides to using aspects:
 
-* Scattering behaviour across the codebase
+* Scattering behavior across the codebase
 * Making the execution model opaque by having aspects intercept any random piece of code, including internal code that might have implicit invariants that aspects break
 * Not knowing **which** aspects are being _woven_ on a piece of code at a given time
 * Having some aspect framework implementations _weave_ aspects into one big bytecode muddy-ball, making debugging difficult when line numbers are desynchronized, adding synthetic methods in the bytecode

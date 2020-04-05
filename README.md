@@ -47,7 +47,7 @@ Aspecio aims to make aspects predictable and bridges them with the OSGi service 
 
 While Aspecio's internal weaving code could be interesting to plug into other Dependency Injection frameworks, it currently supports OSGi R7 exclusively out of the box.
 
-Aspecio works with OSGi services and can weave almost any _willing_ OSGi service. 
+Aspecio works with OSGi services and can weave any _willing_ OSGi service. 
 
 Aspecio works with any service scope, `singleton`, `bundle` and `prototype` and will only create as many instances as expected. In case of service frameworks using the `bundle` scope to make service creation lazy (such as Declarative Services), but still having effectively `singleton` services, Aspecio will make sure each service instance has precisely one proxy instance.
 

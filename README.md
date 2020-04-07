@@ -84,7 +84,7 @@ Aspecio first collects the set of bundles providing services to weave, sorts the
 
 In Aspecio, we use Java to declare an Aspect.
 
-Here is a simple Aspect counting how many times a method has been called. Depending on its configuration, it may count only successful calls (e.g., methods that did not throw an exception) or all methods indiscriminately. 
+Here is a simple Aspect counting how many times a method has been invoked. Depending on its configuration, it may count only successful calls (e.g., methods that did not throw an exception) or all methods indiscriminately. 
 
 ```java
 @Component

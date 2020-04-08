@@ -22,7 +22,6 @@ Apart from this README, the API Javadoc does provide a detailed overview.
 
 ## Overview
 
-
 ### Why Aspects?
 
 In general, aspects allow you to intercept code and alter its execution. There are several downsides to using aspects:

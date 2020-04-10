@@ -231,7 +231,7 @@ The proxy service object registered by Aspecio will have the OSGi service boolea
 
 ## Debugging Aspecio
 
-Aspecio provides a service aptly named `Aspecio` that can show you what Aspecio sees at any time:
+Aspecio provides a service aptly named `Aspecio` that can show you what Aspecio sees in runtime:
 
 * which aspects are available
 * which services are woven

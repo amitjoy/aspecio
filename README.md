@@ -281,7 +281,7 @@ g!
 **Import as Eclipse Projects**
 
 1. Install bndtools
-2. Import all the projects (`File -> Import -> General -> Existing Projects into Workspace`)
+2. Import all the projects (`Eclipse Menu -> File -> Import -> General -> Existing Projects into Workspace`)
 
 
 ## Building from Source

@@ -24,7 +24,7 @@ Apart from this README, the API Javadoc does provide an extensive overview.
 
 ### Why Aspects?
 
-In general, aspects allow you to intercept code and alter its execution. There are several downsides to using aspects:
+In general, aspects allow you to intercept code and alter its execution. However, there are several downsides to using aspects:
 
 * Scattering behavior across the codebase
 * Making the execution model opaque by having aspects intercept any random piece of code, including internal code that might have implicit invariants that aspects break

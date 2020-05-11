@@ -39,7 +39,7 @@ However, there are _cross-cutting concerns_ for which aspects can be beneficial,
 * Ensuring a piece of code takes place in a transaction ;
 * And more :-)
 
-Aspecio aims to make aspects predictable and bridges them with the OSGi service model.
+Aspecio aims to make aspects predictable and bridges them with the OSGi service registry model.
 
 
 ### Aspecio and OSGi

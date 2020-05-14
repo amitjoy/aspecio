@@ -69,7 +69,6 @@ See [Primeval Reflex](http://github.com/primeval-io/primeval-reflex) for documen
 
 OSGi services registered as simple classes cannot be woven using Aspecio. The services need to implement well-defined service interfaces.
 
-
 ### Installing Aspecio in an OSGi Framework
 
 Just install `com.amitinside.aspecio.provider` in your OSGi framework, and it will work right away.

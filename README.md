@@ -41,7 +41,6 @@ However, there are _cross-cutting concerns_ for which aspects can be beneficial,
 
 Aspecio aims to make aspects predictable and bridges them with the OSGi service registry model.
 
-
 ### Aspecio and OSGi
 
 While Aspecio's internal weaving code could be interesting to plug into other Dependency Injection frameworks, it currently supports OSGi R7 exclusively out of the box.

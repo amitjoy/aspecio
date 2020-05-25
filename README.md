@@ -17,7 +17,6 @@ Apart from this README, the API javadoc does provide an extensive overview.
 1. Java 8
 2. OSGi R7
 
-
 ## Overview
 
 ### Why Aspects?

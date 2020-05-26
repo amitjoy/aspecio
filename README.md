@@ -34,7 +34,7 @@ However, there are _cross-cutting concerns_ for which aspects can be beneficial,
 * **Security**: ensuring some conditions are met before being allowed into a function ; 
 * **Metrics**: having live metrics on critical components (e.g. using Coda Hale's Metrics library) ;
 * Ensuring a piece of code takes place in a transaction;
-* And more :-)
+* And many more :-)
 
 Aspecio aims to make aspects predictable and bridges them with the OSGi service registry model.
 

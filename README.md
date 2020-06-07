@@ -67,7 +67,7 @@ OSGi services registered as simple classes cannot be woven using Aspecio. The se
 
 ### Installing Aspecio in an OSGi Framework
 
-Just install `com.amitinside.aspecio.provider` in your OSGi framework, and it will work right away.
+Install `com.amitinside.aspecio.provider` in your OSGi framework, and it will work right away.
 
 If there are already registered services with the weaving property, Aspecio will restart their bundles to make sure it has the opportunity to apply its service hook.
 

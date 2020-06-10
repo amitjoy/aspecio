@@ -281,7 +281,7 @@ g!
 
 ## Building from Source
 
-Run `./gradlew clean build` in the project root directory
+Run `./gradlew clean build` in the project root directory.
 
 # Credits
 

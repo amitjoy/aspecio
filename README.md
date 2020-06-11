@@ -106,7 +106,7 @@ public final class CountingAspectImpl implements Interceptor {
 
 Aspecio finds aspects by:
 
-* Looking for OSGi Services; in the example above, provided using the `@Component` Declarative Service annotation)
+* Looking for OSGi services; in the example above, provided using the `@Component` Declarative Service annotation)
 * That provide the OSGi service string property `AspecioConstants.SERVICE_ASPECT` (`"service.aspect.name"`) declared using the `@Aspect` annotation.
 * That implements the interface `io.primeval.reflect.proxy.Interceptor` (it need not be provided as the service's `"objectClass"`).
 * If several services provide the same aspect, Aspecio will pick the one with the highest-service ranking; in case of equal service rankings, Aspecio will pick the one with the lowest service ID. Aspecio supports OSGi's service dynamics and will gladly replace or update Aspects' lifecycles. Aspecio is always 'greedy': if a "better" interceptor is registered for a given aspect, all the services using it will have it updated immediately. 

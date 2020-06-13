@@ -14,7 +14,7 @@ Apart from this README, the API javadoc provides an extensive overview.
 
 ## Requirements
 
-1. Java 8
+1. Java 8+
 2. OSGi R7
 
 ## Overview

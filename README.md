@@ -120,7 +120,7 @@ For documentation on Interceptors, see [Primeval Reflect](http://github.com/prim
 
 In Aspecio, we can only weave OSGi services that opt-in to one or several aspects. This is because services have a well-defined contract and make it the perfect entry point for aspects.
 
-Services must declare the OSGi service `String` or `String[]` property `"service.aspect.weave.required"` (for required aspects) or `"service.aspect.weave.optional"` (for optional aspects), with the aspect names as value, to be candidate for weaving.
+Services must declare the OSGi service `String` or `String[]` property `service.aspect.weave.required` (for required aspects) or `"service.aspect.weave.optional"` (for optional aspects), with the aspect names as value, to be candidate for weaving.
 
 ### Example
 

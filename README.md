@@ -27,7 +27,7 @@ In general, aspects enable you to intercept code and alter its execution. Howeve
 * Making the execution model opaque by having aspects intercept any random piece of code, including internal code that might have implicit invariants that aspects break
 * Not knowing **which** aspects are being _woven_ on a piece of code at a given time
 * Having some aspect framework implementations _weave_ aspects into one big bytecode muddy-ball, making debugging difficult when line numbers are desynchronized, adding synthetic methods in the bytecode
-* Sometimes aspects are implemented using JDK proxies which can break consuming code, for example, code relying on reflection such as annotation-driven frameworks
+* Sometimes aspects are implemented using Java proxies which can break consuming code, for example, code relying on reflection such as annotation-driven frameworks
 
 However, there are _cross-cutting concerns_ for which aspects can be beneficial, for example:
 

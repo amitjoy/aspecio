@@ -50,7 +50,7 @@ Thanks to relying on OSGi's low-level service primitives, Aspecio can work with 
 
 Aspecio has been tested on Felix 6.0.3 but should work with any framework compliant with OSGi R7.
 
-In the following examples, Declarative Services (DS) are used.
+In the following examples, Declarative Services (DS) is used.
 
 
 ### Aspecio's Weaving

@@ -111,7 +111,7 @@ Aspecio finds aspects by:
 * That implements the interface `io.primeval.reflect.proxy.Interceptor` (it need not be provided as the service's `"objectClass"`).
 * If several services provide the same aspect, Aspecio will pick the one with the highest-service ranking; in case of equal service rankings, Aspecio will pick the one with the lowest service ID. Aspecio supports OSGi's service dynamics and will gladly replace or update Aspects' lifecycles. Aspecio is always 'greedy': if a "better" interceptor is registered for a given aspect, all the services using it will have it updated immediately. 
 
-In the example above, our component `CountingAspectImpl` provides the aspect named `"CountingAspect"` (a Java String). You can call your aspects with any string, but it is practical to use Java classes to piggyback on the namespaces. 
+In the example above, the component `CountingAspectImpl` provides the aspect named `"CountingAspect"` (a Java String). You can call your aspects with any string, but it is practical to use Java classes to piggyback on the namespaces. 
 
 For documentation on Interceptors, see [Primeval Reflect](http://github.com/primeval-io/primeval-reflect).
 

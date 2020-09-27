@@ -40,7 +40,7 @@ Aspecio aims to make aspects predictable and bridges them with the OSGi service 
 
 ### Aspecio and OSGi
 
-While Aspecio's internal weaving code can be interesting to plug into other Dependency Injection frameworks, it currently supports OSGi R7 exclusively out of the box.
+While Aspecio's internal weaving code can be interesting to plug into other Dependency Injection frameworks, it currently does support OSGi R7 exclusively out of the box.
 
 Aspecio works with OSGi services and can weave any _willing_ OSGi service. 
 

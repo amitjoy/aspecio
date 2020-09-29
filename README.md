@@ -55,7 +55,7 @@ In the following examples, Declarative Services (DS) is used.
 
 ### Aspecio's Weaving
 
-Aspecio selects service objects that ask for certain aspects in their service properties, hiding (by default) the original service from all bundles except the system bundle and Aspecio itself.
+Aspecio does select service objects that ask for certain aspects in their service properties, hiding (by default) the original service from all bundles except the system bundle and Aspecio itself.
 
 Aspecio uses [Primeval Reflex](http://github.com/primeval-io/primeval-reflex) to proxy services requesting weaving. All interfaces and public methods are proxied.
 

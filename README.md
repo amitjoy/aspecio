@@ -10,7 +10,7 @@ Aspecio 1.0.0 is the complete overhaul with a completely new proxy model that is
 
 ## Documentation
 
-In addition to this README text, the API javadoc does provide an extensive overview.
+In addition to this README text, the API javadoc provides an extensive overview.
 
 ## Requirements
 

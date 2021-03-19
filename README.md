@@ -65,7 +65,7 @@ See [Primeval Reflex](http://github.com/primeval-io/primeval-reflex) for documen
 
 ### Drawback
 
-OSGi services registered as simple classes cannot be woven using Aspecio. The services need to implement well-defined exported service interfaces.
+OSGi services registered as simple classes cannot be woven using Aspecio. The services need to implement well-defined exported service APIs or interfaces.
 
 ### Installing Aspecio in an OSGi Framework
 

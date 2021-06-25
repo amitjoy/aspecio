@@ -3,6 +3,6 @@
 	com.amitinside.aspecio.api,\
 	com.amitinside.aspecio.examples,\
 	io.primeval.reflex,\
-	org.assertj.core,\
+	assertj-core,\
 	osgi.enroute.junit.wrapper,\
 	osgi.enroute.hamcrest.wrapper

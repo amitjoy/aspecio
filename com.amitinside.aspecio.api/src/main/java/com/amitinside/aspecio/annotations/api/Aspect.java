@@ -22,6 +22,9 @@ import com.amitinside.aspecio.api.AspecioConstants;
  * This annotation can be used on a {@link Component} to define aspects. The component class must be
  * assignable to {@code io.primeval.reflex.proxy.Interceptor} to be recognized as an aspect.
  *
+ * This annotation is not retained at runtime. It is for use by tools to generate bundle manifests or
+ * otherwise process the package.
+ *
  * @see "Component Property Types"
  */
 @Target(TYPE)

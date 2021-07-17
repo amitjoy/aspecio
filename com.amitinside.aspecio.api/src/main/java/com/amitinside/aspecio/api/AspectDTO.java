@@ -6,6 +6,8 @@ import org.osgi.dto.DTO;
 
 /**
  * The data transfer object of an aspect and the interceptors providing it.
+ *
+ * @NotThreadSafe
  */
 public class AspectDTO extends DTO {
 

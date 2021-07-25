@@ -23,7 +23,9 @@ public class AspectDTO extends DTO {
 
     /**
      * The sorted list of interceptors that will replace the current interceptor if the chosen
-     * interceptor is unregistered.<br>
+     * interceptor is unregistered.
+     *
+     * <p>
      * Interceptors are chosen using by comparing their ServiceReference, so a higher service ranking
      * is preferred, and in the case of equal service rankings a lower service id will be chosen.
      */

@@ -3,10 +3,8 @@
 -runvm                          =         -ea
 -runtrace                       =         true
 -runrepos                       =         Workspace, Maven Central
-
 -runblacklist                   =         com.amitinside.aspecio.api,\
                                           io.primeval.reflex,\
                                           org.objectweb.asm
-
 -runrequires.gogo               =         bnd.identity;id='org.apache.felix.gogo.command',\
                                           bnd.identity;id='org.apache.felix.gogo.shell'

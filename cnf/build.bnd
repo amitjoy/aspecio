@@ -41,13 +41,13 @@ Bundle-Developers       : Simon;\
           osgi.annotation,\
           slf4j.api
 
--plugin.1.R7.API        : \
+-plugin.1.R7            : \
 	aQute.bnd.repository.maven.pom.provider.BndPomRepository; \
           snapshotUrls       = https://oss.sonatype.org/content/repositories/osgi/; \
           releaseUrls        = https://repo.maven.apache.org/maven2/; \
           revision           = org.osgi.enroute:osgi-api:7.0.0; \
           readOnly           = true; \
-          name               = "OSGi R7 API"
+          name               = "OSGi R7"
 
 -plugin.2.Maven.Central : \
     aQute.bnd.repository.maven.provider.MavenBndRepository; \

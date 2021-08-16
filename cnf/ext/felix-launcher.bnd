@@ -1,6 +1,5 @@
 -runfw                          =         org.apache.felix.framework
 -runee                          =         JavaSE-1.8
--runvm                          =         -ea
 -runtrace                       =         true
 -runrepos                       =         Workspace, Maven Central
 -runblacklist                   =         com.amitinside.aspecio.api,\

@@ -110,7 +110,7 @@ public final class AspecioIntegrationTest {
         assertThat(aspectDTO).isPresent();
         assertThat(aspectDTO.get().aspectName).isEqualTo(MetricAspect.All.class.getName());
 
-        // In our system, we have exactly one service, that is woven by Aspecio,
+        // In our system, we have exactly one service, which is woven by Aspecio,
         // that provides both Hello and Goodbye.
         assertThat(hello).isNotNull();
         assertThat(goodbye).isNotNull();

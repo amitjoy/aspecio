@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2021 Amit Kumar Mondal
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package com.amitinside.aspecio.service;
 
 import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT_WEAVE;
@@ -76,8 +91,8 @@ public final class ServiceWeavingManager implements AllServiceListener {
     private final Logger logger = LoggerFactory.getLogger(ServiceWeavingManager.class);
 
     private final Map<ServiceReference<?>, WovenService> wovenServiceByServiceRef = new ConcurrentSkipListMap<>();
-    private final Map<String, List<WovenService>>        wovenServicesByAspect    = new ConcurrentHashMap<>();
-    private final List<WovenServiceListener>             wovenServiceListeners    = new CopyOnWriteArrayList<>();
+    private final Map<String, List<WovenService>> wovenServicesByAspect = new ConcurrentHashMap<>();
+    private final List<WovenServiceListener> wovenServiceListeners = new CopyOnWriteArrayList<>();
 
     // Everything in here is weak, using identity equality, so it nicely cleans up by itself as
     // bundles are cleaned-up, if there are no stale references on our bundles or services of course
@@ -158,9 +173,9 @@ public final class ServiceWeavingManager implements AllServiceListener {
 
         final List<String> requiredAspectsToWeave = asList(reference.getProperty(SERVICE_ASPECT_WEAVE));
         final List<String> optionalAspectsToWeave = asList(reference.getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL));
-        final List<String> objectClass            = asList(reference.getProperty(OBJECTCLASS));
-        int                serviceRanking         = asInt(reference.getProperty(SERVICE_RANKING), 0);
-        final ServiceScope serviceScope           = fromString(asString(reference.getProperty(SERVICE_SCOPE)));
+        final List<String> objectClass = asList(reference.getProperty(OBJECTCLASS));
+        int serviceRanking = asInt(reference.getProperty(SERVICE_RANKING), 0);
+        final ServiceScope serviceScope = fromString(asString(reference.getProperty(SERVICE_SCOPE)));
 
         // Keep original properties, except for managed ones.
         final Hashtable<String, Object> serviceProperties = new Hashtable<>(); // NOSONAR
@@ -215,7 +230,7 @@ public final class ServiceWeavingManager implements AllServiceListener {
         final Iterator<String> aspectIt = Stream
                 .concat(requiredAspectsToWeave.stream(), optionalAspectsToWeave.stream()).distinct().iterator();
         while (aspectIt.hasNext()) {
-            final String             aspect        = aspectIt.next();
+            final String aspect = aspectIt.next();
             final List<WovenService> wovenServices = wovenServicesByAspect.computeIfAbsent(aspect,
                     k -> new ArrayList<>());
             wovenServices.add(wovenService);
@@ -232,7 +247,7 @@ public final class ServiceWeavingManager implements AllServiceListener {
                 Arrays.asList(asStringArray(reference.getProperty(SERVICE_ASPECT_WEAVE))));
         final List<String> optionalAspectsToWeave = new ArrayList<>(
                 Arrays.asList(asStringArray(reference.getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL))));
-        int                serviceRanking         = asInt(reference.getProperty(SERVICE_RANKING), 0);
+        int serviceRanking = asInt(reference.getProperty(SERVICE_RANKING), 0);
 
         // Keep original properties, except for managed ones.
         final Hashtable<String, Object> serviceProperties = new Hashtable<>(); // NOSONAR
@@ -255,8 +270,8 @@ public final class ServiceWeavingManager implements AllServiceListener {
         serviceRanking++;
         serviceProperties.put(SERVICE_RANKING, serviceRanking);
 
-        final boolean requiredAspectsChanged   = !Objects.equals(requiredAspectsToWeave, wovenService.requiredAspects);
-        final boolean optionalAspectsChanged   = !Objects.equals(optionalAspectsToWeave, wovenService.optionalAspects);
+        final boolean requiredAspectsChanged = !Objects.equals(requiredAspectsToWeave, wovenService.requiredAspects);
+        final boolean optionalAspectsChanged = !Objects.equals(optionalAspectsToWeave, wovenService.optionalAspects);
         final boolean servicePropertiesChanged = !Objects.equals(serviceProperties, wovenService.serviceProperties);
 
         final WovenService updatedWovenService = wovenService.update(requiredAspectsToWeave, optionalAspectsToWeave,
@@ -300,16 +315,16 @@ public final class ServiceWeavingManager implements AllServiceListener {
     private ProxyClassLoader getDynamicClassLoader(final Class<?> clazz) {
         // Find all bundles required to instantiate the class and bridge their
         // classloaders in case the abstract class or interface lives in non-imported packages
-        Class<?>                                currClazz     = clazz;
-        final List<BundleRevision>              bundleRevs    = new ArrayList<>();
-        Map<BundleRevision, BundleRevisionPath> revisions     = revisionMap;
-        BundleRevisionPath                      bundleRevPath = null;
+        Class<?> currClazz = clazz;
+        final List<BundleRevision> bundleRevs = new ArrayList<>();
+        Map<BundleRevision, BundleRevisionPath> revisions = revisionMap;
+        BundleRevisionPath bundleRevPath = null;
         do {
             final BundleRevision bundleRev = FrameworkUtil.getBundle(currClazz).adapt(BundleRevision.class);
             if (!bundleRevs.contains(bundleRev)) {
                 bundleRevs.add(bundleRev);
                 bundleRevPath = revisions.computeIfAbsent(bundleRev, k -> new BundleRevisionPath());
-                revisions     = bundleRevPath.computeSubMapIfAbsent(() -> synchronizedMap(new WeakIdentityHashMap<>()));
+                revisions = bundleRevPath.computeSubMapIfAbsent(() -> synchronizedMap(new WeakIdentityHashMap<>()));
             }
             currClazz = currClazz.getSuperclass();
         } while (currClazz != null && currClazz != Object.class);

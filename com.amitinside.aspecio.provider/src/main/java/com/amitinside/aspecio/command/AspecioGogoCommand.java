@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2021 Amit Kumar Mondal
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package com.amitinside.aspecio.command;
 
 import java.util.List;
@@ -14,11 +29,11 @@ import com.amitinside.aspecio.api.InterceptorDTO;
 public final class AspecioGogoCommand {
 
     private final BundleContext bundleContext;
-    private final Aspecio       aspecio;
+    private final Aspecio aspecio;
 
     public AspecioGogoCommand(final BundleContext bundleContext, final Aspecio aspecio) {
         this.bundleContext = bundleContext;
-        this.aspecio       = aspecio;
+        this.aspecio = aspecio;
     }
 
     // Gogo command "aspecio:aspects"
@@ -45,8 +60,8 @@ public final class AspecioGogoCommand {
         System.out.println("  " + marker + " Service ID " + interceptorDescription.serviceId + ", class "
                 + interceptorDescription.interceptorClass.getName() + ", extra properties: "
                 + interceptorDescription.extraProperties);
-        final long   serviceBundleId = interceptorDescription.bundleId;
-        final Bundle bundle          = bundleContext.getBundle(serviceBundleId);
+        final long serviceBundleId = interceptorDescription.bundleId;
+        final Bundle bundle = bundleContext.getBundle(serviceBundleId);
         System.out.println(shift + "Provided by: " + bundle.getSymbolicName() + " " + bundle.getVersion() + " ["
                 + serviceBundleId + "]");
         System.out.println();
@@ -64,15 +79,15 @@ public final class AspecioGogoCommand {
     }
 
     private void printWoven(final List<InterceptedServiceDTO> interceptedServices) {
-        int          i         = 0;
-        final int    shiftSize = 4 + interceptedServices.size() / 10;
-        final String shift     = String.format("%" + shiftSize + "s", "");
+        int i = 0;
+        final int shiftSize = 4 + interceptedServices.size() / 10;
+        final String shift = String.format("%" + shiftSize + "s", "");
         for (final InterceptedServiceDTO mws : interceptedServices) {
             System.out.println("[" + i + "] Service ID: " + mws.serviceId + ", objectClass: " + mws.objectClass);
             System.out.println(
                     shift + "Required Aspects: " + mws.requiredAspects + ", Optional Aspects: " + mws.optionalAspects);
-            final long   serviceBundleId = mws.bundleId;
-            final Bundle bundle          = bundleContext.getBundle(serviceBundleId);
+            final long serviceBundleId = mws.bundleId;
+            final Bundle bundle = bundleContext.getBundle(serviceBundleId);
             System.out.println(shift + "Provided by: " + bundle.getSymbolicName() + " " + bundle.getVersion() + " ["
                     + serviceBundleId + "]");
             final boolean satisfied = mws.published;

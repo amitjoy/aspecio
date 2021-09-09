@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2021 Amit Kumar Mondal
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package com.amitinside.aspecio.service;
 
 import static com.amitinside.aspecio.api.AspecioConstants.SERVICE_ASPECT;
@@ -50,12 +65,12 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
 
     private static final String SERVICE_FILTER = "(" + SERVICE_ASPECT + "=*)";
 
-    private final Logger        logger = LoggerFactory.getLogger(AspectInterceptorManager.class);
+    private final Logger logger = LoggerFactory.getLogger(AspectInterceptorManager.class);
     private final BundleContext bundleContext;
 
-    private final SortedMap<ServiceReference<?>, AspectInterceptor> aspectServiceByServiceRef  = new ConcurrentSkipListMap<>();
-    private final Map<String, SortedSet<AspectInterceptor>>         aspectServicesByAspectName = new ConcurrentHashMap<>();
-    private final List<AspectInterceptorListener>                   aspectInterceptorListeners = new CopyOnWriteArrayList<>();
+    private final SortedMap<ServiceReference<?>, AspectInterceptor> aspectServiceByServiceRef = new ConcurrentSkipListMap<>();
+    private final Map<String, SortedSet<AspectInterceptor>> aspectServicesByAspectName = new ConcurrentHashMap<>();
+    private final List<AspectInterceptorListener> aspectInterceptorListeners = new CopyOnWriteArrayList<>();
 
     private ServiceTracker<Object, Object> tracker;
 
@@ -95,9 +110,9 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
     }
 
     public synchronized void onServiceRegistration(final ServiceReference<?> reference, final Object service) {
-        final String      aspect          = asString(reference.getProperty(SERVICE_ASPECT));
+        final String aspect = asString(reference.getProperty(SERVICE_ASPECT));
         final Set<String> extraProperties = asSet(reference.getProperty(SERVICE_ASPECT_EXTRAPROPERTIES));
-        final int         serviceRanking  = asInt(reference.getProperty(SERVICE_RANKING), 0);
+        final int serviceRanking = asInt(reference.getProperty(SERVICE_RANKING), 0);
 
         if (!(service instanceof Interceptor)) {
             // Don't track aspects that don't implement Interceptor.
@@ -110,9 +125,9 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
         aspectServiceByServiceRef.put(reference, aspectService);
 
         // Deal with aspect map.
-        final SortedSet<AspectInterceptor> as          = aspectServicesByAspectName.computeIfAbsent(aspect,
+        final SortedSet<AspectInterceptor> as = aspectServicesByAspectName.computeIfAbsent(aspect,
                 k -> new TreeSet<>());
-        final AspectInterceptor            firstBefore = firstOrNull(as);
+        final AspectInterceptor firstBefore = firstOrNull(as);
         // The trick here is that we use a SortedSet with the right compareTo method on aspectService.
         as.add(aspectService);
 
@@ -128,12 +143,12 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
         if (aspectService == null) {
             return;
         }
-        final String      newAspect       = asString(reference.getProperty(SERVICE_ASPECT));
+        final String newAspect = asString(reference.getProperty(SERVICE_ASPECT));
         final Set<String> extraProperties = asSet(reference.getProperty(SERVICE_ASPECT_EXTRAPROPERTIES));
-        final int         serviceRanking  = asInt(reference.getProperty(SERVICE_RANKING), 0);
+        final int serviceRanking = asInt(reference.getProperty(SERVICE_RANKING), 0);
 
-        final boolean rankingChanged    = aspectService.serviceRanking != serviceRanking;
-        final boolean aspectChanged     = !Objects.equals(aspectService.aspect, newAspect);
+        final boolean rankingChanged = aspectService.serviceRanking != serviceRanking;
+        final boolean aspectChanged = !Objects.equals(aspectService.aspect, newAspect);
         final boolean extraPropsChanged = !Objects.equals(aspectService.extraProperties, extraProperties);
 
         if (rankingChanged || aspectChanged || extraPropsChanged) {
@@ -150,11 +165,11 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
             final Iterator<String> aspectsToProcess = Stream.of(aspectService.aspect, newAspect).distinct().iterator();
 
             while (aspectsToProcess.hasNext()) {
-                final String                       aspect      = aspectsToProcess.next();
-                final boolean                      toPublish   = newAspect.equals(aspect);
-                final SortedSet<AspectInterceptor> as          = aspectServicesByAspectName.computeIfAbsent(aspect,
+                final String aspect = aspectsToProcess.next();
+                final boolean toPublish = newAspect.equals(aspect);
+                final SortedSet<AspectInterceptor> as = aspectServicesByAspectName.computeIfAbsent(aspect,
                         k -> new TreeSet<>());
-                final AspectInterceptor            firstBefore = firstOrNull(as);
+                final AspectInterceptor firstBefore = firstOrNull(as);
 
                 if (toPublish) {
                     if (rankingChanged) {
@@ -194,8 +209,8 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
         logger.debug("Removed aspect: {} (extraProps: {})", aspect, aspectService.extraProperties);
         aspectServiceByServiceRef.remove(reference);
 
-        final SortedSet<AspectInterceptor> as          = aspectServicesByAspectName.get(aspect);
-        final AspectInterceptor            firstBefore = firstOrNull(as);
+        final SortedSet<AspectInterceptor> as = aspectServicesByAspectName.get(aspect);
+        final AspectInterceptor firstBefore = firstOrNull(as);
 
         if (as != null) {
             as.remove(aspectService);
@@ -212,13 +227,13 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
 
     public synchronized AspectInterceptorContext getContext(final List<String> requiredAspects,
             final List<String> optionalAspects) {
-        final Set<AspectInterceptor> interceptors               = new TreeSet<>(
+        final Set<AspectInterceptor> interceptors = new TreeSet<>(
                 comparing((final AspectInterceptor a) -> a.aspect).thenComparingInt(a -> a.serviceRanking));
-        final Set<String>            satisfiedRequiredAspects   = new LinkedHashSet<>();
-        final Set<String>            unsatisfiedRequiredAspects = new LinkedHashSet<>();
-        final Set<String>            satisfiedOptionalAspects   = new LinkedHashSet<>();
-        final Set<String>            unsatisfiedOptionalAspects = new LinkedHashSet<>();
-        final Set<String>            extraProperties            = new LinkedHashSet<>();
+        final Set<String> satisfiedRequiredAspects = new LinkedHashSet<>();
+        final Set<String> unsatisfiedRequiredAspects = new LinkedHashSet<>();
+        final Set<String> satisfiedOptionalAspects = new LinkedHashSet<>();
+        final Set<String> unsatisfiedOptionalAspects = new LinkedHashSet<>();
+        final Set<String> extraProperties = new LinkedHashSet<>();
 
         for (final String aspect : requiredAspects) {
             final AspectInterceptor aspectInterceptor = getAspectInterceptor(aspect);
@@ -277,9 +292,9 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
         }
         final Iterator<AspectInterceptor> iterator = ais.iterator();
 
-        AspectInterceptor          interceptor = iterator.next();
-        final InterceptorDTO       id          = makeInterceptorDTO(interceptor);
-        final List<InterceptorDTO> backupIds   = new ArrayList<>(ais.size() - 1);
+        AspectInterceptor interceptor = iterator.next();
+        final InterceptorDTO id = makeInterceptorDTO(interceptor);
+        final List<InterceptorDTO> backupIds = new ArrayList<>(ais.size() - 1);
 
         while (iterator.hasNext()) {
             interceptor = iterator.next();
@@ -287,8 +302,8 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
             backupIds.add(backupId);
         }
         final AspectDTO ad = new AspectDTO();
-        ad.aspectName         = aspectName;
-        ad.interceptor        = id;
+        ad.aspectName = aspectName;
+        ad.interceptor = id;
         ad.backupInterceptors = backupIds;
 
         return Optional.of(ad);
@@ -296,14 +311,14 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
 
     private InterceptorDTO makeInterceptorDTO(final AspectInterceptor ai) {
         final long serviceId = asLong(ai.serviceRef.getProperty(SERVICE_ID));
-        final long bundleId  = asLong(ai.serviceRef.getProperty(SERVICE_BUNDLEID));
+        final long bundleId = asLong(ai.serviceRef.getProperty(SERVICE_BUNDLEID));
 
         final InterceptorDTO dto = new InterceptorDTO();
-        dto.serviceId        = serviceId;
-        dto.bundleId         = bundleId;
-        dto.serviceRanking   = ai.serviceRanking;
+        dto.serviceId = serviceId;
+        dto.bundleId = bundleId;
+        dto.serviceRanking = ai.serviceRanking;
         dto.interceptorClass = ai.interceptor.getClass();
-        dto.extraProperties  = asSet(ai.extraProperties);
+        dto.extraProperties = asSet(ai.extraProperties);
 
         return dto;
     }

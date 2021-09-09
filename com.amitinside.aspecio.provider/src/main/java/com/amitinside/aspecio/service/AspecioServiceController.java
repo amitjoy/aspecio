@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2021 Amit Kumar Mondal
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
 package com.amitinside.aspecio.service;
 
 import static com.amitinside.aspecio.service.WovenServiceEvent.ChangeEvent.OPTIONAL_ASPECT_CHANGE;
@@ -24,14 +39,14 @@ public final class AspecioServiceController implements AspectInterceptorListener
     private final Logger logger = LoggerFactory.getLogger(AspecioServiceController.class);
 
     private final AspectInterceptorManager aspectInterceptorManager;
-    private final ServiceWeavingManager    serviceWeavingManager;
+    private final ServiceWeavingManager serviceWeavingManager;
 
     private final Map<ServiceReference<?>, ManagedWovenService> managedServices = new ConcurrentHashMap<>();
 
     public AspecioServiceController(final AspectInterceptorManager aspectInterceptorManager,
             final ServiceWeavingManager serviceWeavingManager) {
         this.aspectInterceptorManager = aspectInterceptorManager;
-        this.serviceWeavingManager    = serviceWeavingManager;
+        this.serviceWeavingManager = serviceWeavingManager;
     }
 
     public void open() throws InvalidSyntaxException {
@@ -79,8 +94,7 @@ public final class AspecioServiceController implements AspectInterceptorListener
 
     private synchronized void handleServiceArrival(final WovenService wovenService) {
         final ManagedWovenService managedWovenService = new ManagedWovenService();
-        final ManagedWovenService old                 = managedServices.put(wovenService.originalReference,
-                managedWovenService);
+        final ManagedWovenService old = managedServices.put(wovenService.originalReference, managedWovenService);
         if (old != null) {
             logger.warn("Got an old service with service ID {}", wovenService.originalServiceId);
             old.unregister();
@@ -88,7 +102,7 @@ public final class AspecioServiceController implements AspectInterceptorListener
         final AspectInterceptorContext context = aspectInterceptorManager.getContext(wovenService.requiredAspects,
                 wovenService.optionalAspects);
 
-        managedWovenService.wovenService  = wovenService;
+        managedWovenService.wovenService = wovenService;
         managedWovenService.aspectContext = context;
         managedWovenService.wovenService.aspecioServiceObject.setInterceptor(context.interceptor);
 
@@ -110,7 +124,7 @@ public final class AspecioServiceController implements AspectInterceptorListener
         if (requiredAspectsChanged || optionalAspectsChanged) {
             final AspectInterceptorContext context = aspectInterceptorManager.getContext(wovenService.requiredAspects,
                     wovenService.optionalAspects);
-            managed.wovenService  = wovenService;
+            managed.wovenService = wovenService;
             managed.aspectContext = context;
             managed.wovenService.aspecioServiceObject.setInterceptor(context.interceptor);
 
@@ -148,14 +162,14 @@ public final class AspecioServiceController implements AspectInterceptorListener
             final long bundleId = asLong(mws.wovenService.originalReference.getProperty(SERVICE_BUNDLEID));
 
             final InterceptedServiceDTO dto = new InterceptedServiceDTO();
-            dto.serviceId                  = mws.wovenService.originalServiceId;
-            dto.bundleId                   = bundleId;
-            dto.objectClass                = new ArrayList<>(mws.wovenService.objectClass);
-            dto.published                  = mws.registration != null;
-            dto.satisfiedAspects           = asSet(mws.aspectContext.satisfiedAspects);
+            dto.serviceId = mws.wovenService.originalServiceId;
+            dto.bundleId = bundleId;
+            dto.objectClass = new ArrayList<>(mws.wovenService.objectClass);
+            dto.published = mws.registration != null;
+            dto.satisfiedAspects = asSet(mws.aspectContext.satisfiedAspects);
             dto.unsatisfiedRequiredAspects = asSet(mws.aspectContext.unsatisfiedRequiredAspects);
-            dto.requiredAspects            = asSet(mws.wovenService.requiredAspects);
-            dto.optionalAspects            = asSet(mws.wovenService.optionalAspects);
+            dto.requiredAspects = asSet(mws.wovenService.requiredAspects);
+            dto.optionalAspects = asSet(mws.wovenService.optionalAspects);
 
             isds.add(dto);
         }

@@ -33,6 +33,8 @@ Bundle-Developers       : Simon;\
                             email="admin@amitinside.com";\
                             url=http://www.amitinside.com
 
+-groupid                : com.amitinside
+-pom                    : version=${if;${def;-snapshot};${versionmask;===;${@version}}-${-snapshot};${versionmask;===s;${@version}}}
 -resolve.effective      : resolve, active
 
 -buildpath.all          : \

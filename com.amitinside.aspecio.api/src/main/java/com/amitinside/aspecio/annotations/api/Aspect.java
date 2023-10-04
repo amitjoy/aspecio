@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2021 Amit Kumar Mondal
+ * Copyright 2021-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -34,11 +34,12 @@ import com.amitinside.aspecio.api.AspecioConstants;
  * </ul>
  *
  * <p>
- * This annotation can be used on a {@link Component} to define aspects. The component class must be
- * assignable to {@code io.primeval.reflex.proxy.Interceptor} to be recognized as an aspect.
+ * This annotation can be used on a {@link Component} to define aspects. The
+ * component class must be assignable to
+ * {@code io.primeval.reflex.proxy.Interceptor} to be recognized as an aspect.
  *
- * This annotation is not retained at runtime. It is for use by tools to generate bundle manifests or
- * otherwise process the package.
+ * This annotation is not retained at runtime. It is for use by tools to
+ * generate bundle manifests or otherwise process the package.
  *
  * @see "Component Property Types"
  */
@@ -47,21 +48,21 @@ import com.amitinside.aspecio.api.AspecioConstants;
 @ComponentPropertyType
 public @interface Aspect {
 
-    String PREFIX_ = "service.aspect.";
+	String PREFIX_ = "service.aspect.";
 
-    /**
-     * The name of the aspect to provide. A class is used here to piggyback on Java's namespacing and
-     * avoid conflicts in aspect names.
-     *
-     * @return The aspect class to provide
-     */
-    Class<?> name();
+	/**
+	 * The name of the aspect to provide. A class is used here to piggyback on
+	 * Java's namespacing and avoid conflicts in aspect names.
+	 *
+	 * @return The aspect class to provide
+	 */
+	Class<?> name();
 
-    /**
-     * The extra properties that will be published, with value {@link Boolean#TRUE} to services woven
-     * with this aspect. Defaults to the empty array.
-     *
-     * @return the extra properties
-     */
-    String[] extraProperties() default {};
+	/**
+	 * The extra properties that will be published, with value {@link Boolean#TRUE}
+	 * to services woven with this aspect. Defaults to the empty array.
+	 *
+	 * @return the extra properties
+	 */
+	String[] extraProperties() default {};
 }

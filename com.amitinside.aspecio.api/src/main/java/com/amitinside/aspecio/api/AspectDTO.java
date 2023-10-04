@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2021 Amit Kumar Mondal
+ * Copyright 2021-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -26,24 +26,25 @@ import org.osgi.dto.DTO;
  */
 public class AspectDTO extends DTO {
 
-    /**
-     * The aspect name.
-     */
-    public String aspectName;
+	/**
+	 * The aspect name.
+	 */
+	public String aspectName;
 
-    /**
-     * The currently chosen interceptor for that aspect
-     */
-    public InterceptorDTO interceptor;
+	/**
+	 * The currently chosen interceptor for that aspect
+	 */
+	public InterceptorDTO interceptor;
 
-    /**
-     * The sorted list of interceptors that will replace the current interceptor if the chosen
-     * interceptor is unregistered.
-     *
-     * <p>
-     * Interceptors are chosen using by comparing their ServiceReference, so a higher service ranking
-     * is preferred, and in the case of equal service rankings a lower service id will be chosen.
-     */
-    public List<InterceptorDTO> backupInterceptors;
+	/**
+	 * The sorted list of interceptors that will replace the current interceptor if
+	 * the chosen interceptor is unregistered.
+	 *
+	 * <p>
+	 * Interceptors are chosen using by comparing their ServiceReference, so a
+	 * higher service ranking is preferred, and in the case of equal service
+	 * rankings a lower service id will be chosen.
+	 */
+	public List<InterceptorDTO> backupInterceptors;
 
 }

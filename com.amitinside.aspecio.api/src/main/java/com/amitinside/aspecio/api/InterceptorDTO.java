@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2021 Amit Kumar Mondal
+ * Copyright 2021-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -26,10 +26,10 @@ import org.osgi.dto.DTO;
  */
 public class InterceptorDTO extends DTO {
 
-    public long serviceId;
-    public long bundleId;
-    public int serviceRanking;
-    public Class<?> interceptorClass;
-    public Set<String> extraProperties;
+	public long serviceId;
+	public long bundleId;
+	public int serviceRanking;
+	public Class<?> interceptorClass;
+	public Set<String> extraProperties;
 
 }

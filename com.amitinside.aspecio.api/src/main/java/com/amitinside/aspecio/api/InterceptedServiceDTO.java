@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2021 Amit Kumar Mondal
+ * Copyright 2021-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -21,20 +21,20 @@ import java.util.Set;
 import org.osgi.dto.DTO;
 
 /**
- * The data transfer object describing a service candidate to interception by Aspecio, along with
- * the Aspects it define and its status.
+ * The data transfer object describing a service candidate to interception by
+ * Aspecio, along with the Aspects it define and its status.
  *
  * @NotThreadSafe
  */
 public class InterceptedServiceDTO extends DTO {
 
-    public long serviceId;
-    public long bundleId;
-    public List<String> objectClass;
-    public boolean published;
-    public Set<String> satisfiedAspects;
-    public Set<String> unsatisfiedRequiredAspects;
-    public Set<String> requiredAspects;
-    public Set<String> optionalAspects;
+	public long serviceId;
+	public long bundleId;
+	public List<String> objectClass;
+	public boolean published;
+	public Set<String> satisfiedAspects;
+	public Set<String> unsatisfiedRequiredAspects;
+	public Set<String> requiredAspects;
+	public Set<String> optionalAspects;
 
 }

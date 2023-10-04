@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2021 Amit Kumar Mondal
+ * Copyright 2021-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -36,7 +36,8 @@ import com.amitinside.aspecio.api.AspecioConstants;
  * </ul>
  *
  * <p>
- * This annotation can be used on a {@link Component} to request aspects to be woven.
+ * This annotation can be used on a {@link Component} to request aspects to be
+ * woven.
  *
  * @see "Component Property Types"
  */
@@ -45,25 +46,27 @@ import com.amitinside.aspecio.api.AspecioConstants;
 @ComponentPropertyType
 public @interface Weave {
 
-    String PREFIX_ = "service.aspect.weave.";
+	String PREFIX_ = "service.aspect.weave.";
 
-    /**
-     * The required aspects to weave. The woven service will not be published unless all of the
-     * required aspects are present. <br>
-     * The deregistration of any required aspect will also cause the woven service to be unregistered.
-     *
-     * @return the required aspects.
-     */
-    Class<?>[] required() default {};
+	/**
+	 * The required aspects to weave. The woven service will not be published unless
+	 * all of the required aspects are present. <br>
+	 * The deregistration of any required aspect will also cause the woven service
+	 * to be unregistered.
+	 *
+	 * @return the required aspects.
+	 */
+	Class<?>[] required() default {};
 
-    /**
-     * The optional aspects to weave. The woven service will be published even if the optional aspects
-     * are absent. <br>
-     * The registration of an optional aspect will allow these aspects to intercept the service
-     * methods, even if the service was previously published without that aspect.
-     *
-     * @return the optional aspects.
-     */
-    Class<?>[] optional() default {};
+	/**
+	 * The optional aspects to weave. The woven service will be published even if
+	 * the optional aspects are absent. <br>
+	 * The registration of an optional aspect will allow these aspects to intercept
+	 * the service methods, even if the service was previously published without
+	 * that aspect.
+	 *
+	 * @return the optional aspects.
+	 */
+	Class<?>[] optional() default {};
 
 }

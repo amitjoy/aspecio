@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2022 Amit Kumar Mondal
+ * Copyright 2022-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -22,10 +22,10 @@ import com.codahale.metrics.Timer;
 
 public interface Metrics extends MetricSet {
 
-    Counter counter(String name);
+	Counter counter(String name);
 
-    Timer timer(String name);
+	Timer timer(String name);
 
-    Meter meter(String name);
+	Meter meter(String name);
 
 }

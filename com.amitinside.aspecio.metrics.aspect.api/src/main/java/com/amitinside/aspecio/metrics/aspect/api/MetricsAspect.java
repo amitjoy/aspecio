@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2022 Amit Kumar Mondal
+ * Copyright 2022-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -17,10 +17,10 @@ package com.amitinside.aspecio.metrics.aspect.api;
 
 public final class MetricsAspect {
 
-    private MetricsAspect() {
-        throw new IllegalAccessError("Cannot be instantiated");
-    }
+	private MetricsAspect() {
+		throw new IllegalAccessError("Cannot be instantiated");
+	}
 
-    public static final String MEASURED_PROPERTY = "aspecio.metrics.measured";
+	public static final String MEASURED_PROPERTY = "aspecio.metrics.measured";
 
 }

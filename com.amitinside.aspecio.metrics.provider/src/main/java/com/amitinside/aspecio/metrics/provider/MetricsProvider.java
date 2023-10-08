@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2022 Amit Kumar Mondal
+ * Copyright 2022-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -29,25 +29,25 @@ import com.codahale.metrics.Timer;
 @Component
 public final class MetricsProvider implements Metrics {
 
-    private final MetricRegistry metricRegistry = new MetricRegistry();
+	private final MetricRegistry metricRegistry = new MetricRegistry();
 
-    @Override
-    public Map<String, Metric> getMetrics() {
-        return metricRegistry.getMetrics();
-    }
+	@Override
+	public Map<String, Metric> getMetrics() {
+		return metricRegistry.getMetrics();
+	}
 
-    @Override
-    public Counter counter(final String name) {
-        return metricRegistry.counter(name);
-    }
+	@Override
+	public Counter counter(final String name) {
+		return metricRegistry.counter(name);
+	}
 
-    @Override
-    public Timer timer(final String name) {
-        return metricRegistry.timer(name);
-    }
+	@Override
+	public Timer timer(final String name) {
+		return metricRegistry.timer(name);
+	}
 
-    @Override
-    public Meter meter(final String name) {
-        return metricRegistry.meter(name);
-    }
+	@Override
+	public Meter meter(final String name) {
+		return metricRegistry.meter(name);
+	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2022 Amit Kumar Mondal
+ * Copyright 2022-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -18,10 +18,9 @@ package com.amitinside.aspecio.service;
 @FunctionalInterface
 public interface AspectInterceptorListener {
 
-    enum EventKind {
-        NEW_MATCH,
-        NO_MATCH
-    }
+	enum EventKind {
+		NEW_MATCH, NO_MATCH
+	}
 
-    void onAspectChange(EventKind eventKind, String aspectName, AspectInterceptor aspectInterceptor);
+	void onAspectChange(EventKind eventKind, String aspectName, AspectInterceptor aspectInterceptor);
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2022 Amit Kumar Mondal
+ * Copyright 2022-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -31,43 +31,42 @@ import com.amitinside.aspecio.util.Exceptions;
 // Owned by AspecioServiceController (i.e, sync is done there)
 public final class ManagedWovenService {
 
-    private final Logger logger = LoggerFactory.getLogger(ManagedWovenService.class);
+	private final Logger logger = LoggerFactory.getLogger(ManagedWovenService.class);
 
-    // can be null if unsatisfied
-    WovenService wovenService;
-    AspectInterceptorContext aspectContext;
-    ServiceRegistration<?> registration;
+	// can be null if unsatisfied
+	WovenService wovenService;
+	AspectInterceptorContext aspectContext;
+	ServiceRegistration<?> registration;
 
-    public Dictionary<String, Object> getProperties() {
-        final Map<String, Object> props = new HashMap<>();
-        props.putAll(wovenService.serviceProperties);
-        props.put(SERVICE_ASPECT_WOVEN, aspectContext.satisfiedAspects.toArray(new String[0]));
+	public Dictionary<String, Object> getProperties() {
+		final Map<String, Object> props = new HashMap<>(wovenService.serviceProperties);
+		props.put(SERVICE_ASPECT_WOVEN, aspectContext.satisfiedAspects.toArray(new String[0]));
 
-        return new Hashtable<>(props);
-    }
+		return new Hashtable<>(props);
+	}
 
-    public void register() {
-        logger.debug("Registering aspect proxy for service {} with aspects {}", wovenService.originalServiceId,
-                aspectContext.satisfiedAspects);
+	public void register() {
+		logger.debug("Registering aspect proxy for service {} with aspects {}", wovenService.originalServiceId,
+				aspectContext.satisfiedAspects);
 
-        registration = wovenService.originalReference.getBundle().getBundleContext().registerService(
-                wovenService.objectClass.toArray(new String[0]),
-                wovenService.aspecioServiceObject.getServiceObjectToRegister(), getProperties());
-    }
+		registration = wovenService.originalReference.getBundle().getBundleContext().registerService(
+				wovenService.objectClass.toArray(new String[0]),
+				wovenService.aspecioServiceObject.getServiceObjectToRegister(), getProperties());
+	}
 
-    public void unregister() {
-        if (registration == null) {
-            return;
-        }
-        logger.debug("Deregistering aspect proxy for service ID {}", wovenService.originalServiceId);
-        try {
-            registration.unregister();
-        } catch (final IllegalStateException e) {
-            throw Exceptions.duck(e);
-        } finally {
-            registration = null;
-        }
+	public void unregister() {
+		if (registration == null) {
+			return;
+		}
+		logger.debug("Deregistering aspect proxy for service ID {}", wovenService.originalServiceId);
+		try {
+			registration.unregister();
+		} catch (final IllegalStateException e) {
+			throw Exceptions.duck(e);
+		} finally {
+			registration = null;
+		}
 
-    }
+	}
 
 }

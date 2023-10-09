@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2022 Amit Kumar Mondal
+ * Copyright 2022-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -45,91 +45,91 @@ import com.amitinside.aspecio.util.Exceptions;
 @Capability(namespace = SERVICE_NAMESPACE, attribute = "objectClass:List<String>=com.amitinside.aspecio.api.Aspecio")
 public final class AspecioProvider implements Aspecio, FindHook, EventListenerHook {
 
-    private final Logger logger = LoggerFactory.getLogger(AspecioProvider.class);
+	private final Logger logger = LoggerFactory.getLogger(AspecioProvider.class);
 
-    private final long bundleId;
-    private final ServiceWeavingManager serviceWeavingManager;
-    private final AspectInterceptorManager aspectInterceptorManager;
-    private final AspecioServiceController aspecioServiceController;
+	private final long bundleId;
+	private final ServiceWeavingManager serviceWeavingManager;
+	private final AspectInterceptorManager aspectInterceptorManager;
+	private final AspecioServiceController aspecioServiceController;
 
-    public AspecioProvider(final BundleContext bundleContext) {
-        bundleId = bundleContext.getBundle().getBundleId();
+	public AspecioProvider(final BundleContext bundleContext) {
+		bundleId = bundleContext.getBundle().getBundleId();
 
-        aspectInterceptorManager = new AspectInterceptorManager(bundleContext);
-        serviceWeavingManager = new ServiceWeavingManager(bundleContext);
-        aspecioServiceController = new AspecioServiceController(aspectInterceptorManager, serviceWeavingManager);
-    }
+		aspectInterceptorManager = new AspectInterceptorManager(bundleContext);
+		serviceWeavingManager = new ServiceWeavingManager(bundleContext);
+		aspecioServiceController = new AspecioServiceController(aspectInterceptorManager, serviceWeavingManager);
+	}
 
-    public void activate() {
-        logger.info("Activating Aspecio");
-        try {
-            aspecioServiceController.open();
-        } catch (final InvalidSyntaxException e) {
-            throw Exceptions.duck(e);
-        }
-        logger.info("Aspecio activated");
-    }
+	public void activate() {
+		logger.info("Activating Aspecio");
+		try {
+			aspecioServiceController.open();
+		} catch (final InvalidSyntaxException e) {
+			throw Exceptions.duck(e);
+		}
+		logger.info("Aspecio activated");
+	}
 
-    public void deactivate() {
-        aspecioServiceController.close();
-        logger.info("Aspecio deactivated");
-    }
+	public void deactivate() {
+		aspecioServiceController.close();
+		logger.info("Aspecio deactivated");
+	}
 
-    @Override
-    public void event(final ServiceEvent event, final Map<BundleContext, Collection<ListenerInfo>> listeners) {
-        // Is it an event we want to filter out?
-        final ServiceReference<?> ref = event.getServiceReference();
-        final Object weaveProperty = ref.getProperty(SERVICE_ASPECT_WEAVE);
-        final Object optionalWeaveProperty = ref.getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL);
+	@Override
+	public void event(final ServiceEvent event, final Map<BundleContext, Collection<ListenerInfo>> listeners) {
+		// Is it an event we want to filter out?
+		final ServiceReference<?> ref = event.getServiceReference();
+		final Object weaveProperty = ref.getProperty(SERVICE_ASPECT_WEAVE);
+		final Object optionalWeaveProperty = ref.getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL);
 
-        if (weaveProperty == null && optionalWeaveProperty == null) {
-            return;
-        }
-        final Iterator<BundleContext> iterator = listeners.keySet().iterator();
-        while (iterator.hasNext()) {
-            final BundleContext consumingBundleContext = iterator.next();
-            final long consumingBundleID = consumingBundleContext.getBundle().getBundleId();
+		if (weaveProperty == null && optionalWeaveProperty == null) {
+			return;
+		}
+		final Iterator<BundleContext> iterator = listeners.keySet().iterator();
+		while (iterator.hasNext()) {
+			final BundleContext consumingBundleContext = iterator.next();
+			final long consumingBundleID = consumingBundleContext.getBundle().getBundleId();
 
-            if (consumingBundleID == bundleId || consumingBundleID == 0) {
-                continue; // allow self and system bundle
-            }
-            iterator.remove();
-        }
-    }
+			if (consumingBundleID == bundleId || consumingBundleID == 0) {
+				continue; // allow self and system bundle
+			}
+			iterator.remove();
+		}
+	}
 
-    @Override
-    public void find(final BundleContext context, final String name, final String filter, final boolean allServices,
-            final Collection<ServiceReference<?>> references) {
-        final long consumingBundleId = context.getBundle().getBundleId();
-        if (consumingBundleId == bundleId || consumingBundleId == 0) {
-            return; // allow self and system bundle
-        }
-        final Iterator<ServiceReference<?>> iterator = references.iterator();
-        while (iterator.hasNext()) {
-            final ServiceReference<?> reference = iterator.next();
-            final Object weaveProperty = reference.getProperty(SERVICE_ASPECT_WEAVE);
-            final Object optionalWeaveProperty = reference.getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL);
+	@Override
+	public void find(final BundleContext context, final String name, final String filter, final boolean allServices,
+			final Collection<ServiceReference<?>> references) {
+		final long consumingBundleId = context.getBundle().getBundleId();
+		if (consumingBundleId == bundleId || consumingBundleId == 0) {
+			return; // allow self and system bundle
+		}
+		final Iterator<ServiceReference<?>> iterator = references.iterator();
+		while (iterator.hasNext()) {
+			final ServiceReference<?> reference = iterator.next();
+			final Object weaveProperty = reference.getProperty(SERVICE_ASPECT_WEAVE);
+			final Object optionalWeaveProperty = reference.getProperty(SERVICE_ASPECT_WEAVE_OPTIONAL);
 
-            if (weaveProperty == null && optionalWeaveProperty == null) {
-                continue;
-            }
-            iterator.remove();
-        }
-    }
+			if (weaveProperty == null && optionalWeaveProperty == null) {
+				continue;
+			}
+			iterator.remove();
+		}
+	}
 
-    @Override
-    public Set<String> getRegisteredAspects() {
-        return aspectInterceptorManager.getRegisteredAspects();
-    }
+	@Override
+	public Set<String> getRegisteredAspects() {
+		return aspectInterceptorManager.getRegisteredAspects();
+	}
 
-    @Override
-    public Optional<AspectDTO> getAspectDescription(final String aspectName) {
-        return aspectInterceptorManager.getAspectDescription(aspectName);
-    }
+	@Override
+	public Optional<AspectDTO> getAspectDescription(final String aspectName) {
+		return aspectInterceptorManager.getAspectDescription(aspectName);
+	}
 
-    @Override
-    public List<InterceptedServiceDTO> getInterceptedServices() {
-        return aspecioServiceController.getInterceptedServices();
-    }
+	@Override
+	public List<InterceptedServiceDTO> getInterceptedServices() {
+		return aspecioServiceController.getInterceptedServices();
+	}
 
 }

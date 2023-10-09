@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2022 Amit Kumar Mondal
+ * Copyright 2022-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -21,31 +21,31 @@ import java.util.function.Supplier;
 
 public final class ServicePool<T> {
 
-    private final Map<Object, T> originalToProxy = new IdentityHashMap<>();
-    private final Map<T, Object> proxyToOriginal = new IdentityHashMap<>();
-    private final Map<T, Integer> proxyToCount = new IdentityHashMap<>();
+	private final Map<Object, T> originalToProxy = new IdentityHashMap<>();
+	private final Map<T, Object> proxyToOriginal = new IdentityHashMap<>();
+	private final Map<T, Integer> proxyToCount = new IdentityHashMap<>();
 
-    public synchronized T get(final Object originalService, final Supplier<T> proxyFactory) {
-        final T proxy = originalToProxy.computeIfAbsent(originalService, k -> proxyFactory.get());
-        proxyToOriginal.putIfAbsent(proxy, originalService);
-        proxyToCount.compute(proxy, (k, v) -> v == null ? 1 : v + 1);
-        return proxy;
-    }
+	public synchronized T get(final Object originalService, final Supplier<T> proxyFactory) {
+		final T proxy = originalToProxy.computeIfAbsent(originalService, k -> proxyFactory.get());
+		proxyToOriginal.putIfAbsent(proxy, originalService);
+		proxyToCount.compute(proxy, (k, v) -> v == null ? 1 : v + 1);
+		return proxy;
+	}
 
-    public synchronized boolean unget(final T proxy) {
-        final Integer count = proxyToCount.compute(proxy, (k, v) -> v == null ? 0 : v - 1);
-        if (count > 0) {
-            return false;
-        }
-        // clean-up
-        proxyToCount.remove(proxy);
-        final Object original = proxyToOriginal.remove(proxy);
-        final T proxyX = originalToProxy.remove(original);
+	public synchronized boolean unget(final T proxy) {
+		final Integer count = proxyToCount.compute(proxy, (k, v) -> v == null ? 0 : v - 1);
+		if (count > 0) {
+			return false;
+		}
+		// clean-up
+		proxyToCount.remove(proxy);
+		final Object original = proxyToOriginal.remove(proxy);
+		final T proxyX = originalToProxy.remove(original);
 
-        if (proxy != proxyX) {
-            throw new IllegalStateException("Service Proxies are not the same");
-        }
-        return true;
-    }
+		if (proxy != proxyX) {
+			throw new IllegalStateException("Service Proxies are not the same");
+		}
+		return true;
+	}
 
 }

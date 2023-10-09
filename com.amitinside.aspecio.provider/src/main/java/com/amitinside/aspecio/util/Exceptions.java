@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2022 Amit Kumar Mondal
+ * Copyright 2022-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -17,18 +17,18 @@ package com.amitinside.aspecio.util;
 
 public final class Exceptions {
 
-    private Exceptions() {
-        throw new IllegalAccessError("Cannot be instantiated");
-    }
+	private Exceptions() {
+		throw new IllegalAccessError("Cannot be instantiated");
+	}
 
-    public static RuntimeException duck(final Throwable t) {
-        Exceptions.throwsUnchecked(t);
-        throw new AssertionError("unreachable");
-    }
+	public static RuntimeException duck(final Throwable t) {
+		Exceptions.throwsUnchecked(t);
+		throw new AssertionError("unreachable");
+	}
 
-    @SuppressWarnings("unchecked")
-    private static <E extends Throwable> void throwsUnchecked(final Throwable throwable) throws E {
-        throw (E) throwable;
-    }
+	@SuppressWarnings("unchecked")
+	private static <E extends Throwable> void throwsUnchecked(final Throwable throwable) throws E {
+		throw (E) throwable;
+	}
 
 }

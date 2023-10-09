@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2022 Amit Kumar Mondal
+ * Copyright 2022-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -25,19 +25,19 @@ import io.primeval.reflex.proxy.bytecode.ProxyClassLoader;
 
 public final class BundleRevisionPath {
 
-    private ProxyClassLoader classLoader;
-    private Map<BundleRevision, BundleRevisionPath> subMap;
+	private ProxyClassLoader classLoader;
+	private Map<BundleRevision, BundleRevisionPath> subMap;
 
-    public synchronized ProxyClassLoader computeClassLoaderIfAbsent(
-            final Supplier<ProxyClassLoader> classLoaderSupplier) {
-        classLoader = Optional.ofNullable(classLoader).orElse(classLoaderSupplier.get());
-        return classLoader;
-    }
+	public synchronized ProxyClassLoader computeClassLoaderIfAbsent(
+			final Supplier<ProxyClassLoader> classLoaderSupplier) {
+		classLoader = Optional.ofNullable(classLoader).orElse(classLoaderSupplier.get());
+		return classLoader;
+	}
 
-    public synchronized Map<BundleRevision, BundleRevisionPath> computeSubMapIfAbsent(
-            final Supplier<Map<BundleRevision, BundleRevisionPath>> subMapSupplier) {
-        subMap = Optional.ofNullable(subMap).orElse(subMapSupplier.get());
-        return subMap;
-    }
+	public synchronized Map<BundleRevision, BundleRevisionPath> computeSubMapIfAbsent(
+			final Supplier<Map<BundleRevision, BundleRevisionPath>> subMapSupplier) {
+		subMap = Optional.ofNullable(subMap).orElse(subMapSupplier.get());
+		return subMap;
+	}
 
 }

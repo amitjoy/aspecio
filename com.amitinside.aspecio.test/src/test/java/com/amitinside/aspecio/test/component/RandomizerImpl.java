@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2021 Amit Kumar Mondal
+ * Copyright 2021-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -19,10 +19,10 @@ import com.amitinside.aspecio.test.api.Randomizer;
 
 public class RandomizerImpl implements Randomizer {
 
-    @Override
-    public int randomInt(final int max) {
-        // very random!
-        return Math.max(max, 42);
-    }
+	@Override
+	public int randomInt(final int max) {
+		// very random!
+		return Math.max(max, 42);
+	}
 
 }

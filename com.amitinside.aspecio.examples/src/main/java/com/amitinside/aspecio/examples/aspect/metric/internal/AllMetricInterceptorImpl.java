@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2021 Amit Kumar Mondal
+ * Copyright 2021-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -32,30 +32,30 @@ import io.primeval.reflex.proxy.handler.InterceptionHandler;
 @Aspect(name = MetricAspect.All.class, extraProperties = "measured")
 public final class AllMetricInterceptorImpl implements Interceptor {
 
-    @Override
-    public <T, E extends Throwable> T onCall(final CallContext callContext, final InterceptionHandler<T> handler)
-            throws E {
-        final Stopwatch started = Stopwatch.createStarted();
-        final String methodName = callContext.target.getName() + "::" + callContext.method.getName();
+	@Override
+	public <T, E extends Throwable> T onCall(final CallContext callContext, final InterceptionHandler<T> handler)
+			throws E {
+		final Stopwatch started = Stopwatch.createStarted();
+		final String methodName = callContext.target.getName() + "::" + callContext.method.getName();
 
-        final boolean async = callContext.method.getReturnType() == Promise.class;
+		final boolean async = callContext.method.getReturnType() == Promise.class;
 
-        try {
-            final T result = handler.invoke();
-            if (async) {
-                final Promise<?> p = (Promise<?>) result;
-                p.onResolve(() -> System.out.println(
-                        "Async call to " + methodName + " took " + started.elapsed(TimeUnit.MICROSECONDS) + " µs"));
-            }
-            return result;
-        } finally {
-            System.out
-                    .println("Sync call to " + methodName + " took " + started.elapsed(TimeUnit.MICROSECONDS) + " µs");
-        }
-    }
+		try {
+			final T result = handler.invoke();
+			if (async) {
+				final Promise<?> p = (Promise<?>) result;
+				p.onResolve(() -> System.out.println(
+						"Async call to " + methodName + " took " + started.elapsed(TimeUnit.MICROSECONDS) + " µs"));
+			}
+			return result;
+		} finally {
+			System.out
+					.println("Sync call to " + methodName + " took " + started.elapsed(TimeUnit.MICROSECONDS) + " µs");
+		}
+	}
 
-    @Override
-    public String toString() {
-        return "MetricsInterceptor:ALL";
-    }
+	@Override
+	public String toString() {
+		return "MetricsInterceptor:ALL";
+	}
 }

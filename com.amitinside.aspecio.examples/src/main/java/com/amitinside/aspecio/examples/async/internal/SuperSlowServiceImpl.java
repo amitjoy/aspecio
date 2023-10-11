@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2021 Amit Kumar Mondal
+ * Copyright 2021-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -38,29 +38,29 @@ import com.google.common.util.concurrent.Uninterruptibles;
 @Weave(required = MetricAspect.AnnotatedOnly.class, optional = CountingAspect.class)
 public final class SuperSlowServiceImpl implements SuperSlowService {
 
-    private ExecutorService executor;
-    private PromiseFactory promiseFactory;
+	private ExecutorService executor;
+	private PromiseFactory promiseFactory;
 
-    @Activate
-    public void activate() {
-        executor = Executors.newFixedThreadPool(3);
-        promiseFactory = new PromiseFactory(executor);
-    }
+	@Activate
+	public void activate() {
+		executor = Executors.newFixedThreadPool(3);
+		promiseFactory = new PromiseFactory(executor);
+	}
 
-    @Deactivate
-    public void deactivate() {
-        executor.shutdown();
-    }
+	@Deactivate
+	public void deactivate() {
+		executor.shutdown();
+	}
 
-    @Override
-    @Timed
-    public Promise<Long> compute() {
-        final Deferred<Long> deferred = promiseFactory.deferred();
-        executor.submit(() -> {
-            Uninterruptibles.sleepUninterruptibly(3, SECONDS);
-            deferred.resolve(42L);
-        });
-        return deferred.getPromise();
-    }
+	@Override
+	@Timed
+	public Promise<Long> compute() {
+		final Deferred<Long> deferred = promiseFactory.deferred();
+		executor.submit(() -> {
+			Uninterruptibles.sleepUninterruptibly(3, SECONDS);
+			deferred.resolve(42L);
+		});
+		return deferred.getPromise();
+	}
 
 }

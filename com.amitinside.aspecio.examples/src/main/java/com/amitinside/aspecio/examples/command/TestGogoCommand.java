@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2021 Amit Kumar Mondal
+ * Copyright 2021-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -26,18 +26,18 @@ import com.amitinside.aspecio.examples.async.SuperSlowService;
 @GogoCommand(scope = "test", function = { "showCounts", "callSlowService" })
 public final class TestGogoCommand {
 
-    @Reference
-    private CountingAspect countingAspect;
+	@Reference
+	private CountingAspect countingAspect;
 
-    @Reference
-    private SuperSlowService superSlowService;
+	@Reference
+	private SuperSlowService superSlowService;
 
-    public void showCounts() {
-        countingAspect.printCounts();
-    }
+	public void showCounts() {
+		countingAspect.printCounts();
+	}
 
-    public void callSlowService() {
-        superSlowService.compute();
-    }
+	public void callSlowService() {
+		superSlowService.compute();
+	}
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2021 Amit Kumar Mondal
+ * Copyright 2021-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -19,8 +19,8 @@ import java.io.PrintStream;
 
 public interface Stuff {
 
-    void test(PrintStream ps, int i, byte b, String s);
+	void test(PrintStream ps, int i, byte b, String s);
 
-    double foo(double a, int[] b);
+	double foo(double a, int[] b);
 
 }

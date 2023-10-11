@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2021 Amit Kumar Mondal
+ * Copyright 2021-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -33,33 +33,33 @@ import com.amitinside.aspecio.examples.greetings.Hello;
 @Component
 public final class DemoConsumerImpl implements DemoConsumer {
 
-    @Reference
-    private Hello hello;
+	@Reference
+	private Hello hello;
 
-    @Reference
-    private Goodbye goodbye;
+	@Reference
+	private Goodbye goodbye;
 
-    @Reference
-    private SuperSlowService superSlowService;
+	@Reference
+	private SuperSlowService superSlowService;
 
-    private final PromiseFactory promiseFactory;
+	private final PromiseFactory promiseFactory;
 
-    @Activate
-    public DemoConsumerImpl() {
-        promiseFactory = new PromiseFactory(Executors.newSingleThreadExecutor());
-    }
+	@Activate
+	public DemoConsumerImpl() {
+		promiseFactory = new PromiseFactory(Executors.newSingleThreadExecutor());
+	}
 
-    @Override
-    public void consumeTo(final PrintStream out) {
-        out.println(hello.hello() + " " + goodbye.goodbye());
-    }
+	@Override
+	public void consumeTo(final PrintStream out) {
+		out.println(hello.hello() + " " + goodbye.goodbye());
+	}
 
-    @Override
-    public Promise<Long> getLongResult() {
-        final Deferred<Long> d = promiseFactory.deferred();
-        final Promise<Long> promise = superSlowService.compute();
-        promise.onResolve(() -> new Thread(() -> d.resolveWith(promise)).start());
-        return d.getPromise();
-    }
+	@Override
+	public Promise<Long> getLongResult() {
+		final Deferred<Long> d = promiseFactory.deferred();
+		final Promise<Long> promise = superSlowService.compute();
+		promise.onResolve(() -> new Thread(() -> d.resolveWith(promise)).start());
+		return d.getPromise();
+	}
 
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2021 Amit Kumar Mondal
+ * Copyright 2021-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -16,10 +16,10 @@
 package com.amitinside.aspecio.examples.aspect.metric;
 
 public interface MetricAspect {
-    interface AnnotatedOnly {
-    }
+	interface AnnotatedOnly {
+	}
 
-    interface All {
-    }
+	interface All {
+	}
 
 }

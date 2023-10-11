@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2021 Amit Kumar Mondal
+ * Copyright 2021-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -28,13 +28,13 @@ import com.amitinside.aspecio.examples.misc.Stuff;
 @Weave(required = Timed.class)
 public final class StuffImpl implements Stuff {
 
-    @Override
-    public void test(final PrintStream ps, final int i, final byte b, final String s) {
-        ps.println(s + " " + i + " b" + b);
-    }
+	@Override
+	public void test(final PrintStream ps, final int i, final byte b, final String s) {
+		ps.println(s + " " + i + " b" + b);
+	}
 
-    @Override
-    public double foo(final double a, final int[] b) {
-        return a + IntStream.of(b).sum();
-    }
+	@Override
+	public double foo(final double a, final int[] b) {
+		return a + IntStream.of(b).sum();
+	}
 }

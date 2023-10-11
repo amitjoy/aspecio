@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2021 Amit Kumar Mondal
+ * Copyright 2021-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -27,14 +27,14 @@ import com.amitinside.aspecio.examples.greetings.Hello;
 @Weave(required = CountingAspect.class, optional = MetricAspect.All.class)
 public final class HelloGoodbyeImpl implements Hello, Goodbye {
 
-    @Override
-    public String hello() {
-        return "hello";
-    }
+	@Override
+	public String hello() {
+		return "hello";
+	}
 
-    @Override
-    public String goodbye() {
-        return "goodbye";
-    }
+	@Override
+	public String goodbye() {
+		return "goodbye";
+	}
 
 }

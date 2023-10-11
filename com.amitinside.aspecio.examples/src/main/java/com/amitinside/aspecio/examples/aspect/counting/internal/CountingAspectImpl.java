@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2021 Amit Kumar Mondal
+ * Copyright 2021-2023 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License.  You may obtain a copy
@@ -35,50 +35,49 @@ import io.primeval.reflex.proxy.handler.InterceptionHandler;
 @Aspect(name = CountingAspect.class)
 public final class CountingAspectImpl implements Interceptor, CountingAspect {
 
-    @interface CountAspectConfig {
-        boolean countOnlySuccessful() default false;
-    }
+	@interface CountAspectConfig {
+		boolean countOnlySuccessful() default false;
+	}
 
-    private final Map<Method, Integer> methodCallCount = new ConcurrentHashMap<>();
+	private final Map<Method, Integer> methodCallCount = new ConcurrentHashMap<>();
 
-    private volatile boolean countOnlySuccessful = false;
+	private volatile boolean countOnlySuccessful = false;
 
-    @Activate
-    public void activate(final CountAspectConfig config) {
-        countOnlySuccessful = config.countOnlySuccessful();
-    }
+	@Activate
+	public void activate(final CountAspectConfig config) {
+		countOnlySuccessful = config.countOnlySuccessful();
+	}
 
-    @Deactivate
-    public void deactivate() {
-        methodCallCount.clear();
-    }
+	@Deactivate
+	public void deactivate() {
+		methodCallCount.clear();
+	}
 
-    @Modified
-    public void modified(final CountAspectConfig config) {
-        countOnlySuccessful = config.countOnlySuccessful();
-    }
+	@Modified
+	public void modified(final CountAspectConfig config) {
+		countOnlySuccessful = config.countOnlySuccessful();
+	}
 
-    @Override
-    public <T, E extends Throwable> T onCall(final CallContext context, final InterceptionHandler<T> handler) throws E {
-        if (countOnlySuccessful) {
-            final T res = handler.invoke();
-            methodCallCount.compute(context.method, (k, v) -> v == null ? 1 : (v += 1));
-            return res;
-        } else {
-            methodCallCount.compute(context.method, (k, v) -> v == null ? 1 : (v += 1));
-            return handler.invoke();
-        }
-    }
+	@Override
+	public <T, E extends Throwable> T onCall(final CallContext context, final InterceptionHandler<T> handler) throws E {
+		if (countOnlySuccessful) {
+			final T res = handler.invoke();
+			methodCallCount.compute(context.method, (k, v) -> v == null ? 1 : (v += 1));
+			return res;
+		}
+		methodCallCount.compute(context.method, (k, v) -> v == null ? 1 : (v += 1));
+		return handler.invoke();
+	}
 
-    @Override
-    public void printCounts() {
-        methodCallCount.forEach((m, count) -> System.out
-                .println(m.getDeclaringClass().getName() + "::" + m.getName() + " -> " + count));
-    }
+	@Override
+	public void printCounts() {
+		methodCallCount.forEach((m, count) -> System.out
+				.println(m.getDeclaringClass().getName() + "::" + m.getName() + " -> " + count));
+	}
 
-    @Override
-    public String toString() {
-        return "Counting";
-    }
+	@Override
+	public String toString() {
+		return "Counting";
+	}
 
 }

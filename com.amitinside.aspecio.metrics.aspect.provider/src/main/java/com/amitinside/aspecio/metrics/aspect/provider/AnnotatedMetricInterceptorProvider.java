@@ -49,13 +49,13 @@ import io.primeval.reflex.proxy.handler.VoidInterceptionHandler;
 
 @Component
 @Aspect(name = MetricsAspect.class, extraProperties = MEASURED_PROPERTY)
-public final class AnnotatedMetricInterceptorImpl implements AnnotationInterceptor<Measured> {
+public final class AnnotatedMetricInterceptorProvider implements AnnotationInterceptor<Measured> {
 
 	private final Metrics metrics;
 	private final Map<CallContext, String> methodIds;
 
 	@Activate
-	public AnnotatedMetricInterceptorImpl(@Reference final Metrics metrics) {
+	public AnnotatedMetricInterceptorProvider(@Reference final Metrics metrics) {
 		this.metrics = metrics;
 		methodIds = new ConcurrentHashMap<>();
 	}
@@ -63,7 +63,7 @@ public final class AnnotatedMetricInterceptorImpl implements AnnotationIntercept
 	@Override
 	public <T, E extends Throwable> T onCall(final Measured annotation, final CallContext callContext,
 			final InterceptionHandler<T> handler) throws E {
-		final String methodid = methodIds.computeIfAbsent(callContext, AnnotatedMetricInterceptorImpl::methodId);
+		final String methodid = methodIds.computeIfAbsent(callContext, AnnotatedMetricInterceptorProvider::methodId);
 		final Context syncTimer = metrics.timer(methodid).time();
 
 		final boolean async = Promise.class.isAssignableFrom(callContext.method.getReturnType());
@@ -84,7 +84,7 @@ public final class AnnotatedMetricInterceptorImpl implements AnnotationIntercept
 	@Override
 	public <E extends Throwable> boolean onCall(final Measured annotation, final CallContext context,
 			final BooleanInterceptionHandler handler) throws E {
-		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorImpl::methodId);
+		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorProvider::methodId);
 		final Context syncTimer = metrics.timer(methodid).time();
 		try {
 			return handler.invoke();
@@ -96,7 +96,7 @@ public final class AnnotatedMetricInterceptorImpl implements AnnotationIntercept
 	@Override
 	public <E extends Throwable> byte onCall(final Measured annotation, final CallContext context,
 			final ByteInterceptionHandler handler) throws E {
-		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorImpl::methodId);
+		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorProvider::methodId);
 		final Context syncTimer = metrics.timer(methodid).time();
 		try {
 			return handler.invoke();
@@ -108,7 +108,7 @@ public final class AnnotatedMetricInterceptorImpl implements AnnotationIntercept
 	@Override
 	public <E extends Throwable> char onCall(final Measured annotation, final CallContext context,
 			final CharInterceptionHandler handler) throws E {
-		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorImpl::methodId);
+		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorProvider::methodId);
 		final Context syncTimer = metrics.timer(methodid).time();
 		try {
 			return handler.invoke();
@@ -120,7 +120,7 @@ public final class AnnotatedMetricInterceptorImpl implements AnnotationIntercept
 	@Override
 	public <E extends Throwable> double onCall(final Measured annotation, final CallContext context,
 			final DoubleInterceptionHandler handler) throws E {
-		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorImpl::methodId);
+		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorProvider::methodId);
 		final Context syncTimer = metrics.timer(methodid).time();
 		try {
 			return handler.invoke();
@@ -132,7 +132,7 @@ public final class AnnotatedMetricInterceptorImpl implements AnnotationIntercept
 	@Override
 	public <E extends Throwable> float onCall(final Measured annotation, final CallContext context,
 			final FloatInterceptionHandler handler) throws E {
-		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorImpl::methodId);
+		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorProvider::methodId);
 		final Context syncTimer = metrics.timer(methodid).time();
 		try {
 			return handler.invoke();
@@ -144,7 +144,7 @@ public final class AnnotatedMetricInterceptorImpl implements AnnotationIntercept
 	@Override
 	public <E extends Throwable> int onCall(final Measured annotation, final CallContext context,
 			final IntInterceptionHandler handler) throws E {
-		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorImpl::methodId);
+		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorProvider::methodId);
 		final Context syncTimer = metrics.timer(methodid).time();
 		try {
 			return handler.invoke();
@@ -156,7 +156,7 @@ public final class AnnotatedMetricInterceptorImpl implements AnnotationIntercept
 	@Override
 	public <E extends Throwable> long onCall(final Measured annotation, final CallContext context,
 			final LongInterceptionHandler handler) throws E {
-		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorImpl::methodId);
+		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorProvider::methodId);
 		final Context syncTimer = metrics.timer(methodid).time();
 		try {
 			return handler.invoke();
@@ -168,7 +168,7 @@ public final class AnnotatedMetricInterceptorImpl implements AnnotationIntercept
 	@Override
 	public <E extends Throwable> short onCall(final Measured annotation, final CallContext context,
 			final ShortInterceptionHandler handler) throws E {
-		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorImpl::methodId);
+		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorProvider::methodId);
 		final Context syncTimer = metrics.timer(methodid).time();
 		try {
 			return handler.invoke();
@@ -180,7 +180,7 @@ public final class AnnotatedMetricInterceptorImpl implements AnnotationIntercept
 	@Override
 	public <E extends Throwable> void onCall(final Measured annotation, final CallContext context,
 			final VoidInterceptionHandler handler) throws E {
-		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorImpl::methodId);
+		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorProvider::methodId);
 		final Context syncTimer = metrics.timer(methodid).time();
 		try {
 			handler.invoke();

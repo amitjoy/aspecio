@@ -20,12 +20,33 @@ import com.codahale.metrics.Meter;
 import com.codahale.metrics.MetricSet;
 import com.codahale.metrics.Timer;
 
+/**
+ * Used to provide metrics data
+ */
 public interface Metrics extends MetricSet {
 
+	/**
+	 * Provides counter for the specified aspect
+	 *
+	 * @param name the name of the aspect
+	 * @return the counter instance
+	 */
 	Counter counter(String name);
 
+	/**
+	 * Provides the timer for the specified aspect
+	 *
+	 * @param name the name of the aspect
+	 * @return the timer instance
+	 */
 	Timer timer(String name);
 
+	/**
+	 * Provides the meter for the specified aspect
+	 *
+	 * @param name the name of the aspect
+	 * @return the meter instance
+	 */
 	Meter meter(String name);
 
 }

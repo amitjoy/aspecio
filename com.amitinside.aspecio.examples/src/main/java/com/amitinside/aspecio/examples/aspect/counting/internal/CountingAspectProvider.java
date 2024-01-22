@@ -33,7 +33,7 @@ import io.primeval.reflex.proxy.handler.InterceptionHandler;
 
 @Component
 @Aspect(name = CountingAspect.class)
-public final class CountingAspectImpl implements Interceptor, CountingAspect {
+public final class CountingAspectProvider implements Interceptor, CountingAspect {
 
 	@interface CountAspectConfig {
 		boolean countOnlySuccessful() default false;

@@ -39,7 +39,7 @@ import com.amitinside.aspecio.api.AspecioConstants;
  * {@code io.primeval.reflex.proxy.Interceptor} to be recognized as an aspect.
  *
  * This annotation is not retained at runtime. It is for use by tools to
- * generate bundle manifests or otherwise process the package.
+ * generate service property in the component XML.
  *
  * @see "Component Property Types"
  */

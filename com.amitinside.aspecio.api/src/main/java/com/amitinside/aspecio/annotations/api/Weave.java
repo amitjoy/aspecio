@@ -39,6 +39,9 @@ import com.amitinside.aspecio.api.AspecioConstants;
  * This annotation can be used on a {@link Component} to request aspects to be
  * woven.
  *
+ * This annotation is not retained at runtime. It is for use by tools to
+ * generate service property in the component XML.
+ *
  * @see "Component Property Types"
  */
 @Target(TYPE)

@@ -31,6 +31,7 @@ import static com.amitinside.aspecio.util.AspecioUtil.asLong;
 import static com.amitinside.aspecio.util.AspecioUtil.asString;
 import static com.amitinside.aspecio.util.AspecioUtil.asStringArray;
 import static java.util.Collections.synchronizedMap;
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static org.osgi.framework.Bundle.START_TRANSIENT;
 import static org.osgi.framework.Bundle.STOP_TRANSIENT;
@@ -104,6 +105,7 @@ public final class ServiceWeavingManager implements AllServiceListener {
 	private final AtomicBoolean closed = new AtomicBoolean();
 
 	public ServiceWeavingManager(final BundleContext bundleContext) {
+		requireNonNull(bundleContext, "'Bundle context cannot be null'");
 		this.bundleContext = bundleContext;
 	}
 

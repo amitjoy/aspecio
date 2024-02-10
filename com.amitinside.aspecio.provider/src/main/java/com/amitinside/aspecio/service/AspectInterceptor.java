@@ -15,6 +15,8 @@
  ******************************************************************************/
 package com.amitinside.aspecio.service;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Objects;
 import java.util.Set;
 
@@ -32,6 +34,10 @@ public final class AspectInterceptor implements Comparable<AspectInterceptor> {
 
 	public AspectInterceptor(final String aspect, final Interceptor interceptor, final ServiceReference<?> serviceRef,
 			final int serviceRanking, final Set<String> extraProperties) {
+		requireNonNull(aspect, "'Aspect cannot be null'");
+		requireNonNull(interceptor, "'Interceptor cannot be null'");
+		requireNonNull(serviceRef, "'Service reference cannot be null'");
+
 		this.aspect = aspect;
 		this.interceptor = interceptor;
 		this.serviceRef = serviceRef;
@@ -54,7 +60,7 @@ public final class AspectInterceptor implements Comparable<AspectInterceptor> {
 		if (this == obj) {
 			return true;
 		}
-		if ((obj == null) || !(obj instanceof AspectInterceptor)) {
+		if (obj == null || !(obj instanceof AspectInterceptor)) {
 			return false;
 		}
 		final AspectInterceptor other = (AspectInterceptor) obj;

@@ -25,6 +25,7 @@ import static com.amitinside.aspecio.util.AspecioUtil.asSet;
 import static com.amitinside.aspecio.util.AspecioUtil.asString;
 import static com.amitinside.aspecio.util.AspecioUtil.firstOrNull;
 import static java.util.Comparator.comparing;
+import static java.util.Objects.requireNonNull;
 import static org.osgi.framework.Constants.SERVICE_BUNDLEID;
 import static org.osgi.framework.Constants.SERVICE_ID;
 import static org.osgi.framework.Constants.SERVICE_RANKING;
@@ -75,6 +76,7 @@ public final class AspectInterceptorManager implements ServiceTrackerCustomizer<
 	private ServiceTracker<Object, Object> tracker;
 
 	public AspectInterceptorManager(final BundleContext bundleContext) {
+		requireNonNull(bundleContext, "'Bundle context cannot be null'");
 		this.bundleContext = bundleContext;
 	}
 

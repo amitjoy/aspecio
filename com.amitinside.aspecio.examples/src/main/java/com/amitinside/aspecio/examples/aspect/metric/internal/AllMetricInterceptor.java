@@ -30,7 +30,7 @@ import io.primeval.reflex.proxy.handler.InterceptionHandler;
 
 @Component
 @Aspect(name = MetricAspect.All.class, extraProperties = "measured")
-public final class AllMetricInterceptorImpl implements Interceptor {
+public final class AllMetricInterceptor implements Interceptor {
 
 	@Override
 	public <T, E extends Throwable> T onCall(final CallContext callContext, final InterceptionHandler<T> handler)

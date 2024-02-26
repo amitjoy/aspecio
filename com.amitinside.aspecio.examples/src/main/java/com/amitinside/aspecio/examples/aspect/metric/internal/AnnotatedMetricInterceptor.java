@@ -31,7 +31,7 @@ import io.primeval.reflex.proxy.handler.InterceptionHandler;
 
 @Component
 @Aspect(name = MetricAspect.AnnotatedOnly.class, extraProperties = "measured")
-public final class AnnotatedMetricInterceptorImpl implements AnnotationInterceptor<Timed> {
+public final class AnnotatedMetricInterceptor implements AnnotationInterceptor<Timed> {
 
 	@Override
 	public <T, E extends Throwable> T onCall(final Timed annotation, final CallContext callContext,

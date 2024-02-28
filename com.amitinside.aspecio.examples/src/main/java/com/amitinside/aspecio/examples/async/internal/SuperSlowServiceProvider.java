@@ -36,7 +36,7 @@ import com.google.common.util.concurrent.Uninterruptibles;
 
 @Component
 @Weave(required = MetricAspect.AnnotatedOnly.class, optional = CountingAspect.class)
-public final class SuperSlowServiceImpl implements SuperSlowService {
+public final class SuperSlowServiceProvider implements SuperSlowService {
 
 	private ExecutorService executor;
 	private PromiseFactory promiseFactory;
@@ -49,7 +49,7 @@ public final class SuperSlowServiceImpl implements SuperSlowService {
 
 	@Deactivate
 	public void deactivate() {
-		executor.shutdown();
+		executor.shutdownNow();
 	}
 
 	@Override

@@ -25,7 +25,7 @@ import com.amitinside.aspecio.examples.greetings.Hello;
 
 @Component
 @Weave(required = CountingAspect.class, optional = MetricAspect.All.class)
-public final class HelloGoodbyeImpl implements Hello, Goodbye {
+public final class HelloGoodBye implements Hello, Goodbye {
 
 	@Override
 	public String hello() {

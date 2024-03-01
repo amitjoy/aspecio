@@ -20,12 +20,12 @@ import org.osgi.service.component.annotations.Component;
 import com.amitinside.aspecio.annotations.api.Weave;
 import com.amitinside.aspecio.examples.aspect.counting.CountingAspect;
 import com.amitinside.aspecio.examples.aspect.metric.MetricAspect;
-import com.amitinside.aspecio.examples.greetings.Goodbye;
+import com.amitinside.aspecio.examples.greetings.GoodBye;
 import com.amitinside.aspecio.examples.greetings.Hello;
 
 @Component
 @Weave(required = CountingAspect.class, optional = MetricAspect.All.class)
-public final class HelloGoodBye implements Hello, Goodbye {
+public final class HelloGoodBye implements Hello, GoodBye {
 
 	@Override
 	public String hello() {

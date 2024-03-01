@@ -45,7 +45,7 @@ import com.amitinside.aspecio.examples.DemoConsumer;
 import com.amitinside.aspecio.examples.aspect.counting.CountingAspect;
 import com.amitinside.aspecio.examples.aspect.metric.MetricAspect;
 import com.amitinside.aspecio.examples.async.SuperSlowService;
-import com.amitinside.aspecio.examples.greetings.Goodbye;
+import com.amitinside.aspecio.examples.greetings.GoodBye;
 import com.amitinside.aspecio.examples.greetings.Hello;
 import com.amitinside.aspecio.test.api.Randomizer;
 import com.amitinside.aspecio.test.aspect.NoopAspect;
@@ -81,10 +81,10 @@ public final class AspecioIntegrationTest {
 	private ServiceReference<Hello> helloRef;
 
 	@Service(target = "(" + SERVICE_ASPECT_WOVEN + "=*)")
-	private Goodbye goodbye;
+	private GoodBye goodbye;
 
 	@Service(target = "(" + SERVICE_ASPECT_WOVEN + "=*)")
-	private ServiceReference<Goodbye> goodbyeRef;
+	private ServiceReference<GoodBye> goodbyeRef;
 
 	@Service(target = "(" + SERVICE_ASPECT_WOVEN + "=*)")
 	private SuperSlowService superSlowService;

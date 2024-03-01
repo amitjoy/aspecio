@@ -15,6 +15,6 @@
  ******************************************************************************/
 package com.amitinside.aspecio.examples.greetings;
 
-public interface Goodbye {
+public interface GoodBye {
 	String goodbye();
 }

@@ -27,7 +27,7 @@ import org.osgi.util.promise.PromiseFactory;
 
 import com.amitinside.aspecio.examples.DemoConsumer;
 import com.amitinside.aspecio.examples.async.SuperSlowService;
-import com.amitinside.aspecio.examples.greetings.Goodbye;
+import com.amitinside.aspecio.examples.greetings.GoodBye;
 import com.amitinside.aspecio.examples.greetings.Hello;
 
 @Component
@@ -37,7 +37,7 @@ public final class DemoConsumerImpl implements DemoConsumer {
 	private Hello hello;
 
 	@Reference
-	private Goodbye goodbye;
+	private GoodBye goodbye;
 
 	@Reference
 	private SuperSlowService superSlowService;

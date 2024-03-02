@@ -26,7 +26,7 @@ import com.amitinside.aspecio.examples.misc.Stuff;
 
 @Component
 @Weave(required = Timed.class)
-public final class StuffImpl implements Stuff {
+public final class StuffProvider implements Stuff {
 
 	@Override
 	public void test(final PrintStream ps, final int i, final byte b, final String s) {

@@ -49,7 +49,7 @@ import com.amitinside.aspecio.examples.greetings.GoodBye;
 import com.amitinside.aspecio.examples.greetings.Hello;
 import com.amitinside.aspecio.test.api.Randomizer;
 import com.amitinside.aspecio.test.aspect.NoopAspect;
-import com.amitinside.aspecio.test.component.RandomizerImpl;
+import com.amitinside.aspecio.test.component.RandomizerProvider;
 
 import aQute.launchpad.Launchpad;
 import aQute.launchpad.LaunchpadBuilder;
@@ -155,7 +155,7 @@ public final class AspecioIntegrationTest {
 		randomizerTracker.open();
 
 		final String fakeAspect = "tested.aspect";
-		final Randomizer randomizerImpl = new RandomizerImpl();
+		final Randomizer randomizerImpl = new RandomizerProvider();
 		final ServiceRegistration<Randomizer> serviceReg = launchpad.register(Randomizer.class, randomizerImpl,
 				SERVICE_ASPECT_WEAVE, fakeAspect);
 

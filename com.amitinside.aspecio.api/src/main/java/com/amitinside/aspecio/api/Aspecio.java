@@ -27,8 +27,8 @@ import org.osgi.framework.Constants;
  * <p>
  * <b>Aspecio Service Interface</b><br>
  *
- * (mainly interesting for building a UI to get some information about what
- * Aspecio is doing)
+ * Primarily for building a monitoring tool to get some information about what
+ * Aspecio is doing
  * </p>
  *
  * <p>

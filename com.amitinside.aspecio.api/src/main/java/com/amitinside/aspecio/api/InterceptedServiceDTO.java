@@ -30,11 +30,11 @@ public class InterceptedServiceDTO extends DTO {
 
 	public long serviceId;
 	public long bundleId;
-	public List<String> objectClass;
 	public boolean published;
+	public List<String> objectClass;
 	public Set<String> satisfiedAspects;
-	public Set<String> unsatisfiedRequiredAspects;
 	public Set<String> requiredAspects;
 	public Set<String> optionalAspects;
+	public Set<String> unsatisfiedRequiredAspects;
 
 }

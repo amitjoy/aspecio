@@ -57,7 +57,7 @@ Bundle-Developers       : Simon;\
           releaseUrls        = https://repo.maven.apache.org/maven2/; \
           revision           = org.osgi.enroute:osgi-api:7.0.0; \
           readOnly           = true; \
-          name               = "OSGi R7"
+          name               = "OSGi R8"
 
 -plugin.2.Maven.Central : \
     aQute.bnd.repository.maven.provider.MavenBndRepository; \

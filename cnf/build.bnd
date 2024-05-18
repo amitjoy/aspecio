@@ -44,12 +44,7 @@ Bundle-Developers       : Simon;\
 -groupid                : com.amitinside
 -pom                    : version=${if;${def;-snapshot};${versionmask;===;${@version}}-${-snapshot};${versionmask;===s;${@version}}}
 -resolve.effective      : resolve, active
-
--buildpath.all          : \
-          osgi.cmpn,\
-          osgi.core,\
-          osgi.annotation,\
-          slf4j.api
+-buildpath.all          : osgi.cmpn, osgi.core, osgi.annotation, slf4j.api
 
 -plugin.1.R7            : \
 	aQute.bnd.repository.maven.pom.provider.BndPomRepository; \

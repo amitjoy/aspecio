@@ -27,53 +27,53 @@ import org.osgi.framework.Constants;
  * <p>
  * <b>Aspecio Service Interface</b><br>
  *
- * Primarily for building a monitoring tool to get some information about what
- * Aspecio is doing
+ * This interface is primarily designed for building a monitoring tool to obtain 
+ * information about Aspecio's activities.
  * </p>
  *
  * <p>
- * It is not possible to change the state of Aspecio through this class. It is
- * merely a read-only view.
+ * It is important to note that this class does not allow changes to Aspecio's state. 
+ * It provides a read-only view.
  * </p>
  *
  * <p>
- * To define and update aspects, a service object implementing
- * {@code io.primeval.reflex.proxy.Interceptor} must be registered to the OSGi
- * service registry with the {@link String} property
+ * To define and update aspects, a service object implementing 
+ * {@code io.primeval.reflex.proxy.Interceptor} must be registered in the OSGi 
+ * service registry with the {@link String} property 
  * {@link AspecioConstants#SERVICE_ASPECT} set to the name of the aspect.
  * </p>
  *
- * An aspect service may define the property
- * {@link AspecioConstants#SERVICE_ASPECT_EXTRAPROPERTIES} of type
- * {@link String} or String[] to have one or several extra OSGi properties
- * registered with the services it is woven into. For instance, if an aspect
- * defines an extra service property named {@code secure}, then services woven
- * with that aspect will be published with the OSGi property {@code secure} and
- * value {@code true}. This can in turn be used to make sure, from the consuming
- * code, that a service exposes a certain behavior (here, that it is indeed
- * secured, whether by the aspect or by custom code).
+ * <p>
+ * An aspect service may specify the property 
+ * {@link AspecioConstants#SERVICE_ASPECT_EXTRAPROPERTIES} of type 
+ * {@link String} or String[] to register additional OSGi properties with the 
+ * services it is woven into. For example, if an aspect defines an extra service 
+ * property named {@code secure}, services woven with that aspect will be 
+ * published with the OSGi property {@code secure} set to {@code true}. This can 
+ * be used by consuming code to ensure that a service exhibits certain behavior 
+ * (in this case, ensuring it is secured, either by the aspect or custom code).
  * </p>
  *
  * <p>
- * Aspecio will <i>weave</i> aspects into OSGi services that define the service
- * properties {@link AspecioConstants#SERVICE_ASPECT_WEAVE} (for required
- * aspects) or {@link AspecioConstants#SERVICE_ASPECT_WEAVE_OPTIONAL}. <br/>
- * <br/>
- *
- * By default, if a required aspect is not present, then the original service
- * will not be available until a service providing the required aspect is
- * registered. To change that behavior and disable the filtering of services,
- * you may use the framework property
- * {@link AspecioConstants#ASPECIO_FILTER_SERVICES} and set it to {@code false}.
- * <br/>
- * <br/>
- *
- * Changing that property using Java system properties will only be taken into
- * account after restarting Aspecio's bundle. Note that due to the impossibility
- * to publish a previously filtered service, you should restart bundles
- * providing woven services as well after changing that property.
+ * Aspecio will <i>weave</i> aspects into OSGi services that define the service 
+ * properties {@link AspecioConstants#SERVICE_ASPECT_WEAVE} (for required 
+ * aspects) or {@link AspecioConstants#SERVICE_ASPECT_WEAVE_OPTIONAL}. 
+ * <br/><br/>
+ * 
+ * By default, if a required aspect is not present, the original service will 
+ * not be available until a service providing the required aspect is registered. 
+ * To change this behavior and disable the filtering of services, use the 
+ * framework property {@link AspecioConstants#ASPECIO_FILTER_SERVICES} and set 
+ * it to {@code false}. 
+ * <br/><br/>
+ * 
+ * Changing this property via Java system properties will only take effect after 
+ * restarting the Aspecio bundle. Note that due to the inability to publish a 
+ * previously filtered service, you should also restart bundles providing woven 
+ * services after changing this property.
  * </p>
  */
+
 @ProviderType
 public interface Aspecio {
 

@@ -36,44 +36,31 @@ import com.codahale.metrics.Timer.Context;
 
 import io.primeval.reflex.proxy.CallContext;
 import io.primeval.reflex.proxy.annotation.AnnotationInterceptor;
-import io.primeval.reflex.proxy.handler.BooleanInterceptionHandler;
-import io.primeval.reflex.proxy.handler.ByteInterceptionHandler;
-import io.primeval.reflex.proxy.handler.CharInterceptionHandler;
-import io.primeval.reflex.proxy.handler.DoubleInterceptionHandler;
-import io.primeval.reflex.proxy.handler.FloatInterceptionHandler;
-import io.primeval.reflex.proxy.handler.IntInterceptionHandler;
-import io.primeval.reflex.proxy.handler.InterceptionHandler;
-import io.primeval.reflex.proxy.handler.LongInterceptionHandler;
-import io.primeval.reflex.proxy.handler.ShortInterceptionHandler;
-import io.primeval.reflex.proxy.handler.VoidInterceptionHandler;
+import io.primeval.reflex.proxy.handler.*;
 
 @Component
 @Aspect(name = MetricsAspect.class, extraProperties = MEASURED_PROPERTY)
 public final class AnnotatedMetricInterceptorProvider implements AnnotationInterceptor<Measured> {
 
 	private final Metrics metrics;
-	private final Map<CallContext, String> methodIds;
+	private final Map<CallContext, String> methodIds = new ConcurrentHashMap<>();
 
 	@Activate
 	public AnnotatedMetricInterceptorProvider(@Reference final Metrics metrics) {
 		this.metrics = metrics;
-		methodIds = new ConcurrentHashMap<>();
 	}
 
 	@Override
 	public <T, E extends Throwable> T onCall(final Measured annotation, final CallContext callContext,
 			final InterceptionHandler<T> handler) throws E {
-		final String methodid = methodIds.computeIfAbsent(callContext, AnnotatedMetricInterceptorProvider::methodId);
-		final Context syncTimer = metrics.timer(methodid).time();
-
+		final String methodId = getMethodId(callContext);
+		final Context syncTimer = metrics.timer(methodId).time();
 		final boolean async = Promise.class.isAssignableFrom(callContext.method.getReturnType());
 
 		try {
 			final T result = handler.invoke();
 			if (async) {
-				final Context resolveTimer = metrics.timer(methodid + "::promise").time();
-				final Promise<?> pms = (Promise<?>) result;
-				pms.onResolve(resolveTimer::close);
+				handleAsyncResult(methodId, result);
 			}
 			return result;
 		} finally {
@@ -84,104 +71,56 @@ public final class AnnotatedMetricInterceptorProvider implements AnnotationInter
 	@Override
 	public <E extends Throwable> boolean onCall(final Measured annotation, final CallContext context,
 			final BooleanInterceptionHandler handler) throws E {
-		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorProvider::methodId);
-		final Context syncTimer = metrics.timer(methodid).time();
-		try {
-			return handler.invoke();
-		} finally {
-			syncTimer.close();
-		}
+		return handleCall(context, handler.boxed());
 	}
 
 	@Override
 	public <E extends Throwable> byte onCall(final Measured annotation, final CallContext context,
 			final ByteInterceptionHandler handler) throws E {
-		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorProvider::methodId);
-		final Context syncTimer = metrics.timer(methodid).time();
-		try {
-			return handler.invoke();
-		} finally {
-			syncTimer.close();
-		}
+		return handleCall(context, handler.boxed());
 	}
 
 	@Override
 	public <E extends Throwable> char onCall(final Measured annotation, final CallContext context,
 			final CharInterceptionHandler handler) throws E {
-		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorProvider::methodId);
-		final Context syncTimer = metrics.timer(methodid).time();
-		try {
-			return handler.invoke();
-		} finally {
-			syncTimer.close();
-		}
+		return handleCall(context, handler.boxed());
 	}
 
 	@Override
 	public <E extends Throwable> double onCall(final Measured annotation, final CallContext context,
 			final DoubleInterceptionHandler handler) throws E {
-		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorProvider::methodId);
-		final Context syncTimer = metrics.timer(methodid).time();
-		try {
-			return handler.invoke();
-		} finally {
-			syncTimer.close();
-		}
+		return handleCall(context, handler.boxed());
 	}
 
 	@Override
 	public <E extends Throwable> float onCall(final Measured annotation, final CallContext context,
 			final FloatInterceptionHandler handler) throws E {
-		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorProvider::methodId);
-		final Context syncTimer = metrics.timer(methodid).time();
-		try {
-			return handler.invoke();
-		} finally {
-			syncTimer.close();
-		}
+		return handleCall(context, handler.boxed());
 	}
 
 	@Override
 	public <E extends Throwable> int onCall(final Measured annotation, final CallContext context,
 			final IntInterceptionHandler handler) throws E {
-		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorProvider::methodId);
-		final Context syncTimer = metrics.timer(methodid).time();
-		try {
-			return handler.invoke();
-		} finally {
-			syncTimer.close();
-		}
+		return handleCall(context, handler.boxed());
 	}
 
 	@Override
 	public <E extends Throwable> long onCall(final Measured annotation, final CallContext context,
 			final LongInterceptionHandler handler) throws E {
-		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorProvider::methodId);
-		final Context syncTimer = metrics.timer(methodid).time();
-		try {
-			return handler.invoke();
-		} finally {
-			syncTimer.close();
-		}
+		return handleCall(context, handler.boxed());
 	}
 
 	@Override
 	public <E extends Throwable> short onCall(final Measured annotation, final CallContext context,
 			final ShortInterceptionHandler handler) throws E {
-		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorProvider::methodId);
-		final Context syncTimer = metrics.timer(methodid).time();
-		try {
-			return handler.invoke();
-		} finally {
-			syncTimer.close();
-		}
+		return handleCall(context, handler.boxed());
 	}
 
 	@Override
 	public <E extends Throwable> void onCall(final Measured annotation, final CallContext context,
 			final VoidInterceptionHandler handler) throws E {
-		final String methodid = methodIds.computeIfAbsent(context, AnnotatedMetricInterceptorProvider::methodId);
-		final Context syncTimer = metrics.timer(methodid).time();
+		final String methodId = getMethodId(context);
+		final Context syncTimer = metrics.timer(methodId).time();
 		try {
 			handler.invoke();
 		} finally {
@@ -189,25 +128,35 @@ public final class AnnotatedMetricInterceptorProvider implements AnnotationInter
 		}
 	}
 
-	public static String methodId(final CallContext cc) {
-		final Method method = cc.method;
-		// @formatter:off
-        final String classAndMethodName =
-                "."                                        +
-                method.getDeclaringClass().getSimpleName() +
-                "."                                        +
-                method.getName()                           +
-                "(" + cc.parameters.stream()
-                                   .map(p -> p.getType().getSimpleName())
-                                   .collect(joining(",")) + ")";
+	private <T, E extends Throwable> T handleCall(final CallContext context, final InterceptionHandler<T> handler)
+			throws E {
+		final String methodId = getMethodId(context);
+		final Context syncTimer = metrics.timer(methodId).time();
+		try {
+			return handler.invoke();
+		} finally {
+			syncTimer.close();
+		}
+	}
 
-        return Stream.of(method.getDeclaringClass()
-                               .getPackage()
-                               .getName()
-                               .split("\\."))
-                     .map(s -> s.subSequence(0, 1))
-                     .collect(joining(".", "", classAndMethodName));
-        // @formatter:on
+	private void handleAsyncResult(final String methodId, final Object result) {
+		final Context resolveTimer = metrics.timer(methodId + "::promise").time();
+		final Promise<?> promise = (Promise<?>) result;
+		promise.onResolve(resolveTimer::close);
+	}
+
+	private String getMethodId(final CallContext callContext) {
+		return methodIds.computeIfAbsent(callContext, AnnotatedMetricInterceptorProvider::methodId);
+	}
+
+	public static String methodId(final CallContext callContext) {
+		final Method method = callContext.method;
+		final String classAndMethodName = String.format(".%s.%s(%s)", method.getDeclaringClass().getSimpleName(),
+				method.getName(),
+				callContext.parameters.stream().map(p -> p.getType().getSimpleName()).collect(joining(",")));
+
+		return Stream.of(method.getDeclaringClass().getPackage().getName().split("\\.")).map(s -> s.substring(0, 1))
+				.collect(joining(".", "", classAndMethodName));
 	}
 
 	@Override
@@ -219,5 +168,4 @@ public final class AnnotatedMetricInterceptorProvider implements AnnotationInter
 	public String toString() {
 		return "MetricsInterceptor";
 	}
-
 }

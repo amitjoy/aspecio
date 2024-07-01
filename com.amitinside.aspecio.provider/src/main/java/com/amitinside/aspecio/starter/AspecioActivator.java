@@ -49,27 +49,13 @@ public final class AspecioActivator implements BundleActivator {
 		aspecio = new AspecioProvider(context);
 		aspecio.activate();
 
-		final boolean filterServices = shouldFilterServices(context);
-		if (filterServices) {
-			// @formatter:off
-            context.registerService(
-                    new String[] {
-                            Aspecio.class.getName(),
-                            FindHook.class.getName(),
-                            EventListenerHook.class.getName()
-                    },
-                    aspecio, null);
-            // @formatter:on
+		if (shouldFilterServices(context)) {
+			registerFilteredServices(context);
 		} else {
-			context.registerService(Aspecio.class, aspecio, null);
+			registerUnfilteredServices(context);
 		}
-		final AspecioGogoCommand gogoCommand = new AspecioGogoCommand(context, aspecio);
-		final Map<String, Object> props = new HashMap<>();
 
-		props.put(COMMAND_SCOPE, "aspecio");
-		props.put(COMMAND_FUNCTION, new String[] { "aspects", "woven" });
-
-		context.registerService(Object.class, gogoCommand, new Hashtable<>(props));
+		registerGogoCommand(context);
 	}
 
 	@Override
@@ -81,4 +67,21 @@ public final class AspecioActivator implements BundleActivator {
 		return ofNullable(bundleContext.getProperty(ASPECIO_FILTER_SERVICES)).map(Boolean::valueOf).orElse(true);
 	}
 
+	private void registerFilteredServices(final BundleContext context) {
+		context.registerService(
+				new String[] { Aspecio.class.getName(), FindHook.class.getName(), EventListenerHook.class.getName() },
+				aspecio, null);
+	}
+
+	private void registerUnfilteredServices(final BundleContext context) {
+		context.registerService(Aspecio.class, aspecio, null);
+	}
+
+	private void registerGogoCommand(final BundleContext context) {
+		final AspecioGogoCommand gogoCommand = new AspecioGogoCommand(context, aspecio);
+		final Map<String, Object> props = new HashMap<>();
+		props.put(COMMAND_SCOPE, "aspecio");
+		props.put(COMMAND_FUNCTION, new String[] { "aspects", "woven" });
+		context.registerService(Object.class, gogoCommand, new Hashtable<>(props));
+	}
 }

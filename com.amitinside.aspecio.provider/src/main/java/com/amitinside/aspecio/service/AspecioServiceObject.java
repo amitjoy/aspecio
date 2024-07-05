@@ -2,14 +2,14 @@
  * Copyright 2022-2024 Amit Kumar Mondal
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License.  You may obtain a copy
+ * use this file except in compliance with the License. You may obtain a copy
  * of the License at
  *
  *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
@@ -37,8 +37,6 @@ public final class AspecioServiceObject {
 	private final ServiceReference<?> originalRef;
 	private final Function<Object, Proxy> proxyFunction;
 	private final List<Proxy> instances = new CopyOnWriteArrayList<>();
-
-	// Try to de-duplicate for service factories that are just lazy singletons.
 	private final ServicePool<Proxy> servicePool = new ServicePool<>();
 	private Object serviceToRegister;
 	private volatile Interceptor interceptor = DEFAULT;
@@ -52,74 +50,83 @@ public final class AspecioServiceObject {
 
 	public void setInterceptor(final Interceptor interceptor) {
 		this.interceptor = interceptor;
-		instances.forEach(w -> w.setInterceptor(interceptor));
+		instances.forEach(proxy -> proxy.setInterceptor(interceptor));
 	}
 
 	public synchronized Object getServiceObjectToRegister() {
 		if (serviceToRegister == null) {
-			serviceToRegister = makeServiceObjectToRegister();
+			serviceToRegister = createServiceObjectToRegister();
 		}
 		return serviceToRegister;
 	}
 
-	private Object makeServiceObjectToRegister() {
+	private Object createServiceObjectToRegister() {
 		switch (serviceScope) {
 		case PROTOTYPE:
-			return new PrototypeServiceFactory<Proxy>() {
-				@Override
-				public Proxy getService(final Bundle bundle, final ServiceRegistration<Proxy> registration) {
-					final Object originalService = bundle.getBundleContext().getService(originalRef);
-					final Proxy instance = proxyFunction.apply(originalService);
-					instance.setInterceptor(interceptor);
-					instances.add(instance);
-					return instance;
-				}
-
-				@Override
-				public void ungetService(final Bundle bundle, final ServiceRegistration<Proxy> registration,
-						final Proxy service) {
-					instances.remove(service);
-					final BundleContext bundleContext = bundle.getBundleContext();
-					// If bundle is still there, let's unget, otherwise ignore.
-					if (bundleContext != null) {
-						bundleContext.ungetService(originalRef);
-					}
-				}
-			};
+			return createPrototypeServiceFactory();
 		case BUNDLE:
-			return new ServiceFactory<Proxy>() {
-				@Override
-				public Proxy getService(final Bundle bundle, final ServiceRegistration<Proxy> registration) {
-					final Object originalService = bundle.getBundleContext().getService(originalRef);
-					return servicePool.get(originalService, () -> {
-						final Proxy woven = proxyFunction.apply(originalService);
-						woven.setInterceptor(interceptor);
-						instances.add(woven);
-						return woven;
-					});
-				}
-
-				@Override
-				public void ungetService(final Bundle bundle, final ServiceRegistration<Proxy> registration,
-						final Proxy service) {
-					final boolean empty = servicePool.unget(service);
-					if (empty) {
-						instances.remove(service);
-					}
-					final BundleContext bundleContext = bundle.getBundleContext();
-					// If bundle is still there, let's unget, otherwise ignore.
-					if (bundleContext != null) {
-						bundleContext.ungetService(originalRef);
-					}
-				}
-			};
+			return createBundleServiceFactory();
 		default:
-			final Object originalService = originalRef.getBundle().getBundleContext().getService(originalRef);
-			final Proxy instance = proxyFunction.apply(originalService);
-			instance.setInterceptor(interceptor);
-			instances.add(instance);
-			return instance;
+			return createDefaultServiceObject();
 		}
+	}
 
+	private PrototypeServiceFactory<Proxy> createPrototypeServiceFactory() {
+		return new PrototypeServiceFactory<Proxy>() {
+			@Override
+			public Proxy getService(final Bundle bundle, final ServiceRegistration<Proxy> registration) {
+				final Object originalService = bundle.getBundleContext().getService(originalRef);
+				final Proxy instance = proxyFunction.apply(originalService);
+				instance.setInterceptor(interceptor);
+				instances.add(instance);
+				return instance;
+			}
+
+			@Override
+			public void ungetService(final Bundle bundle, final ServiceRegistration<Proxy> registration,
+					final Proxy service) {
+				instances.remove(service);
+				ungetOriginalService(bundle);
+			}
+		};
+	}
+
+	private ServiceFactory<Proxy> createBundleServiceFactory() {
+		return new ServiceFactory<Proxy>() {
+			@Override
+			public Proxy getService(final Bundle bundle, final ServiceRegistration<Proxy> registration) {
+				final Object originalService = bundle.getBundleContext().getService(originalRef);
+				return servicePool.get(originalService, () -> {
+					final Proxy proxy = proxyFunction.apply(originalService);
+					proxy.setInterceptor(interceptor);
+					instances.add(proxy);
+					return proxy;
+				});
+			}
+
+			@Override
+			public void ungetService(final Bundle bundle, final ServiceRegistration<Proxy> registration,
+					final Proxy service) {
+				if (servicePool.unget(service)) {
+					instances.remove(service);
+				}
+				ungetOriginalService(bundle);
+			}
+		};
+	}
+
+	private Object createDefaultServiceObject() {
+		final Object originalService = originalRef.getBundle().getBundleContext().getService(originalRef);
+		final Proxy instance = proxyFunction.apply(originalService);
+		instance.setInterceptor(interceptor);
+		instances.add(instance);
+		return instance;
+	}
+
+	private void ungetOriginalService(final Bundle bundle) {
+		final BundleContext bundleContext = bundle.getBundleContext();
+		if (bundleContext != null) {
+			bundleContext.ungetService(originalRef);
+		}
 	}
 }

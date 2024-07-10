@@ -17,6 +17,7 @@ package com.amitinside.aspecio.metrics.provider;
 
 import java.util.Map;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 
 import com.amitinside.aspecio.metrics.api.Metrics;
@@ -29,7 +30,12 @@ import com.codahale.metrics.Timer;
 @Component
 public final class MetricsProvider implements Metrics {
 
-	private final MetricRegistry metricRegistry = new MetricRegistry();
+	private final MetricRegistry metricRegistry;
+
+	@Activate
+	public MetricsProvider() {
+		metricRegistry = new MetricRegistry();
+	}
 
 	@Override
 	public Map<String, Metric> getMetrics() {

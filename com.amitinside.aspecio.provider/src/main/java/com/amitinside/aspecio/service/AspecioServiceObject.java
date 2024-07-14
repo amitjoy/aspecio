@@ -13,6 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  ******************************************************************************/
+
 package com.amitinside.aspecio.service;
 
 import static io.primeval.reflex.proxy.Interceptor.DEFAULT;
@@ -33,100 +34,100 @@ import io.primeval.reflex.proxy.bytecode.Proxy;
 
 public final class AspecioServiceObject {
 
-	private final ServiceScope serviceScope;
-	private final ServiceReference<?> originalRef;
-	private final Function<Object, Proxy> proxyFunction;
-	private final List<Proxy> instances = new CopyOnWriteArrayList<>();
-	private final ServicePool<Proxy> servicePool = new ServicePool<>();
-	private Object serviceToRegister;
-	private volatile Interceptor interceptor = DEFAULT;
+    private final ServiceScope serviceScope;
+    private final ServiceReference<?> originalRef;
+    private final Function<Object, Proxy> proxyFunction;
+    private final List<Proxy> instances = new CopyOnWriteArrayList<>();
+    private final ServicePool<Proxy> servicePool = new ServicePool<>();
+    private Object serviceToRegister;
+    private volatile Interceptor interceptor = DEFAULT;
 
-	public AspecioServiceObject(final ServiceScope serviceScope, final ServiceReference<?> originalRef,
-			final Function<Object, Proxy> proxyFunction) {
-		this.serviceScope = serviceScope;
-		this.originalRef = originalRef;
-		this.proxyFunction = proxyFunction;
-	}
+    public AspecioServiceObject(final ServiceScope serviceScope, final ServiceReference<?> originalRef,
+                                final Function<Object, Proxy> proxyFunction) {
+        this.serviceScope = serviceScope;
+        this.originalRef = originalRef;
+        this.proxyFunction = proxyFunction;
+    }
 
-	public void setInterceptor(final Interceptor interceptor) {
-		this.interceptor = interceptor;
-		instances.forEach(proxy -> proxy.setInterceptor(interceptor));
-	}
+    public void setInterceptor(final Interceptor interceptor) {
+        this.interceptor = interceptor;
+        instances.forEach(proxy -> proxy.setInterceptor(interceptor));
+    }
 
-	public synchronized Object getServiceObjectToRegister() {
-		if (serviceToRegister == null) {
-			serviceToRegister = createServiceObjectToRegister();
-		}
-		return serviceToRegister;
-	}
+    public synchronized Object getServiceObjectToRegister() {
+        if (serviceToRegister == null) {
+            serviceToRegister = createServiceObjectToRegister();
+        }
+        return serviceToRegister;
+    }
 
-	private Object createServiceObjectToRegister() {
-		switch (serviceScope) {
-		case PROTOTYPE:
-			return createPrototypeServiceFactory();
-		case BUNDLE:
-			return createBundleServiceFactory();
-		default:
-			return createDefaultServiceObject();
-		}
-	}
+    private Object createServiceObjectToRegister() {
+        switch (serviceScope) {
+            case PROTOTYPE:
+                return createPrototypeServiceFactory();
+            case BUNDLE:
+                return createBundleServiceFactory();
+            default:
+                return createDefaultServiceObject();
+        }
+    }
 
-	private PrototypeServiceFactory<Proxy> createPrototypeServiceFactory() {
-		return new PrototypeServiceFactory<Proxy>() {
-			@Override
-			public Proxy getService(final Bundle bundle, final ServiceRegistration<Proxy> registration) {
-				final Object originalService = bundle.getBundleContext().getService(originalRef);
-				final Proxy instance = proxyFunction.apply(originalService);
-				instance.setInterceptor(interceptor);
-				instances.add(instance);
-				return instance;
-			}
+    private PrototypeServiceFactory<Proxy> createPrototypeServiceFactory() {
+        return new PrototypeServiceFactory<Proxy>() {
+            @Override
+            public Proxy getService(final Bundle bundle, final ServiceRegistration<Proxy> registration) {
+                final Object originalService = bundle.getBundleContext().getService(originalRef);
+                final Proxy instance = proxyFunction.apply(originalService);
+                instance.setInterceptor(interceptor);
+                instances.add(instance);
+                return instance;
+            }
 
-			@Override
-			public void ungetService(final Bundle bundle, final ServiceRegistration<Proxy> registration,
-					final Proxy service) {
-				instances.remove(service);
-				ungetOriginalService(bundle);
-			}
-		};
-	}
+            @Override
+            public void ungetService(final Bundle bundle, final ServiceRegistration<Proxy> registration,
+                                     final Proxy service) {
+                instances.remove(service);
+                ungetOriginalService(bundle);
+            }
+        };
+    }
 
-	private ServiceFactory<Proxy> createBundleServiceFactory() {
-		return new ServiceFactory<Proxy>() {
-			@Override
-			public Proxy getService(final Bundle bundle, final ServiceRegistration<Proxy> registration) {
-				final Object originalService = bundle.getBundleContext().getService(originalRef);
-				return servicePool.get(originalService, () -> {
-					final Proxy proxy = proxyFunction.apply(originalService);
-					proxy.setInterceptor(interceptor);
-					instances.add(proxy);
-					return proxy;
-				});
-			}
+    private ServiceFactory<Proxy> createBundleServiceFactory() {
+        return new ServiceFactory<Proxy>() {
+            @Override
+            public Proxy getService(final Bundle bundle, final ServiceRegistration<Proxy> registration) {
+                final Object originalService = bundle.getBundleContext().getService(originalRef);
+                return servicePool.get(originalService, () -> {
+                    final Proxy proxy = proxyFunction.apply(originalService);
+                    proxy.setInterceptor(interceptor);
+                    instances.add(proxy);
+                    return proxy;
+                });
+            }
 
-			@Override
-			public void ungetService(final Bundle bundle, final ServiceRegistration<Proxy> registration,
-					final Proxy service) {
-				if (servicePool.unget(service)) {
-					instances.remove(service);
-				}
-				ungetOriginalService(bundle);
-			}
-		};
-	}
+            @Override
+            public void ungetService(final Bundle bundle, final ServiceRegistration<Proxy> registration,
+                                     final Proxy service) {
+                if (servicePool.unget(service)) {
+                    instances.remove(service);
+                }
+                ungetOriginalService(bundle);
+            }
+        };
+    }
 
-	private Object createDefaultServiceObject() {
-		final Object originalService = originalRef.getBundle().getBundleContext().getService(originalRef);
-		final Proxy instance = proxyFunction.apply(originalService);
-		instance.setInterceptor(interceptor);
-		instances.add(instance);
-		return instance;
-	}
+    private Object createDefaultServiceObject() {
+        final Object originalService = originalRef.getBundle().getBundleContext().getService(originalRef);
+        final Proxy instance = proxyFunction.apply(originalService);
+        instance.setInterceptor(interceptor);
+        instances.add(instance);
+        return instance;
+    }
 
-	private void ungetOriginalService(final Bundle bundle) {
-		final BundleContext bundleContext = bundle.getBundleContext();
-		if (bundleContext != null) {
-			bundleContext.ungetService(originalRef);
-		}
-	}
+    private void ungetOriginalService(final Bundle bundle) {
+        final BundleContext bundleContext = bundle.getBundleContext();
+        if (bundleContext != null) {
+            bundleContext.ungetService(originalRef);
+        }
+    }
 }

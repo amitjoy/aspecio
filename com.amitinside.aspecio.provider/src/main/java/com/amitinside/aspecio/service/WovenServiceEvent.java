@@ -35,10 +35,10 @@ public final class WovenServiceEvent {
     public static final WovenServiceEvent SERVICE_DEPARTURE = new WovenServiceEvent(
         EventKind.SERVICE_DEPARTURE, Collections.emptySet());
 
-    private final EventKind kind;
+    public final EventKind kind;
     private final Set<ChangeEvent> changeEvents;
 
-    private WovenServiceEvent(final EventKind kind, final Set<ChangeEvent> changeEvents) {
+    public WovenServiceEvent(final EventKind kind, final Set<ChangeEvent> changeEvents) {
         this.kind = kind;
         this.changeEvents = EnumSet.copyOf(changeEvents);
     }

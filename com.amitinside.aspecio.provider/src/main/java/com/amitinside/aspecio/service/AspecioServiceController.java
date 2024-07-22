@@ -104,9 +104,9 @@ public final class AspecioServiceController implements AspectInterceptorListener
 
         managedWovenService.wovenService = wovenService;
         managedWovenService.aspectContext = context;
-        managedWovenService.wovenService.aspecioServiceObject.setInterceptor(context.interceptor);
+        managedWovenService.wovenService.aspecioServiceObject.setInterceptor(context.getInterceptor());
 
-        if (context.unsatisfiedRequiredAspects.isEmpty()) {
+        if (context.getUnsatisfiedRequiredAspects().isEmpty()) {
             managedWovenService.register();
         }
     }
@@ -126,9 +126,9 @@ public final class AspecioServiceController implements AspectInterceptorListener
                                                                                          wovenService.optionalAspects);
             managed.wovenService = wovenService;
             managed.aspectContext = context;
-            managed.wovenService.aspecioServiceObject.setInterceptor(context.interceptor);
+            managed.wovenService.aspecioServiceObject.setInterceptor(context.getInterceptor());
 
-            final boolean satisfied = context.unsatisfiedRequiredAspects.isEmpty();
+            final boolean satisfied = context.getUnsatisfiedRequiredAspects().isEmpty();
             if (satisfied) {
                 if (managed.registration == null) {
                     managed.register();
@@ -162,8 +162,8 @@ public final class AspecioServiceController implements AspectInterceptorListener
             dto.bundleId = bundleId;
             dto.objectClass = new ArrayList<>(mws.wovenService.objectClass);
             dto.published = mws.registration != null;
-            dto.satisfiedAspects = asSet(mws.aspectContext.satisfiedAspects);
-            dto.unsatisfiedRequiredAspects = asSet(mws.aspectContext.unsatisfiedRequiredAspects);
+            dto.satisfiedAspects = asSet(mws.aspectContext.getSatisfiedAspects());
+            dto.unsatisfiedRequiredAspects = asSet(mws.aspectContext.getUnsatisfiedRequiredAspects());
             dto.requiredAspects = asSet(mws.wovenService.requiredAspects);
             dto.optionalAspects = asSet(mws.wovenService.optionalAspects);
 

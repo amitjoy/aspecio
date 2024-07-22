@@ -40,14 +40,14 @@ public final class ManagedWovenService {
 
 	public Dictionary<String, Object> getProperties() {
 		final Map<String, Object> props = new HashMap<>(wovenService.serviceProperties);
-		props.put(SERVICE_ASPECT_WOVEN, aspectContext.satisfiedAspects.toArray(new String[0]));
+		props.put(SERVICE_ASPECT_WOVEN, aspectContext.getSatisfiedAspects().toArray(new String[0]));
 
 		return new Hashtable<>(props);
 	}
 
 	public void register() {
 		logger.debug("Registering aspect proxy for service {} with aspects {}", wovenService.originalServiceId,
-				aspectContext.satisfiedAspects);
+				aspectContext.getSatisfiedAspects());
 
 		registration = wovenService.originalReference.getBundle().getBundleContext().registerService(
 				wovenService.objectClass.toArray(new String[0]),

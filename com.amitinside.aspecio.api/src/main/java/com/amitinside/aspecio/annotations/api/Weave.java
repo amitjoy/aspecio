@@ -27,21 +27,19 @@ import com.amitinside.aspecio.api.AspecioConstants;
 
 /**
  * Component Property Type for Aspect Weaving.
- *
- * <ul>
- * <ul>
- * <li>{@link AspecioConstants#SERVICE_ASPECT_WEAVE}</li>
- * <li>{@link AspecioConstants#SERVICE_ASPECT_WEAVE_OPTIONAL}</li>
- * </ul>
- * </ul>
- *
  * <p>
- * This annotation can be used on a {@link Component} to request aspects to be
- * woven.
- *
- * This annotation is not retained at runtime. It is for use by tools to
- * generate service property in the component XML.
- *
+ * This annotation can be used on a {@link org.osgi.service.component.annotations.Component} 
+ * to request that aspects be woven into the component. It is used by tools to generate 
+ * service properties in the component XML.
+ * <p>
+ * The annotation is not retained at runtime.
+ * 
+ * <h2>Properties:</h2>
+ * <ul>
+ *   <li>{@link AspecioConstants#SERVICE_ASPECT_WEAVE}</li>
+ *   <li>{@link AspecioConstants#SERVICE_ASPECT_WEAVE_OPTIONAL}</li>
+ * </ul>
+ * 
  * @see "Component Property Types"
  */
 @Target(TYPE)
@@ -49,27 +47,25 @@ import com.amitinside.aspecio.api.AspecioConstants;
 @ComponentPropertyType
 public @interface Weave {
 
-	String PREFIX_ = "service.aspect.weave.";
+    String PREFIX_ = "service.aspect.weave.";
 
-	/**
-	 * The required aspects to weave. The woven service will not be published unless
-	 * all of the required aspects are present. <br>
-	 * The deregistration of any required aspect will also cause the woven service
-	 * to be unregistered.
-	 *
-	 * @return the required aspects.
-	 */
-	Class<?>[] required() default {};
+    /**
+     * Specifies the required aspects to weave. The woven service will only be published 
+     * if all required aspects are present. The service will be unregistered if any 
+     * required aspect is deregistered.
+     *
+     * @return an array of required aspect classes.
+     */
+    Class<?>[] required() default {};
 
-	/**
-	 * The optional aspects to weave. The woven service will be published even if
-	 * the optional aspects are absent. <br>
-	 * The registration of an optional aspect will allow these aspects to intercept
-	 * the service methods, even if the service was previously published without
-	 * that aspect.
-	 *
-	 * @return the optional aspects.
-	 */
-	Class<?>[] optional() default {};
+    /**
+     * Specifies the optional aspects to weave. The woven service will be published 
+     * even if the optional aspects are absent. When an optional aspect is registered, 
+     * it allows that aspect to intercept the service methods, even if the service was 
+     * previously published without that aspect.
+     *
+     * @return an array of optional aspect classes.
+     */
+    Class<?>[] optional() default {};
 
 }

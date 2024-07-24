@@ -23,50 +23,76 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import org.osgi.framework.ServiceRegistration;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 import com.amitinside.aspecio.util.Exceptions;
 
-// Owned by AspecioServiceController (i.e, sync is done there)
+/**
+ * Manages the registration and unregistration of a woven service.
+ * <p>
+ * This class is controlled by AspecioServiceController to ensure thread safety.
+ */
 public final class ManagedWovenService {
 
-	private final Logger logger = LoggerFactory.getLogger(ManagedWovenService.class);
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	// can be null if unsatisfied
-	WovenService wovenService;
-	AspectInterceptorContext aspectContext;
-	ServiceRegistration<?> registration;
+    public WovenService wovenService;
+    public ServiceRegistration<?> registration;
+    public AspectInterceptorContext aspectContext;
 
-	public Dictionary<String, Object> getProperties() {
-		final Map<String, Object> props = new HashMap<>(wovenService.serviceProperties);
-		props.put(SERVICE_ASPECT_WOVEN, aspectContext.getSatisfiedAspects().toArray(new String[0]));
+    /**
+     * Creates a dictionary of service properties with the current aspect weaving state.
+     *
+     * @return a dictionary of service properties.
+     */
+    public Dictionary<String, Object> getProperties() {
+        Map<String, Object> props = new HashMap<>(wovenService.serviceProperties);
+        props.put(SERVICE_ASPECT_WOVEN, aspectContext.getSatisfiedAspects().toArray(new String[0]));
 
-		return new Hashtable<>(props);
-	}
+        return new Hashtable<>(props);
+    }
 
-	public void register() {
-		logger.debug("Registering aspect proxy for service {} with aspects {}", wovenService.originalServiceId,
-				aspectContext.getSatisfiedAspects());
+    /**
+     * Registers the woven service with the OSGi framework.
+     */
+    public void register() {
+        if (registration != null) {
+            logger.warn("Service is already registered: {}", wovenService.originalServiceId);
+            return;
+        }
+        
+        logger.debug("Registering aspect proxy for service {} with aspects {}", 
+                wovenService.originalServiceId, aspectContext.getSatisfiedAspects());
 
-		registration = wovenService.originalReference.getBundle().getBundleContext().registerService(
-				wovenService.objectClass.toArray(new String[0]),
-				wovenService.aspecioServiceObject.getServiceObjectToRegister(), getProperties());
-	}
+        try {
+            registration = wovenService.originalReference.getBundle().getBundleContext().registerService(
+                    wovenService.objectClass.toArray(new String[0]),
+                    wovenService.aspecioServiceObject.getServiceObjectToRegister(), 
+                    getProperties());
+        } catch (Exception e) {
+            logger.error("Failed to register service {}: {}", wovenService.originalServiceId, e.getMessage());
+            throw Exceptions.duck(e);
+        }
+    }
 
-	public void unregister() {
-		if (registration == null) {
-			return;
-		}
-		logger.debug("Deregistering aspect proxy for service ID {}", wovenService.originalServiceId);
-		try {
-			registration.unregister();
-		} catch (final IllegalStateException e) {
-			throw Exceptions.duck(e);
-		} finally {
-			registration = null;
-		}
+    /**
+     * Unregisters the woven service from the OSGi framework.
+     */
+    public void unregister() {
+        if (registration == null) {
+            logger.warn("Service is not registered: {}", wovenService.originalServiceId);
+            return;
+        }
 
-	}
-
+        logger.debug("Deregistering aspect proxy for service ID {}", wovenService.originalServiceId);
+        try {
+            registration.unregister();
+        } catch (IllegalStateException e) {
+            logger.error("Service already unregistered or in invalid state: {}", e.getMessage());
+            throw Exceptions.duck(e);
+        } finally {
+            registration = null;
+        }
+    }
 }

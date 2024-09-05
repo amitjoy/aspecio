@@ -21,15 +21,25 @@ import org.osgi.dto.DTO;
 
 /**
  * The data transfer object describing an interceptor as seen by Aspecio.
+ * This class provides information about the interceptor's service and bundle IDs, 
+ * service ranking, class, and any additional properties associated with the interceptor.
  *
  * @NotThreadSafe
  */
 public class InterceptorDTO extends DTO {
 
-	public long serviceId;
-	public long bundleId;
-	public int serviceRanking;
-	public Class<?> interceptorClass;
-	public Set<String> extraProperties;
+    /** The service ID of the interceptor */
+    public long serviceId;
 
+    /** The bundle ID of the interceptor */
+    public long bundleId;
+
+    /** The service ranking of the interceptor */
+    public int serviceRanking;
+
+    /** The class of the interceptor */
+    public Class<?> interceptorClass;
+
+    /** A set of extra properties related to the interceptor */
+    public Set<String> extraProperties;
 }

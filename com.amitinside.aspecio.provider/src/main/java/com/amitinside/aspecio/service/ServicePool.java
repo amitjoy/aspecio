@@ -1,18 +1,3 @@
-/*******************************************************************************
- * Copyright 2022-2024 Amit Kumar Mondal
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy
- * of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- ******************************************************************************/
 package com.amitinside.aspecio.service;
 
 import java.util.IdentityHashMap;
@@ -26,25 +11,36 @@ public final class ServicePool<T> {
     private final Map<T, Integer> proxyToCount = new IdentityHashMap<>();
 
     public synchronized T get(final Object originalService, final Supplier<T> proxyFactory) {
-        T proxy = originalToProxy.computeIfAbsent(originalService, k -> {
-            T newProxy = proxyFactory.get();
-            proxyToOriginal.put(newProxy, originalService);
-            return newProxy;
-        });
-
-        // Increment count for existing or new proxy
-        proxyToCount.merge(proxy, 1, Integer::sum);
+        T proxy = originalToProxy.computeIfAbsent(originalService, k -> createNewProxy(originalService, proxyFactory));
+        incrementProxyCount(proxy);
         return proxy;
     }
 
-    public synchronized boolean unget(final T proxy) {
-        int count = proxyToCount.merge(proxy, -1, Integer::sum);
+    private T createNewProxy(final Object originalService, final Supplier<T> proxyFactory) {
+        T newProxy = proxyFactory.get();
+        proxyToOriginal.put(newProxy, originalService);
+        return newProxy;
+    }
 
+    private void incrementProxyCount(final T proxy) {
+        proxyToCount.merge(proxy, 1, Integer::sum);
+    }
+
+    public synchronized boolean unget(final T proxy) {
+        int count = decrementProxyCount(proxy);
         if (count > 0) {
             return false;
         }
 
-        // Clean-up
+        cleanUp(proxy);
+        return true;
+    }
+
+    private int decrementProxyCount(final T proxy) {
+        return proxyToCount.merge(proxy, -1, Integer::sum);
+    }
+
+    private void cleanUp(final T proxy) {
         proxyToCount.remove(proxy);
         Object original = proxyToOriginal.remove(proxy);
         T proxyX = originalToProxy.remove(original);
@@ -52,6 +48,5 @@ public final class ServicePool<T> {
         if (proxy != proxyX) {
             throw new IllegalStateException("Service proxies do not match.");
         }
-        return true;
     }
 }

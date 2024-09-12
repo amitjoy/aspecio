@@ -22,7 +22,7 @@ target-dir              : target
 
 Bundle-Version          : 1.0.0.${tstamp}
 
-Bundle-Copyright        : Amit Kumar Mondal (c) 2021-2024
+Bundle-Copyright        : Amit Kumar Mondal (c) 2021-2025
 
 Bundle-License          : http://opensource.org/licenses/apache2.0.php;\
                             link="http://www.apache.org/licenses/LICENSE-2.0";\
